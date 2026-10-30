@@ -1,0 +1,4 @@
+Read-only reconciliation, 2026-10-27. No apply or write retry.
+Command: uv run google_spike.py reconcile --action 41674f3c12494615843591d1073b3c08
+Exit code: 0
+Action 41674f3c12494615843591d1073b3c08: verified. No automatic retries or cleanup.

@@ -1,0 +1,32 @@
+{"time": 1793081813.4809656, "cycle": 1, "ok": true, "matches": 2, "newly_observed": 0, "baseline": true, "uidvalidity_reset": false}
+{"time": 1793081824.641113, "cycle": 2, "ok": true, "matches": 2, "newly_observed": 0, "baseline": false, "uidvalidity_reset": false}
+{"time": 1793081835.6948037, "cycle": 3, "ok": true, "matches": 2, "newly_observed": 0, "baseline": false, "uidvalidity_reset": false}
+{"time": 1793081846.7075474, "cycle": 4, "ok": true, "matches": 2, "newly_observed": 0, "baseline": false, "uidvalidity_reset": false}
+{"time": 1793081857.7450376, "cycle": 5, "ok": true, "matches": 2, "newly_observed": 0, "baseline": false, "uidvalidity_reset": false}
+{"time": 1793081868.7431774, "cycle": 6, "ok": true, "matches": 2, "newly_observed": 0, "baseline": false, "uidvalidity_reset": false}
+{"time": 1793081879.926243, "cycle": 7, "ok": true, "matches": 2, "newly_observed": 0, "baseline": false, "uidvalidity_reset": false}
+{"time": 1793081890.9190452, "cycle": 8, "ok": true, "matches": 2, "newly_observed": 0, "baseline": false, "uidvalidity_reset": false}
+{"time": 1793081901.8326564, "cycle": 9, "ok": true, "matches": 2, "newly_observed": 0, "baseline": false, "uidvalidity_reset": false}
+{"time": 1793081914.0947907, "cycle": 10, "ok": true, "matches": 2, "newly_observed": 0, "baseline": false, "uidvalidity_reset": false}
+{"time": 1793081927.1877184, "cycle": 11, "ok": true, "matches": 3, "newly_observed": 1, "baseline": false, "uidvalidity_reset": false}
+{"time": 1793081939.0175169, "cycle": 12, "ok": true, "matches": 3, "newly_observed": 0, "baseline": false, "uidvalidity_reset": false}
+{"time": 1793081950.9651718, "cycle": 13, "ok": true, "matches": 3, "newly_observed": 0, "baseline": false, "uidvalidity_reset": false}
+{"time": 1793081962.0328856, "cycle": 14, "ok": true, "matches": 3, "newly_observed": 0, "baseline": false, "uidvalidity_reset": false}
+{"time": 1793081973.068172, "cycle": 15, "ok": true, "matches": 3, "newly_observed": 0, "baseline": false, "uidvalidity_reset": false}
+{"time": 1793081985.2623582, "cycle": 16, "ok": true, "matches": 3, "newly_observed": 0, "baseline": false, "uidvalidity_reset": false}
+{"time": 1793081998.8733258, "cycle": 17, "ok": true, "matches": 3, "newly_observed": 0, "baseline": false, "uidvalidity_reset": false}
+{"time": 1793082011.6720793, "cycle": 18, "ok": true, "matches": 3, "newly_observed": 0, "baseline": false, "uidvalidity_reset": false}
+{"time": 1793082024.960587, "cycle": 19, "ok": true, "matches": 3, "newly_observed": 0, "baseline": false, "uidvalidity_reset": false}
+{"time": 1793082038.1686664, "cycle": 20, "ok": true, "matches": 3, "newly_observed": 0, "baseline": false, "uidvalidity_reset": false}
+{"time": 1793082050.9584746, "cycle": 21, "ok": true, "matches": 3, "newly_observed": 0, "baseline": false, "uidvalidity_reset": false}
+{"time": 1793082063.7350488, "cycle": 22, "ok": true, "matches": 3, "newly_observed": 0, "baseline": false, "uidvalidity_reset": false}
+{"time": 1793082077.177495, "cycle": 23, "ok": true, "matches": 3, "newly_observed": 0, "baseline": false, "uidvalidity_reset": false}
+{"time": 1793082090.0193996, "cycle": 24, "ok": true, "matches": 3, "newly_observed": 0, "baseline": false, "uidvalidity_reset": false}
+{"time": 1793082103.3932014, "cycle": 25, "ok": false, "error_type": "abort"}
+{"time": 1793082114.1926064, "cycle": 26, "ok": false, "error_type": "ConnectionRefusedError"}
+{"time": 1793082124.200172, "cycle": 27, "ok": false, "error_type": "ConnectionRefusedError"}
+{"time": 1793082134.2093241, "cycle": 28, "ok": false, "error_type": "ConnectionRefusedError"}
+{"time": 1793082144.2169635, "cycle": 29, "ok": false, "error_type": "error"}
+{"time": 1793082154.2688432, "cycle": 30, "ok": true, "matches": 3, "newly_observed": 0, "baseline": false, "uidvalidity_reset": false}
+{"time": 1793082165.300784, "cycle": 31, "ok": true, "matches": 3, "newly_observed": 0, "baseline": false, "uidvalidity_reset": false}
+{"time": 1793082176.2783897, "cycle": 32, "ok": true, "matches": 3, "newly_observed": 0, "baseline": false, "uidvalidity_reset": false}

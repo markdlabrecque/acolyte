@@ -1,0 +1,4 @@
+Fresh-process read-only reconciliation after the owner-approved Calendar test apply. No write retry or cleanup.
+Command: uv run google_spike.py reconcile --action 03e76a9caa63433db90124a62c735912
+Exit code: 0
+Action 03e76a9caa63433db90124a62c735912: verified. No automatic retries or cleanup.

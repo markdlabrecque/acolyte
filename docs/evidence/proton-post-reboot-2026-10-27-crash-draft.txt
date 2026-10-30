@@ -1,0 +1,4 @@
+Owner-requested post-desktop-login reboot test, 2026-10-27. Owner reports reboot without restarting Bridge. No Bridge launch/restart, service/keyring change, write/apply, or cleanup by agent.
+Command: python3 proton_spike.py reconcile --marker AGENT-SPIKE-PROTON-20261025 --action 55838858e10845388c644bb89929cf7c --ca-file /home/mark/.config/pi-durable-agents/spikes/proton/cert.pem --allow-live
+Exit code: 0
+Action 55838858e10845388c644bb89929cf7c: verified. No replay or cleanup.

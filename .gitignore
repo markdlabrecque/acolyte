@@ -1,0 +1,65 @@
+# Keep authored docs, .scratch/personal-assistant/ planning/research, and
+# redacted docs/evidence/ records, including .txt and .jsonl, in Git.
+# output/research/ is authored research, not disposable generated output.
+
+# Temporary work and generated document previews/exports.
+/tmp/
+/output/pdf/
+
+# Local dependencies, environments, caches, and build output.
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+/coverage/
+/dist/
+/build/
+*.tsbuildinfo
+
+# Private local configuration and credentials. Commit templates only.
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+slack.env
+credentials.json
+client_secret*.json
+*-token.json
+token.json
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+/secrets/
+/credentials/
+
+# Runtime state and SQLite sidecars are not source or evidence exports.
+/state/
+/runtime/
+/logs/
+*.sqlite
+*.sqlite3
+*.db
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Editor recovery files and OS metadata, not shared editor configuration.
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db

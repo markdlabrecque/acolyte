@@ -1,0 +1,5 @@
+Owner-authorized scoped check on 2026-10-27. Command: cd /home/mark/Projects/pi-agent-spikes && python3 proton_followup.py watch --run-dir /home/mark/.config/pi-durable-agents/spikes/proton/delivery-watch-01 --allow-live --resume --cycles 3 --interval 5
+Exit code: 0
+{"baseline": false, "cycle": 1, "matches": 3, "newly_observed": 0, "ok": true, "time": 1793122772.1368258, "uidvalidity_reset": false}
+{"baseline": false, "cycle": 2, "matches": 3, "newly_observed": 0, "ok": true, "time": 1793122778.5685089, "uidvalidity_reset": false}
+{"baseline": false, "cycle": 3, "matches": 3, "newly_observed": 0, "ok": true, "time": 1793122784.4874227, "uidvalidity_reset": false}

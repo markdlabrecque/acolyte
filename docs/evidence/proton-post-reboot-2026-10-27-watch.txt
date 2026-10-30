@@ -1,0 +1,4 @@
+Owner-requested post-desktop-login reboot test, 2026-10-27. Owner reports reboot without restarting Bridge. No Bridge launch/restart, service/keyring change, write/apply, or cleanup by agent.
+Command: python3 proton_followup.py watch --run-dir /home/mark/.config/pi-durable-agents/spikes/proton/delivery-watch-01 --allow-live --resume --cycles 1
+Exit code: 0
+{"baseline": false, "cycle": 1, "matches": 3, "newly_observed": 0, "ok": true, "time": 1793128311.5802586, "uidvalidity_reset": false}

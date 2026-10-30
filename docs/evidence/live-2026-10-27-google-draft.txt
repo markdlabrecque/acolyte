@@ -1,0 +1,5 @@
+Owner-authorized single synthetic unsent draft creation, no recipients, on 2026-10-27.
+Action: 41674f3c12494615843591d1073b3c08
+Command: cd /home/mark/Projects/pi-agent-spikes && uv run google_spike.py apply --action 41674f3c12494615843591d1073b3c08
+Exit code: 0
+Action 41674f3c12494615843591d1073b3c08: verified. No automatic retries or cleanup.

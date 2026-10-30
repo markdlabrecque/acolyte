@@ -1,0 +1,84 @@
+Extracted 2026-10-27. Owner statements establish reported results and disposition, not independent live verification. Assistant statements are historical claims, not additional tests.
+
+Source: /home/mark/.pi/agent/sessions/--home-mark-Projects-pi-durable-agents--/2026-10-26T14-50-48-160Z_01a178b1-4de0-74a5-98c1-0154c90a001d.jsonl
+
+Line 38 role user 
+ok, consent set on both APIs. what's next?
+
+Line 62 role user 
+ok check passes validation now
+
+Line 64 role user 
+I didn't have any calendar events in this new calendar, but it was able to read it. Pass?
+
+Line 65 role assistant 
+Yes. Successfully reading the test calendar with zero events passes the calendar read check. It confirms refresh, account verification, and read access to the configured calendar, but not event creation or recovery after uncertain writes.
+
+Line 75 role assistant 
+Updated `pi-durable-personal-agent-prd.md`, both Omarchy setup guides, the Google spike ticket, decision map, and `~/Projects/pi-agent-spikes/GOOGLE-SPIKE.md`.
+
+Recorded owner-reported OAuth consent, local validation, and empty-calendar read as passed. Gmail reads, writes, and live recovery remain unverified; the spike stays open. Documentation consistency checks passed.
+
+Source: /home/mark/.pi/agent/sessions/--home-mark-Projects-pi-durable-agents--/2026-10-26T16-06-59-400Z_01a178f7-0e48-74a5-98c1-0156cd8b02fa.jsonl
+
+Line 207 role assistant 
+No. Those are the last two **Proton operational checks**, not separate spike tickets, and they don't block concluding the spec stage.
+
+The local tracker currently has:
+- **Slack spike:** open.
+- **Google spike:** open.
+- **Proton spike:** open, with the results we've gathered not yet folded into its ticket.
+- **Finalize the M0–M4 specification:** open and unblocked.
+
+The agreed planning scope explicitly deferred integration spikes and reboot/recovery verification. We can finalize the specification now, incorporating the observed results and clearly marking the remaining assumptions and implementation-stage checks. We don't need to wait for longer monitoring or a reboot.
+
+Line 208 role user 
+We've closed the Slack and Google spikes. I guess the results have not made it to the original tracker tickets yet
+
+Line 211 role assistant 
+You're right. I quoted stale tracker statuses instead of the actual completion state.
+
+Slack's ticket already contains closing-test evidence but still says open. Google's ticket only records early progress. Your confirmation establishes that both spikes are closed; their tracker records need reconciling.
+
+The next spec-stage task is **finalizing the M0–M4 implementation specification**, incorporating those results and Proton's verified behavior. Proton's longer monitoring and reboot checks can remain explicit implementation-stage follow-ups.
+
+Slack retest source: /tmp/slack-b-reject.428wNg/events.log. Selected fields only; identifiers and message bodies omitted.
+{"kind": "identity_verified", "bot": "A"}
+{"kind": "identity_verified", "bot": "B"}
+{"kind": "socket_connected", "bot": "A"}
+{"kind": "socket_connected", "bot": "B"}
+{"kind": "ready"}
+{"kind": "thread_reply", "bot": "B"}
+{"kind": "approval_prompt", "bot": "B"}
+{"kind": "identity_verified", "bot": "A"}
+{"kind": "identity_verified", "bot": "B"}
+{"kind": "socket_connected", "bot": "A"}
+{"kind": "socket_connected", "bot": "B"}
+{"kind": "ready"}
+{"kind": "thread_reply", "bot": "B"}
+{"kind": "approval_prompt", "bot": "B"}
+{"kind": "approval_decided", "bot": "B", "choice": "rejected"}
+{"kind": "identity_verified", "bot": "A"}
+{"kind": "identity_verified", "bot": "B"}
+{"kind": "socket_connected", "bot": "A"}
+{"kind": "socket_connected", "bot": "B"}
+{"kind": "ready"}
+{"kind": "approval_ignored", "bot": "B"}
+{"kind": "budget_reset"}
+{"kind": "owner_message", "bot": "B"}
+{"kind": "unmatched_message", "bot": "A"}
+{"kind": "thread_reply", "bot": "B"}
+{"kind": "identity_verified", "bot": "A"}
+{"kind": "identity_verified", "bot": "B"}
+{"kind": "socket_connected", "bot": "A"}
+{"kind": "socket_connected", "bot": "B"}
+{"kind": "ready"}
+{"kind": "status", "bot": "B", "agent": "processing", "warnings": []}
+{"kind": "thread_reply", "bot": "B"}
+{"kind": "notification_dm", "bot": "B"}
+{"kind": "job_started", "bot": "B"}
+{"kind": "stop_received", "bot": "B"}
+{"kind": "status", "bot": "B", "agent": "active", "warnings": []}
+{"kind": "thread_reply", "bot": "B"}
+{"kind": "notification_dm", "bot": "B"}
+{"kind": "job_stopped", "bot": "B"}

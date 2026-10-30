@@ -1,0 +1,80 @@
+Offline rerun on 2026-10-27. Synthetic credentials, fakes, and a local TLS fake IMAP server only. No Google, Slack, or Proton service access. Exit code: 0
+
+test_identity_and_scopes_checked (test_google_oauth.OAuthHelperTests.test_identity_and_scopes_checked) ... ok
+test_non_google_endpoint_rejected (test_google_oauth.OAuthHelperTests.test_non_google_endpoint_rejected) ... ok
+test_private_tokens_and_no_accidental_overwrite (test_google_oauth.OAuthHelperTests.test_private_tokens_and_no_accidental_overwrite) ... ok
+test_public_resources_rejected (test_google_oauth.OAuthHelperTests.test_public_resources_rejected) ... ok
+test_same_personal_account_required (test_google_oauth.OAuthHelperTests.test_same_personal_account_required) ... ok
+test_symlink_target_rejected (test_google_oauth.OAuthHelperTests.test_symlink_target_rejected) ... ok
+test_absent_calendar_event_stays_uncertain (test_google_spike.SpikeTests.test_absent_calendar_event_stays_uncertain) ... ok
+test_calendar_allowlist_cannot_change_between_plan_and_apply (test_google_spike.SpikeTests.test_calendar_allowlist_cannot_change_between_plan_and_apply) ... ok
+test_calendar_requires_approval (test_google_spike.SpikeTests.test_calendar_requires_approval) ... ok
+test_calendar_write_and_lookup (test_google_spike.SpikeTests.test_calendar_write_and_lookup) ... ok
+test_draft_duplicates_across_pages (test_google_spike.SpikeTests.test_draft_duplicates_across_pages) ... ok
+test_draft_timeout_never_retried (test_google_spike.SpikeTests.test_draft_timeout_never_retried) ... ok
+test_journal_cannot_move_to_another_account (test_google_spike.SpikeTests.test_journal_cannot_move_to_another_account) ... ok
+test_lost_calendar_response_reconciles_without_replay (test_google_spike.SpikeTests.test_lost_calendar_response_reconciles_without_replay) ... ok
+test_naive_and_past_events_rejected (test_google_spike.SpikeTests.test_naive_and_past_events_rejected) ... ok
+test_plan_is_offline_and_private (test_google_spike.SpikeTests.test_plan_is_offline_and_private) ... ok
+test_resource_validation (test_google_spike.SpikeTests.test_resource_validation) ... ok
+test_unrelated_subject_is_not_read_in_full (test_google_spike.SpikeTests.test_unrelated_subject_is_not_read_in_full) ... ok
+test_append_has_draft_flag_and_no_other_mutation (test_proton_spike.AdapterTests.test_append_has_draft_flag_and_no_other_mutation) ... ok
+test_body_peek_is_bounded_and_never_marks_seen (test_proton_spike.AdapterTests.test_body_peek_is_bounded_and_never_marks_seen) ... ok
+test_draft_mailbox_must_have_special_use_flag (test_proton_spike.AdapterTests.test_draft_mailbox_must_have_special_use_flag) ... ok
+test_header_flags_and_incomplete_fetch (test_proton_spike.AdapterTests.test_header_flags_and_incomplete_fetch) ... ok
+test_no_uidvalidity_fails (test_proton_spike.AdapterTests.test_no_uidvalidity_fails) ... ok
+test_search_failure_or_overflow_is_not_absence (test_proton_spike.AdapterTests.test_search_failure_or_overflow_is_not_absence) ... ok
+test_select_is_readonly_and_uid_scoped (test_proton_spike.AdapterTests.test_select_is_readonly_and_uid_scoped) ... ok
+test_bad_configuration_is_rejected (test_proton_spike.ConfigTests.test_bad_configuration_is_rejected) ... ok
+test_check_never_connects (test_proton_spike.ConfigTests.test_check_never_connects) ... ok
+test_cli_plan_apply_and_reconcile_with_fake_bridge (test_proton_spike.ConfigTests.test_cli_plan_apply_and_reconcile_with_fake_bridge) ... ok
+test_incomplete_or_empty_values_rejected (test_proton_spike.ConfigTests.test_incomplete_or_empty_values_rejected) ... ok
+test_literal_password_not_shell_or_dotenv_interpreted (test_proton_spike.ConfigTests.test_literal_password_not_shell_or_dotenv_interpreted) ... ok
+test_live_and_write_consent_gates (test_proton_spike.ConfigTests.test_live_and_write_consent_gates) ... ok
+test_poll_reconnects_and_tracks_empty_mailbox_uidvalidity (test_proton_spike.ConfigTests.test_poll_reconnects_and_tracks_empty_mailbox_uidvalidity) ... ok
+test_private_file_and_symlink_requirements (test_proton_spike.ConfigTests.test_private_file_and_symlink_requirements) ... ok
+test_tls_modes_and_loopback (test_proton_spike.ConfigTests.test_tls_modes_and_loopback) ... ok
+test_absence_never_permits_retry (test_proton_spike.RunnerTests.test_absence_never_permits_retry) ... ok
+test_append_is_journalled_before_io_then_verified (test_proton_spike.RunnerTests.test_append_is_journalled_before_io_then_verified) ... ok
+test_bridge_omitted_custom_header_still_verifies_preserved_identifiers (test_proton_spike.RunnerTests.test_bridge_omitted_custom_header_still_verifies_preserved_identifiers) ... ok
+test_cannot_reconcile_unattempted_or_unknown_actions (test_proton_spike.RunnerTests.test_cannot_reconcile_unattempted_or_unknown_actions) ... ok
+test_duplicate_subject_with_different_message_id_requires_review (test_proton_spike.RunnerTests.test_duplicate_subject_with_different_message_id_requires_review) ... ok
+test_duplicates_never_cleaned_up (test_proton_spike.RunnerTests.test_duplicates_never_cleaned_up) ... ok
+test_failed_reconciliation_invalidates_previous_verified_state (test_proton_spike.RunnerTests.test_failed_reconciliation_invalidates_previous_verified_state) ... ok
+test_interrupted_append_stays_uncertain (test_proton_spike.RunnerTests.test_interrupted_append_stays_uncertain) ... ok
+test_journal_bound_to_account_and_resources (test_proton_spike.RunnerTests.test_journal_bound_to_account_and_resources) ... ok
+test_journal_rejects_symlink_and_public_permissions (test_proton_spike.RunnerTests.test_journal_rejects_symlink_and_public_permissions) ... ok
+test_lost_response_reconciles_after_journal_reopen_without_replay (test_proton_spike.RunnerTests.test_lost_response_reconciles_after_journal_reopen_without_replay) ... ok
+test_mismatched_headers_or_non_draft_are_uncertain (test_proton_spike.RunnerTests.test_mismatched_headers_or_non_draft_are_uncertain) ... ok
+test_plan_is_offline_private_and_recipient_free (test_proton_spike.RunnerTests.test_plan_is_offline_private_and_recipient_free) ... ok
+test_preflight_failure_leaves_plan_unattempted (test_proton_spike.RunnerTests.test_preflight_failure_leaves_plan_unattempted) ... ok
+test_read_filters_headers_before_body (test_proton_spike.RunnerTests.test_read_filters_headers_before_body) ... ok
+test_uidvalidity_change_changes_identity (test_proton_spike.RunnerTests.test_uidvalidity_change_changes_identity) ... ok
+test_zero_fixtures_is_valid_read_but_not_live_proof (test_proton_spike.RunnerTests.test_zero_fixtures_is_valid_read_but_not_live_proof) ... ok
+test_implicit_tls_uses_verifying_context (test_proton_spike.TLSTests.test_implicit_tls_uses_verifying_context) ... ok
+test_starttls_precedes_login_and_logout_never_expunge (test_proton_spike.TLSTests.test_starttls_precedes_login_and_logout_never_expunge) ... ok
+test_tls_rejection_never_sends_credentials (test_proton_spike.TLSTests.test_tls_rejection_never_sends_credentials) ... ok
+test_after_append_crash_follows_success_but_precedes_return_to_runner (test_proton_recovery_test.CrashHookTests.test_after_append_crash_follows_success_but_precedes_return_to_runner) ... ok
+test_append_failure_never_records_ok (test_proton_recovery_test.CrashHookTests.test_append_failure_never_records_ok) ... ok
+test_before_append_crash_is_after_journal_commit (test_proton_recovery_test.CrashHookTests.test_before_append_crash_is_after_journal_commit) ... ok
+test_non_faulting_mode_records_append_and_returns (test_proton_recovery_test.CrashHookTests.test_non_faulting_mode_records_append_and_returns) ... ok
+test_detection_deduplicates_even_after_message_temporarily_disappears (test_proton_followup.FollowupTests.test_detection_deduplicates_even_after_message_temporarily_disappears) ... ok
+test_evidence_private_and_no_existing_experiment_overwrite (test_proton_followup.FollowupTests.test_evidence_private_and_no_existing_experiment_overwrite) ... ok
+test_initial_snapshot_is_baseline_not_delivery (test_proton_followup.FollowupTests.test_initial_snapshot_is_baseline_not_delivery) ... ok
+test_live_and_draft_consent_gates_before_file_access (test_proton_followup.FollowupTests.test_live_and_draft_consent_gates_before_file_access) ... ok
+test_network_resume_never_plans_or_applies_a_write (test_proton_followup.FollowupTests.test_network_resume_never_plans_or_applies_a_write) ... ok
+test_proxy_refuses_remote_target (test_proton_followup.FollowupTests.test_proxy_refuses_remote_target) ... ok
+test_uidvalidity_reset_rebaselines_instead_of_reporting_delivery (test_proton_followup.FollowupTests.test_uidvalidity_reset_rebaselines_instead_of_reporting_delivery) ... ok
+test_watch_recovers_after_read_failure_and_preserves_dedup_on_resume (test_proton_followup.FollowupTests.test_watch_recovers_after_read_failure_and_preserves_dedup_on_resume) ... ok
+test_worker_cannot_bypass_draft_consent (test_proton_followup.FollowupTests.test_worker_cannot_bypass_draft_consent) ... ok
+test_tls_passthrough_loses_append_response_and_refuses_replay (test_proton_followup.WireIntegrationTests.test_tls_passthrough_loses_append_response_and_refuses_replay) ... ok
+
+----------------------------------------------------------------------
+Ran 68 tests in 0.157s
+
+OK
+Action 4bf2fb7883504f93969d72d15e6f54bb: uncertain. No automatic retries or cleanup.
+Action 71ad708be5d3462b9716e1db15a8ae1b: verified. No automatic retries or cleanup.
+Action ad332bb3b4124920b4368f67ff28b705: duplicates. No automatic retries or cleanup.
+Action 1313b31de6c540fe82fc708d803b5cbe: verified. No automatic retries or cleanup.
+Local configuration valid. No connection made; TLS, account access, and Bridge version unverified.

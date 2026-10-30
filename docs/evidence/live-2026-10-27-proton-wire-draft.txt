@@ -1,0 +1,4 @@
+Read-only reconciliation, 2026-10-27. No apply or write retry.
+Command: python3 proton_spike.py reconcile --marker AGENT-SPIKE-PROTON-20261025 --action 9c5a7318a97e466e8a4643d5ea1ea2ff --ca-file /home/mark/.config/pi-durable-agents/spikes/proton/cert.pem --allow-live
+Exit code: 0
+Action 9c5a7318a97e466e8a4643d5ea1ea2ff: verified. No replay or cleanup.

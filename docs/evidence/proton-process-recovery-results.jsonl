@@ -1,0 +1,2 @@
+{"phase": "after-append", "action": "55838858e10845388c644bb89929cf7c", "state": "verified", "append_calls": 1, "replay_refused_before_connection": true, "reconciliations": 2}
+{"phase": "before-append", "action": "edf75dea56fb428c9fb0de4d0414ab72", "state": "uncertain", "append_calls": 0, "replay_refused_before_connection": true, "reconciliations": 2}

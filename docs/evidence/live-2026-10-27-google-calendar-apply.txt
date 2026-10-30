@@ -1,0 +1,7 @@
+Owner approved the exact previously displayed Calendar proposal in chat on 2026-10-27. Saved action: 03e76a9caa63433db90124a62c735912. A wrapper checked all saved fields against that proposal and the configured dedicated calendar, then relayed approval through the runner's interactive SHA-256 digest gate. Full proposal/terminal output was suppressed to avoid publishing account/calendar identifiers. One apply only; no retries, attendees, notifications, or cleanup.
+Wrapper exit code: 0
+Owner approved this exact proposal in chat. Full saved proposal matched expected calendar, title, description, start/end, no attendees, and disabled reminders.
+Approval relayed through the runner terminal digest gate: True
+Runner exit code: 0
+Runner reported verified: True
+No credentials or calendar identifiers emitted by this wrapper.
