@@ -1,0 +1,8 @@
+
+> personal-agent-td-002@0.0.0 typecheck
+> tsc --noEmit
+
+tests/tools-acceptance.test.ts(61,54): error TS2322: Type '{ command: string; title?: undefined; shell?: undefined; cursor?: undefined; } | { title: string; command?: undefined; shell?: undefined; cursor?: undefined; } | { title: string; shell: string; command?: undefined; cursor?: undefined; } | { ...; }' is not assignable to type 'JsonObject'.
+  Type '{ command: string; title?: undefined; shell?: undefined; cursor?: undefined; }' is not assignable to type 'JsonObject'.
+    Property 'title' is incompatible with index signature.
+      Type 'undefined' is not assignable to type 'JsonValue'.

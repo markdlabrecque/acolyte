@@ -1,0 +1,124 @@
+{
+  "node": "v24.20.0",
+  "executable": "/home/mark/.config/nvm/versions/node/v24.20.0/bin/node",
+  "sqlite": {
+    "version": "3.53.4"
+  },
+  "defaultPragmas": {
+    "journal": {
+      "journal_mode": "wal"
+    },
+    "synchronous": {
+      "synchronous": 1
+    }
+  },
+  "effectivePragmas": {
+    "journal": {
+      "journal_mode": "wal"
+    },
+    "synchronous": {
+      "synchronous": 2
+    }
+  },
+  "packages": {
+    "pi-durable": {
+      "version": "1.4.0",
+      "resolved": "https://registry.npmjs.org/@earendil-works/pi-durable/-/pi-durable-1.4.0.tgz",
+      "integrity": "sha512-EtIyXH1MBSXdJSkodmy+CYXuwfve3gPrD4GNCZ0XmuRWLPupwRlNQ7fdaXjRcLoKb6SWkT/yEzK+sMmrqvYK+Q==",
+      "license": "MIT",
+      "dependencies": {
+        "@earendil-works/chord": "1.4.0",
+        "@earendil-works/pi-ai": "1.4.0",
+        "@earendil-works/pi-codemode": "1.4.0",
+        "@earendil-works/pi-telemetry": "1.4.0",
+        "@silvia-odwyer/photon": "0.3.3",
+        "diff": "8.0.4",
+        "typebox": "1.3.27"
+      },
+      "engines": {
+        "node": ">=22.19.0"
+      }
+    },
+    "pi-ai": {
+      "version": "1.4.0",
+      "resolved": "https://registry.npmjs.org/@earendil-works/pi-ai/-/pi-ai-1.4.0.tgz",
+      "integrity": "sha512-hQM/C4+1w8rHYACzDDf+0vQMnEnpzIop1tptIERVgR3ZeT/hHSzBNG8PaWPgxWQjqSeKCyBZSyp8uTT6eKK1pQ==",
+      "license": "MIT",
+      "dependencies": {
+        "@anthropic-ai/sdk": "0.129.0",
+        "@aws-sdk/client-bedrock-runtime": "3.1127.0",
+        "@earendil-works/pi-telemetry": "1.4.0",
+        "@google/genai": "2.21.0",
+        "@smithy/node-http-handler": "4.12.1",
+        "http-proxy-agent": "9.1.0",
+        "https-proxy-agent": "9.1.0",
+        "openai": "7.19.0",
+        "partial-json": "0.1.7",
+        "typebox": "1.3.27"
+      },
+      "bin": {
+        "pi-ai": "dist/cli.js"
+      },
+      "engines": {
+        "node": ">=22.19.0"
+      }
+    },
+    "chord": {
+      "version": "1.4.0",
+      "resolved": "https://registry.npmjs.org/@earendil-works/chord/-/chord-1.4.0.tgz",
+      "integrity": "sha512-dTbgyz4xgDS5KAUFx1bFENqj0Cr1N3tYxJJOYStc6g6HS78FSBZydyoCwLoddiQRF+VgRS0fpgAi+iKxjZ3BQA==",
+      "license": "MIT",
+      "dependencies": {
+        "@earendil-works/pi-telemetry": "1.4.0",
+        "typebox": "1.3.27"
+      },
+      "engines": {
+        "node": ">=22.19.0"
+      }
+    }
+  },
+  "publicRootExports": [
+    "AgentDoc",
+    "AssistantEntry",
+    "CompactionEntry",
+    "CompactionTask",
+    "ConversationBusy",
+    "DEFAULT_COMPACTION_POLICY",
+    "DEFAULT_HARNESS_IDENTITY",
+    "DEFAULT_PROGRESS_POLICY",
+    "DEFAULT_RESTART_LIMIT",
+    "DEFAULT_RETRY_POLICY",
+    "DURABLE_TELEMETRY_SCHEMA",
+    "GenerationTask",
+    "Harness",
+    "InboxDoc",
+    "LiveDoc",
+    "MemoryStorage",
+    "NestedCallDoc",
+    "ProviderDoc",
+    "ROOT_CONVERSATION_ID",
+    "ReadAfterWrite",
+    "ResetEntry",
+    "SessionFailed",
+    "StorageRequestError",
+    "SystemEntry",
+    "ToolResultEntry",
+    "ToolTask",
+    "UsageDoc",
+    "UserEntry",
+    "configure",
+    "createRegistry",
+    "createSession",
+    "defineDoc",
+    "defineDocFamily",
+    "defineEntry",
+    "defineExtension",
+    "defineTask",
+    "defineTool",
+    "hook",
+    "section",
+    "watchEvents",
+    "wrapSection",
+    "wrapTool"
+  ]
+}

@@ -1,0 +1,62 @@
+▶ strict configuration rejects unknown keys, unsafe paths, unbounded limits and unavailable model selection without starting a run
+  ✔ malformed (2.017508ms)
+  ✔ unknown (2.608426ms)
+  ✔ tool (4.467627ms)
+  ✔ model (1.239988ms)
+  ✔ relative (1.069377ms)
+  ✔ infinite (1.087842ms)
+  ✔ zero (0.596921ms)
+  ✔ queue (0.680687ms)
+  ✔ price (0.767771ms)
+  ✔ fault-injection (0.800793ms)
+✔ strict configuration rejects unknown keys, unsafe paths, unbounded limits and unavailable model selection without starting a run (236.128025ms)
+✔ atomic queue capacity preserves duplicate receipt before fullness and drains requests admitted around idle completion (316.921492ms)
+✔ failed application storage rejects admission and lookup rather than returning acceptance or 404 (2.916475ms)
+✔ ledger retries the intent/reservation gap idempotently, preserves conflicts and monthly cap (17.314545ms)
+✔ actual live adapter orders durable intent/reservation/dispatch before loopback wire, then stores response and settles usage (109.927702ms)
+✔ actual live wire tool-call conversion executes add/list from a persisted assistant batch (35.359673ms)
+▶ unknown usage and failed dispatch retain conservative charges without hidden wire retries
+  ✔ missing-usage (11.275118ms)
+  ✔ http-error (16.985157ms)
+  ✔ truncated-stream (9.033369ms)
+  ✔ progress-timeout (38.701887ms)
+  ✔ active-timeout (104.011426ms)
+✔ unknown usage and failed dispatch retain conservative charges without hidden wire retries (181.155202ms)
+▶ missing credentials, pricing, funds, model/time/context limits fail before any wire call
+  ✔ credentials (4.292268ms)
+  ✔ missing-file (4.13358ms)
+  ✔ prices (4.366397ms)
+  ✔ funds (4.950153ms)
+  ✔ model-limit (4.581952ms)
+  ✔ time (3.685148ms)
+  ✔ context (8.19779ms)
+✔ missing credentials, pricing, funds, model/time/context limits fail before any wire call (35.686476ms)
+✔ adapter refuses external test endpoints and unbound direct calls (1.21491ms)
+✔ real runner refuses duplicate identity, canonical path aliases, hard links, and shared sockets without harming owner (1255.221879ms)
+✔ unknown socket and ordinary/symlink paths are never unlinked during startup (574.034293ms)
+✔ failed startup releases all owned resources, allowing corrected configuration without a hung process (533.996698ms)
+✖ runner shutdown does not unlink a replacement socket path (219.797377ms)
+✔ socket cleanup retains a replacement inode and refuses a second claimant (19.430348ms)
+ℹ tests 36
+ℹ suites 0
+ℹ pass 35
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2682.81017
+
+✖ failing tests:
+
+test at tests/ownership-acceptance.test.ts:76:1
+✖ runner shutdown does not unlink a replacement socket path (219.797377ms)
+  Error: ENOENT: no such file or directory, lstat '/tmp/td002-acceptance-OcOGOJ/runner.sock'
+      at async lstat (node:internal/fs/promises:1734:18)
+      at async TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/ownership-acceptance.test.ts:86:19)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'lstat',
+    path: '/tmp/td002-acceptance-OcOGOJ/runner.sock'
+  }

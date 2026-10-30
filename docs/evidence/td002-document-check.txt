@@ -1,0 +1,1 @@
+4 documents checked; 32 local link targets exist; review 1 REJECTED; fresh-agent review round 2 pending; TD-002 BLOCKED and live acceptance unchecked; no partial merge authorization.

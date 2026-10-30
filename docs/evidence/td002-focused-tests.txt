@@ -1,0 +1,15 @@
+
+> personal-agent-td-002@0.0.0 test
+> node --test tests/*.test.ts
+
+✔ public application document commit survives SQLite reopen in FULL mode (17.592115ms)
+✔ public safe replay retains the tool decision and atomic application result (38.727362ms)
+✔ CLI crosses authenticated gateway and runner to Pi Durable add/list (1965.397385ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2023.027922

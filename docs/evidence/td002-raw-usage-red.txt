@@ -1,0 +1,385 @@
+▶ raw wire usage must be complete and consistent before normalized usage can settle
+  ✖ missing prompt (82.159821ms)
+  ✖ missing completion (13.611026ms)
+  ✖ missing total (8.485853ms)
+  ✖ inconsistent total (8.233208ms)
+  ✔ valid usage (8.079971ms)
+  ✔ explicit zero completion (6.931484ms)
+  ✔ explicit zero prompt (6.980767ms)
+  ✖ prompt_tokens=-1 (10.09831ms)
+  ✔ prompt_tokens=0.5 (7.349449ms)
+  ✔ prompt_tokens=9007199254740992 (7.068181ms)
+  ✖ prompt_tokens=5 (6.373126ms)
+  ✖ prompt_tokens=null (5.662732ms)
+  ✔ completion_tokens=-1 (5.817322ms)
+  ✔ completion_tokens=0.5 (5.404057ms)
+  ✔ completion_tokens=9007199254740992 (5.79998ms)
+  ✔ completion_tokens=5 (9.843221ms)
+  ✖ completion_tokens=null (5.991389ms)
+  ✖ total_tokens=-1 (6.122415ms)
+  ✖ total_tokens=0.5 (5.914154ms)
+  ✖ total_tokens=9007199254740992 (5.932469ms)
+  ✖ total_tokens=5 (6.025362ms)
+  ✖ total_tokens=null (6.046082ms)
+✖ raw wire usage must be complete and consistent before normalized usage can settle (236.818655ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 9
+ℹ fail 14
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 460.355804
+
+✖ failing tests:
+
+test at tests/inference-acceptance.test.ts:213:53
+✖ missing prompt (82.159821ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    {
+  +   micro_usd: 5,
+  -   micro_usd: 17408,
+      reserved_micro_usd: 17408,
+  +   settled: 1
+  -   settled: 0
+    }
+
+      at TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:228:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:213:45)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { micro_usd: 5, reserved_micro_usd: 17408, settled: 1 },
+    expected: { micro_usd: 17408, reserved_micro_usd: 17408, settled: 0 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/inference-acceptance.test.ts:213:53
+✖ missing completion (13.611026ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    {
+  +   micro_usd: 20,
+  -   micro_usd: 17408,
+      reserved_micro_usd: 17408,
+  +   settled: 1
+  -   settled: 0
+    }
+
+      at TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:228:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:213:45)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { micro_usd: 20, reserved_micro_usd: 17408, settled: 1 },
+    expected: { micro_usd: 17408, reserved_micro_usd: 17408, settled: 0 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/inference-acceptance.test.ts:213:53
+✖ missing total (8.485853ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    {
+  +   micro_usd: 25,
+  -   micro_usd: 17408,
+      reserved_micro_usd: 17408,
+  +   settled: 1
+  -   settled: 0
+    }
+
+      at TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:228:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:213:45)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { micro_usd: 25, reserved_micro_usd: 17408, settled: 1 },
+    expected: { micro_usd: 17408, reserved_micro_usd: 17408, settled: 0 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/inference-acceptance.test.ts:213:53
+✖ inconsistent total (8.233208ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    {
+  +   micro_usd: 25,
+  -   micro_usd: 17408,
+      reserved_micro_usd: 17408,
+  +   settled: 1
+  -   settled: 0
+    }
+
+      at TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:228:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:213:45)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { micro_usd: 25, reserved_micro_usd: 17408, settled: 1 },
+    expected: { micro_usd: 17408, reserved_micro_usd: 17408, settled: 0 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/inference-acceptance.test.ts:213:53
+✖ prompt_tokens=-1 (10.09831ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    {
+  +   micro_usd: 5,
+  -   micro_usd: 17408,
+      reserved_micro_usd: 17408,
+  +   settled: 1
+  -   settled: 0
+    }
+
+      at TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:228:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:213:45)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { micro_usd: 5, reserved_micro_usd: 17408, settled: 1 },
+    expected: { micro_usd: 17408, reserved_micro_usd: 17408, settled: 0 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/inference-acceptance.test.ts:213:53
+✖ prompt_tokens=5 (6.373126ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    {
+  +   micro_usd: 10,
+  -   micro_usd: 17408,
+      reserved_micro_usd: 17408,
+  +   settled: 1
+  -   settled: 0
+    }
+
+      at TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:228:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:213:45)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { micro_usd: 10, reserved_micro_usd: 17408, settled: 1 },
+    expected: { micro_usd: 17408, reserved_micro_usd: 17408, settled: 0 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/inference-acceptance.test.ts:213:53
+✖ prompt_tokens=null (5.662732ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    {
+  +   micro_usd: 5,
+  -   micro_usd: 17408,
+      reserved_micro_usd: 17408,
+  +   settled: 1
+  -   settled: 0
+    }
+
+      at TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:228:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:213:45)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { micro_usd: 5, reserved_micro_usd: 17408, settled: 1 },
+    expected: { micro_usd: 17408, reserved_micro_usd: 17408, settled: 0 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/inference-acceptance.test.ts:213:53
+✖ completion_tokens=null (5.991389ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    {
+  +   micro_usd: 20,
+  -   micro_usd: 17408,
+      reserved_micro_usd: 17408,
+  +   settled: 1
+  -   settled: 0
+    }
+
+      at TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:228:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:213:45)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { micro_usd: 20, reserved_micro_usd: 17408, settled: 1 },
+    expected: { micro_usd: 17408, reserved_micro_usd: 17408, settled: 0 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/inference-acceptance.test.ts:213:53
+✖ total_tokens=-1 (6.122415ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    {
+  +   micro_usd: 25,
+  -   micro_usd: 17408,
+      reserved_micro_usd: 17408,
+  +   settled: 1
+  -   settled: 0
+    }
+
+      at TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:228:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:213:45)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { micro_usd: 25, reserved_micro_usd: 17408, settled: 1 },
+    expected: { micro_usd: 17408, reserved_micro_usd: 17408, settled: 0 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/inference-acceptance.test.ts:213:53
+✖ total_tokens=0.5 (5.914154ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    {
+  +   micro_usd: 25,
+  -   micro_usd: 17408,
+      reserved_micro_usd: 17408,
+  +   settled: 1
+  -   settled: 0
+    }
+
+      at TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:228:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:213:45)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { micro_usd: 25, reserved_micro_usd: 17408, settled: 1 },
+    expected: { micro_usd: 17408, reserved_micro_usd: 17408, settled: 0 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/inference-acceptance.test.ts:213:53
+✖ total_tokens=9007199254740992 (5.932469ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    {
+  +   micro_usd: 25,
+  -   micro_usd: 17408,
+      reserved_micro_usd: 17408,
+  +   settled: 1
+  -   settled: 0
+    }
+
+      at TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:228:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:213:45)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { micro_usd: 25, reserved_micro_usd: 17408, settled: 1 },
+    expected: { micro_usd: 17408, reserved_micro_usd: 17408, settled: 0 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/inference-acceptance.test.ts:213:53
+✖ total_tokens=5 (6.025362ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    {
+  +   micro_usd: 25,
+  -   micro_usd: 17408,
+      reserved_micro_usd: 17408,
+  +   settled: 1
+  -   settled: 0
+    }
+
+      at TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:228:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:213:45)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { micro_usd: 25, reserved_micro_usd: 17408, settled: 1 },
+    expected: { micro_usd: 17408, reserved_micro_usd: 17408, settled: 0 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/inference-acceptance.test.ts:213:53
+✖ total_tokens=null (6.046082ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    {
+  +   micro_usd: 25,
+  -   micro_usd: 17408,
+      reserved_micro_usd: 17408,
+  +   settled: 1
+  -   settled: 0
+    }
+
+      at TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:228:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:213:45)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { micro_usd: 25, reserved_micro_usd: 17408, settled: 1 },
+    expected: { micro_usd: 17408, reserved_micro_usd: 17408, settled: 0 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

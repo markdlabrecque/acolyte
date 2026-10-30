@@ -1,0 +1,34 @@
+{"name":"usage-only-final","micro_usd":25,"settled":1}
+✔ usage-only-final (68.009439ms)
+{"name":"first-choice-fallback","micro_usd":25,"settled":1}
+✔ first-choice-fallback (8.263614ms)
+{"name":"top-level-precedence","micro_usd":25,"settled":1}
+✔ top-level-precedence (5.618471ms)
+{"name":"valid-then-incomplete","micro_usd":17408,"settled":0}
+✔ valid-then-incomplete (5.166434ms)
+{"name":"valid-then-inconsistent","micro_usd":17408,"settled":0}
+✔ valid-then-inconsistent (5.458872ms)
+{"name":"incomplete-then-final-valid","micro_usd":25,"settled":1}
+✔ incomplete-then-final-valid (5.085894ms)
+{"name":"cached-input","micro_usd":25,"settled":1}
+✔ cached-input (5.071757ms)
+{"name":"top-cache-hit","micro_usd":25,"settled":1}
+✔ top-cache-hit (4.856634ms)
+{"name":"invalid-cache-overcount","micro_usd":17408,"settled":0}
+✔ invalid-cache-overcount (7.215701ms)
+{"name":"negative-cache","micro_usd":17408,"settled":0}
+✔ negative-cache (5.173768ms)
+{"name":"reasoning-in-completion","micro_usd":25,"settled":1}
+✔ reasoning-in-completion (4.291796ms)
+{"name":"invalid-first-choice-after-valid","micro_usd":17408,"settled":0}
+✔ invalid-first-choice-after-valid (3.841603ms)
+{"name":"observer-valid-then-empty-object","micro_usd":17408,"settled":0}
+✔ observer-valid-then-empty-object (3.781752ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 271.223882

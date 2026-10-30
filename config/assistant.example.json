@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "agentId": "assistant",
+  "revision": "td002-example-1",
+  "prompt": "Manage the owner's todos. Use only add_todo and list_todos.",
+  "store": "/home/owner/.local/state/personal-agent/agent.sqlite",
+  "ledger": "/home/owner/.local/state/personal-agent/spending.sqlite",
+  "socket": "/home/owner/.local/state/personal-agent/runner.sock",
+  "port": 43120,
+  "authFile": "/home/owner/.config/personal-agent/http-token",
+  "owner": "owner",
+  "tools": ["add_todo", "list_todos"],
+  "inference": {
+    "mode": "live",
+    "provider": "deepinfra",
+    "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
+    "credentialFile": null,
+    "inputUsdPerMillion": null,
+    "outputUsdPerMillion": null
+  },
+  "limits": {
+    "monthlyUsd": 10,
+    "warningUsd": 5,
+    "activeMs": 300000,
+    "modelCalls": 20,
+    "toolCalls": 50,
+    "queued": 20,
+    "inputTokens": 8192,
+    "outputTokens": 1024,
+    "connectMs": 30000,
+    "progressMs": 90000,
+    "bodyBytes": 16384,
+    "listPage": 20
+  }
+}

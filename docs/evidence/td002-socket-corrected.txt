@@ -1,0 +1,16 @@
+✔ real runner refuses duplicate identity, canonical path aliases, hard links, and shared sockets without harming owner (1416.093405ms)
+✔ unknown socket and ordinary/symlink paths are never unlinked during startup (682.120561ms)
+✔ failed startup releases all owned resources, allowing corrected configuration without a hung process (465.018957ms)
+✔ runner shutdown does not unlink a replacement socket path (234.365827ms)
+✔ socket cleanup retains a replacement inode and refuses a second claimant (19.527979ms)
+✔ distinct same-title receipts, CLI disconnect, queue admission/completion, denied routes and stored retrieval across real processes (1472.257254ms)
+✔ gateway forwards durable admission even when the submitting HTTP client disconnects (486.458259ms)
+✔ CLI crosses authenticated gateway and runner to Pi Durable add/list (2281.382026ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2898.388468

@@ -1,0 +1,60 @@
+✔ ledger retries the intent/reservation gap idempotently, preserves conflicts and monthly cap (18.432529ms)
+✔ actual live adapter orders durable intent/reservation/dispatch before loopback wire, then stores response and settles usage (95.319479ms)
+✔ actual live wire tool-call conversion executes add/list from a persisted assistant batch (30.330728ms)
+▶ unknown usage and failed dispatch retain conservative charges without hidden wire retries
+  ✔ missing-usage (8.966866ms)
+  ✔ http-error (9.673472ms)
+  ✔ truncated-stream (7.515932ms)
+  ✔ connect-timeout (38.122558ms)
+  ✔ progress-timeout (38.323225ms)
+  ✔ active-timeout (104.307996ms)
+✔ unknown usage and failed dispatch retain conservative charges without hidden wire retries (207.998192ms)
+▶ raw wire usage must be complete and consistent before normalized usage can settle
+  ✔ missing prompt (10.394096ms)
+  ✔ missing completion (7.682695ms)
+  ✔ missing total (6.521505ms)
+  ✔ inconsistent total (6.505525ms)
+  ✔ valid usage (5.92844ms)
+  ✔ explicit zero completion (5.838182ms)
+  ✔ explicit zero prompt (9.228638ms)
+  ✔ prompt_tokens=-1 (5.536926ms)
+  ✔ prompt_tokens=0.5 (5.666619ms)
+  ✔ prompt_tokens=9007199254740992 (5.56041ms)
+  ✔ prompt_tokens=5 (5.612939ms)
+  ✔ prompt_tokens=null (5.548849ms)
+  ✔ completion_tokens=-1 (5.33684ms)
+  ✔ completion_tokens=0.5 (5.386765ms)
+  ✔ completion_tokens=9007199254740992 (10.212004ms)
+  ✔ completion_tokens=5 (5.669675ms)
+  ✔ completion_tokens=null (5.77339ms)
+  ✔ total_tokens=-1 (5.510156ms)
+  ✔ total_tokens=0.5 (5.545001ms)
+  ✔ total_tokens=9007199254740992 (5.540223ms)
+  ✔ total_tokens=5 (4.987094ms)
+  ✔ total_tokens=null (5.10247ms)
+✔ raw wire usage must be complete and consistent before normalized usage can settle (141.159077ms)
+▶ missing credentials, pricing, funds, model/time/context limits fail before any wire call
+  ✔ credentials (6.435513ms)
+  ✔ missing-file (2.988611ms)
+  ✔ unsafe-file (2.814064ms)
+  ✔ prices (2.827799ms)
+  ✔ funds (3.256384ms)
+  ✔ model-limit (3.089481ms)
+  ✔ time (2.821387ms)
+  ✔ context (2.990776ms)
+✔ missing credentials, pricing, funds, model/time/context limits fail before any wire call (27.993861ms)
+▶ persisted application attempt states reuse reservations/responses but never resend uncertain dispatch
+  ✔ intent-gap (6.341626ms)
+  ✔ answered (3.299826ms)
+  ✔ dispatched (3.185561ms)
+✔ persisted application attempt states reuse reservations/responses but never resend uncertain dispatch (13.238486ms)
+✔ finite model-call allowance blocks the next generation in a real live-adapter tool loop (13.113572ms)
+✔ adapter refuses external test endpoints and unbound direct calls (0.756731ms)
+ℹ tests 48
+ℹ suites 0
+ℹ pass 48
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 776.092862

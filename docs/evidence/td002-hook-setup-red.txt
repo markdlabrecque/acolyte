@@ -1,0 +1,122 @@
+
+> personal-agent-td-002@0.0.0 test
+> node --test tests/*.test.ts
+
+▶ strict configuration rejects unknown keys, unsafe paths, unbounded limits and unavailable model selection without starting a run
+  ✔ malformed (2.345085ms)
+  ✔ unknown (5.379818ms)
+  ✔ tool (2.023501ms)
+  ✔ model (2.380051ms)
+  ✔ relative (1.802285ms)
+  ✔ infinite (1.317285ms)
+  ✔ zero (1.214682ms)
+  ✔ queue (1.265718ms)
+  ✔ price (1.419567ms)
+  ✔ fault-injection (1.366998ms)
+✔ strict configuration rejects unknown keys, unsafe paths, unbounded limits and unavailable model selection without starting a run (304.417505ms)
+✔ atomic queue capacity preserves duplicate receipt before fullness and drains requests admitted around idle completion (354.513029ms)
+✔ failed application storage rejects admission and lookup rather than returning acceptance or 404 (3.126394ms)
+✔ ledger retries the intent/reservation gap idempotently, preserves conflicts and monthly cap (27.779228ms)
+✔ actual live adapter orders durable intent/reservation/dispatch before loopback wire, then stores response and settles usage (117.592329ms)
+✔ actual live wire tool-call conversion executes add/list from a persisted assistant batch (49.799868ms)
+▶ unknown usage and failed dispatch retain conservative charges without hidden wire retries
+  ✔ missing-usage (9.145943ms)
+  ✔ http-error (15.611749ms)
+  ✔ truncated-stream (12.22164ms)
+  ✔ connect-timeout (41.871684ms)
+  ✔ progress-timeout (47.773371ms)
+  ✔ active-timeout (109.143005ms)
+✔ unknown usage and failed dispatch retain conservative charges without hidden wire retries (237.033552ms)
+▶ missing credentials, pricing, funds, model/time/context limits fail before any wire call
+  ✔ credentials (12.29579ms)
+  ✔ missing-file (6.160243ms)
+  ✔ unsafe-file (4.58283ms)
+  ✔ prices (4.291422ms)
+  ✔ funds (5.084712ms)
+  ✔ model-limit (4.259131ms)
+  ✔ time (3.36942ms)
+  ✔ context (5.74911ms)
+✔ missing credentials, pricing, funds, model/time/context limits fail before any wire call (47.187741ms)
+▶ persisted application attempt states reuse reservations/responses but never resend uncertain dispatch
+  ✔ intent-gap (13.221389ms)
+  ✖ answered (18.414845ms)
+  ✖ dispatched (11.628056ms)
+✖ persisted application attempt states reuse reservations/responses but never resend uncertain dispatch (44.256635ms)
+✔ finite model-call allowance blocks the next generation in a real live-adapter tool loop (15.429457ms)
+✔ adapter refuses external test endpoints and unbound direct calls (1.940425ms)
+✔ real runner refuses duplicate identity, canonical path aliases, hard links, and shared sockets without harming owner (1535.543443ms)
+✔ unknown socket and ordinary/symlink paths are never unlinked during startup (835.688463ms)
+✔ failed startup releases all owned resources, allowing corrected configuration without a hung process (1066.675823ms)
+✔ runner shutdown does not unlink a replacement socket path (304.943851ms)
+✔ socket cleanup retains a replacement inode and refuses a second claimant (26.662761ms)
+✔ public application document commit survives SQLite reopen in FULL mode (23.37309ms)
+✔ public safe replay retains the tool decision and atomic application result (83.833156ms)
+✔ distinct same-title receipts, CLI disconnect, queue admission/completion, denied routes and stored retrieval across real processes (1488.704376ms)
+✔ gateway forwards durable admission even when the submitting HTTP client disconnects (641.793777ms)
+✔ CLI crosses authenticated gateway and runner to Pi Durable add/list (2594.350414ms)
+✔ tool batch records distinct action identities, identical titles, and bounded list cursor pages (70.446998ms)
+✔ finite tool limit stops a returned batch after the allowed effect (13.571366ms)
+▶ denied/unregistered tools, invalid arguments, accepted/current permissions and finite limits create no unauthorized effect
+  ✔ shell (12.534709ms)
+  ✔ empty-title (11.411309ms)
+  ✔ extra-argument (7.43076ms)
+  ✔ negative-cursor (12.901117ms)
+  ✔ large-cursor (9.995528ms)
+  ✔ accepted-denial (5.691302ms)
+  ✔ current-denial (9.017441ms)
+  ✔ tool-limit (14.791318ms)
+  ✔ expired (9.862839ms)
+  ✔ current-time (12.7165ms)
+✔ denied/unregistered tools, invalid arguments, accepted/current permissions and finite limits create no unauthorized effect (108.710633ms)
+ℹ tests 61
+ℹ suites 0
+ℹ pass 58
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3877.678418
+
+✖ failing tests:
+
+test at tests/inference-acceptance.test.ts:224:81
+✖ answered (18.414845ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  1 !== 0
+
+      at TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:247:14)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:224:73)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/inference-acceptance.test.ts:224:81
+✖ dispatched (11.628056ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + 'done'
+  - 'unanswered'
+
+      at TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:246:14)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async TestContext.<anonymous> (file:///home/mark/Projects/pi-durable-agents-td-002/tests/inference-acceptance.test.ts:224:73)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'done',
+    expected: 'unanswered',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

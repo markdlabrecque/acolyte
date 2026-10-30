@@ -1,0 +1,13 @@
+
+> personal-agent-td-002@0.0.0 typecheck
+> tsc --noEmit
+
+tests/pi-replay-contract.test.ts(24,74): error TS2559: Type '"batch-call-1"' has no properties in common with type '{ id?: string | undefined; }'.
+tests/pi-replay-contract.test.ts(37,22): error TS18047: 'task.input' is possibly 'null'.
+tests/pi-replay-contract.test.ts(37,33): error TS2339: Property 'kind' does not exist on type 'string | number | boolean | JsonValue[] | { [key: string]: JsonValue; }'.
+  Property 'kind' does not exist on type 'string'.
+tests/pi-replay-contract.test.ts(39,54): error TS18047: 'task.input' is possibly 'null'.
+tests/pi-replay-contract.test.ts(39,65): error TS2339: Property 'assistant' does not exist on type 'string | number | boolean | JsonValue[] | { [key: string]: JsonValue; }'.
+  Property 'assistant' does not exist on type 'string'.
+tests/pi-replay-contract.test.ts(40,53): error TS2339: Property 'type' does not exist on type 'string | TextContent | ImageContent | ToolCall | ThinkingContent'.
+  Property 'type' does not exist on type 'string'.

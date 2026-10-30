@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Durable todo plan</title>
+<link rel="stylesheet" href="/home/mark/.pi/agent/skills/html-plan/runtime/htmlplan.css">
+<script src="/home/mark/.pi/agent/skills/html-plan/runtime/htmlplan.js" defer></script>
+<body>
+<header>
+  <h1>Crash-safe todos in Pi Durable</h1>
+  <doc-changes new="21"></doc-changes>
+  <details class="thread"><summary>Why · 2 requests</summary>
+    <doc-quote via="prompt" from="the owner">How would I call the gateway through a terminal? A CLI or an MCP or… ?</doc-quote>
+    <doc-quote via="prompt" from="the owner">Ok let’s plan this out. I don’t have a remote for this project yet so let’s just use a local file-based ticket tracker system for now.</doc-quote>
+  </details>
+</header>
+<main>
+<doc-plan>
+
+<doc-claim id="terminal">
+  <p>The owner can add and list todos from a terminal.</p>
+  <doc-mock frame="terminal" title="Proposed CLI" w="470" caption="These commands do not exist yet."><template>$ personal-agent submit --agent assistant \
+  --conversation demo --request-id demo-001 \
+  'Add "Book a dentist appointment" to my todos.'
+<span class="g">Accepted: demo-001</span>
+
+$ personal-agent result --agent assistant demo-001
+<span class="g">Added: Book a dentist appointment</span>
+
+$ personal-agent submit --agent assistant \
+  --conversation demo --request-id demo-002 \
+  'List my todos.'</template></doc-mock>
+  <doc-ask id="todo-tools">
+    <p>Which todo tools belong in this slice?</p>
+    <label><input type="radio" name="todo-tools" value="add-list" checked> Add and list only <small>Completion stays in later work.</small></label>
+    <label><input type="radio" name="todo-tools" value="complete"> Add, list, and complete <small>Add completion history and more crash tests.</small></label>
+  </doc-ask>
+  <doc-note tone="ok">The owner confirmed add and list only. Completion remains later work.</doc-note>
+  <doc-claim>
+    <p>One request crosses the real gateway, runtime, provider, and store.</p>
+    <doc-calls title="Proposed request path" caption="Paths name proposed files, not current Pi exports.">
+<script type="text/plain">
++ **submit**(request)                    @ src/cli.ts:1
++   POST /v1/agents/:id/requests         @ src/gateway.ts:1
++     **admit**(owner, request)          @ src/runner.ts:1
++       **AgentModule.submit**(input)   @ src/runtime/pi-durable.ts:1
++         commit receipt and inbox     @ src/host/store.ts:1
++       **generate**(context)           @ src/inference/deepinfra.ts:1
++         reserve before dispatch      @ src/inference/budget.ts:1
++       **addTodo**(action)             @ src/tools/todos.ts:1
++       persist final response          @ src/runtime/pi-durable.ts:1
+</script>
+    </doc-calls>
+    <doc-claim at="src/runtime/pi-durable.ts:1">
+      <p><b>src/runtime/pi-durable.ts:1</b> · AgentModule</p>
+      <doc-code title="AgentModule · interface sketch" lang="ts">
+<script type="text/plain">
+interface AgentModule {
+  submit(input: AuthenticatedInput): Promise<Receipt>;
+  status(requestId: string): Promise<RequestStatus>;
+  result(requestId: string): Promise<StoredOutcome>;
+  resume(): Promise<void>;
+  close(): Promise<void>;
+}
+// Application interface, not a claimed Pi export.
+// Pi keeps execution checkpoints and transcripts.
+// The runner owns the canonical store.
+// The gateway does not create another inbox database.
+</script>
+      </doc-code>
+    </doc-claim>
+  </doc-claim>
+  <doc-claim>
+    <p>The first ticket tests Pi before it adds replacement machinery.</p>
+    <doc-code title="TD-002 dependency gate · sketch" lang="text">
+<script type="text/plain">
+Candidate: @earendil-works/pi-durable 1.4.0
+Status: researched, not runtime-accepted
+
+Test the actual pinned artifact:
+  durable submission and payload conflict guard
+  stable stored tool-call identity
+  supported application document transactions
+  SQLite FULL mode on each writer
+  pre-dispatch inference and permission checks
+
+Unsupported contract: stop for an owner decision.
+Keep the adapter tests and first working path.
+</script>
+    </doc-code>
+    <doc-note tone="warn">The existing research does not prove runtime recovery. No dependency is installed for this plan.</doc-note>
+  </doc-claim>
+</doc-claim>
+
+<doc-claim id="recovery">
+  <p>A receipt still identifies the request after a crash.</p>
+  <doc-mock frame="terminal" title="Proposed isolated crash demo" w="470"><template>Request: demo-001
+Action: action-001
+Todo and action result: committed
+Runtime tool result: not yet committed
+
+<span class="y">The test controller kills the runner.</span>
+The new runner opens the same store.
+
+$ personal-agent result --agent assistant demo-001
+<span class="g">Added: Book a dentist appointment</span>
+
+Independent effect count: <b>1 todo</b>
+Repeated inference: recorded and budgeted</template></doc-mock>
+  <doc-claim>
+    <p>A local transaction saves the todo and its action result.</p>
+    <doc-machine name="action" caption="Restart reuses the saved action result.">
+<script type="text/plain">
+machine action initial intended
+state intended # The runtime stores the tool decision.
+state applied # The store contains the todo and result.
+state recorded final # Pi stores the tool result.
+
+| intended | applied | recorded |
+
+intended -commit-> applied : local commit
+applied -checkpoint-> recorded : saved result
+</script>
+      <div data-state="intended"><doc-mock frame="terminal" title="Action status" w="400"><template>Request: running
+Action: intended
+Todo count: 0</template></doc-mock></div>
+      <div data-state="applied"><doc-mock frame="terminal" title="Action status" w="400"><template>Request: running
+Action result: saved
+Todo count: 1</template></doc-mock></div>
+      <div data-state="recorded"><doc-mock frame="terminal" title="Action status" w="400"><template>Request: preparing final response
+Tool result: stored by Pi
+Todo count: 1</template></doc-mock></div>
+    </doc-machine>
+    <doc-claim at="src/tools/todos.ts:1">
+      <p><b>src/tools/todos.ts:1</b> · addTodo</p>
+      <doc-code title="Atomic action · sketch" lang="ts">
+<script type="text/plain">
+return appTransaction(tx => {
+  const saved = tx.action(actionId);
+  if (saved) {
+    assertSameToolVersionAndArguments(saved, action);
+    return saved.result;
+  }
+  const todo = tx.insertTodo({ id: todoId, title });
+  tx.saveActionResult(actionId, argumentsDigest, todo);
+  return todo;
+});
+// Use a supported Pi application transaction.
+// Never write Pi internal tables directly.
+</script>
+      </doc-code>
+    </doc-claim>
+  </doc-claim>
+  <doc-claim>
+    <p>Repeated input returns the same receipt or a clear conflict.</p>
+    <doc-code title="Receipt behavior · proposed output" lang="text">
+<script type="text/plain">
+Same source + request ID + agent + content:
+  200, original receipt, no new logical run
+Same key + changed conversation or content:
+  409, no mutation
+New request + available capacity:
+  202, only after durable commit
+Runner or store unavailable:
+  503, no false acceptance
+Transport timeout after a possible commit:
+  acceptance unconfirmed; retry the same request ID
+</script>
+    </doc-code>
+  </doc-claim>
+  <doc-claim>
+    <p>A stored final response needs no more model calls.</p>
+    <doc-calls title="Proposed result retrieval" caption="The CLI reads the stored outcome through HTTP.">
+<script type="text/plain">
++ **result**(requestId)                       @ src/cli.ts:1
++   GET /v1/agents/:id/requests/:id/result    @ src/gateway.ts:1
++     **AgentModule.result**(requestId)      @ src/runtime/pi-durable.ts:1
++       read stored terminal outcome         @ src/host/store.ts:1
+</script>
+    </doc-calls>
+  </doc-claim>
+</doc-claim>
+
+<doc-claim id="limits">
+  <p>Every model call uses the remaining authorized budget.</p>
+  <doc-code title="Existing PRD defaults" lang="json">
+<script type="text/plain">
+{
+  "monthlyUsd": 10,
+  "warningUsd": 5,
+  "activeWorkSeconds": 300,
+  "modelCalls": 20,
+  "toolCalls": 50,
+  "activeRequests": 1,
+  "queuedRequests": 20,
+  "temporaryRetryDelaysSeconds": [5, 20],
+  "connectionTimeoutSeconds": 30,
+  "progressTimeoutSeconds": 90
+}
+</script>
+  </doc-code>
+  <doc-claim>
+    <p>The ledger reserves funds before each provider attempt.</p>
+    <doc-calls title="Proposed inference path" caption="The two stores do not share a transaction.">
+<script type="text/plain">
++ **generate**(context)                         @ src/inference/deepinfra.ts:1
++   persist call intent and attempt ID         @ src/runtime/pi-durable.ts:1
++   **reserve**(attemptId, maximumCost)         @ src/inference/budget.ts:1
++   commit dispatch state                       @ src/runtime/pi-durable.ts:1
++   call selected provider                      @ src/inference/deepinfra.ts:1
++   store response and usage                    @ src/runtime/pi-durable.ts:1
++   settle known usage or retain uncertainty    @ src/inference/budget.ts:1
+</script>
+    </doc-calls>
+    <doc-note tone="warn">A crash can cause another model charge. Unknown prices or insufficient funds block dispatch.</doc-note>
+  </doc-claim>
+  <doc-claim>
+    <p>The owner can change validated settings without code edits.</p>
+    <doc-code title="config/assistant.example.json · partial sketch" lang="json">
+<script type="text/plain">
+{
+  "schemaVersion": 1,
+  "agentId": "assistant",
+  "provider": "deepinfra",
+  "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
+  "credentialRef": "deepinfra",
+  "tools": ["add_todo", "list_todos"],
+  "limits": {
+    "modelCalls": 20,
+    "toolCalls": 50
+  }
+}
+</script>
+    </doc-code>
+    <doc-ask id="config-format">
+      <p>Which format does the first configuration file use?</p>
+      <label><input type="radio" name="config-format" value="json" checked> JSON <small>Use the built-in parser and explicit schema validation.</small></label>
+      <label><input type="radio" name="config-format" value="yaml"> YAML <small>Add a pinned parser and YAML error tests.</small></label>
+    </doc-ask>
+    <doc-note tone="ok">The owner confirmed JSON for this slice. YAML remains the final-product preference. YAML support, tests, and linting remain later work.</doc-note>
+  </doc-claim>
+  <doc-claim>
+    <p>Restart does not restore spent funds or revoked permissions.</p>
+    <doc-code title="TD-004 test cases · sketch" lang="text">
+<script type="text/plain">
+One active request + 20 queued: next request rejected
+Accepted duplicate at full capacity: original receipt
+Restart during backoff: original retry count and deadline
+Unknown charge: reservation retained
+Tool permission revoked: next invocation denied
+Owner wait: slot released, counters kept
+Limit reached: partial outcome saved, no new dispatch
+Month change: no automatic replay of paused work
+</script>
+    </doc-code>
+  </doc-claim>
+</doc-claim>
+
+<doc-claim id="services">
+  <p>The owner can run the slice as separate Linux services.</p>
+  <doc-flow caption="Only the runner opens the agent store.">
+<script type="text/plain">
+cli = CLI / HTTP
++ gateway = Gateway / loopback
++ runner = Agent runner / Pi Durable
+store = Agent store / SQLite [db]
+ledger = Budget ledger / SQLite [db]
+| cli | gateway |
+| . | runner |
+| ledger | store |
+cli -> gateway : request
+gateway -> runner : Unix socket
+runner -> store : one owner
+runner -> ledger : reservation
+</script>
+  </doc-flow>
+  <doc-claim>
+    <p>Readiness requires valid configuration, storage ownership, and safe recovery.</p>
+    <doc-code title="Startup and failure rules · sketch" lang="text">
+<script type="text/plain">
+Before writable open: acquire canonical OS ownership lock
+Before readiness: validate config and storage versions
+Before admission: confirm synchronous=FULL on each writer
+After open: resume eligible persisted work
+
+Second writer: refuse before processing
+Corrupt store: preserve it and refuse readiness
+Runner down: HTTP 503, not a false receipt or 404
+Backups absent: status says not configured
+</script>
+    </doc-code>
+  </doc-claim>
+  <doc-claim>
+    <p>The demo separates process recovery from host durability.</p>
+    <doc-code title="Evidence limits · planned report" lang="text">
+<script type="text/plain">
+Deterministic subprocess tests:
+  exact commit barrier, SIGKILL, fresh process, effect count
+Authorized real-model smoke:
+  selected DeepInfra model, synthetic todo, bounded usage
+Authorized isolated service test:
+  gateway restart, runner restart, same store and receipt
+
+Normal host reboot: separate owner authorization
+Sudden power loss: not established by this slice
+No connector retests or production deployment
+</script>
+    </doc-code>
+  </doc-claim>
+</doc-claim>
+
+<doc-claim id="tickets">
+  <p>Local tickets record the work order and acceptance evidence.</p>
+  <doc-tree caption="All five tickets are drafts. No implementation starts yet.">
+<script type="text/plain">
+docs/tickets/
+  README.md                         # queue and status rules
+  001-crash-safe-todo-slice.md        # shared contracts and approval
+  002-first-todo-round-trip.md        # first retained vertical path
+  003-crash-safe-recovery.md          # commit barriers and fresh processes
+  004-persisted-limits.md             # queues, budgets, permissions
+  005-linux-service-demo.md          # service units and demo evidence
+</script>
+  </doc-tree>
+  <doc-note tone="info">Read the <a href="../../docs/tickets/README.md">local tracker</a> and <a href="../../docs/tickets/001-crash-safe-todo-slice.md">shared contracts</a>. These links need the repository files.</doc-note>
+  <doc-claim>
+    <p>Approval of the plan does not start implementation.</p>
+    <doc-code src="docs/tickets/001-crash-safe-todo-slice.md" lines="3-9" lang="text" title="Current ticket authority"></doc-code>
+    <doc-note tone="info">Record the chosen options before work. Start only when the owner also authorizes implementation.</doc-note>
+  </doc-claim>
+</doc-claim>
+
+<doc-claim aux="shared">
+  <p>Shared records keep request, action, and attempt identities distinct.</p>
+  <doc-schema id="identities" lang="ts" title="Persisted identities · partial sketch" caption="Pi keeps its own execution state; these records add application facts.">
+<script type="text/plain">
+type Receipt = {
+  requestId: string;
+  source: string;
+  agentId: string;
+  conversationId: string;
+  payloadDigest: string;
+  submissionId: string;
+  configurationDigest: string;
+};
+type LocalAction = {
+  actionId: string;
+  runtimeToolCallId: string;
+  toolVersion: string;
+  argumentsDigest: string;
+  savedResult?: { todoId: string; title: string };
+};
+type ModelAttempt = {
+  attemptId: string;
+  requestId: string;
+  reservationId: string;
+  outcome: "reserved" | "dispatching" | "known" | "uncertain";
+};
+</script>
+  </doc-schema>
+</doc-claim>
+
+<doc-claim aux="scope">
+  <p>Not changing: Slack selection, completed spikes, or the full PRD.</p>
+  <ul>
+    <li>The terminal is an internal client. Slack remains the owner interface.</li>
+    <li>Mail, Calendar, reminders, MCP, and multiple agents stay outside this slice.</li>
+    <li>Full cancellation, approvals, backups, restore, and upgrades remain later work.</li>
+    <li>Specification task 19 stays open. This plan does not complete M0–M4.</li>
+    <li>No live account access, host changes, commits, or publication occur for this plan.</li>
+  </ul>
+</doc-claim>
+
+</doc-plan>
+</main>
+</body>
+</html>

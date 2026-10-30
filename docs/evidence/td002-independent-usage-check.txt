@@ -1,0 +1,4 @@
+FAIL promptOnly: uncertain raw usage must retain reservation; actual={"micro_usd":20,"reserved_micro_usd":17408,"settled":1}
+FAIL outputOnly: uncertain raw usage must retain reservation; actual={"micro_usd":5,"reserved_micro_usd":17408,"settled":1}
+FAIL inconsistent: uncertain raw usage must retain reservation; actual={"micro_usd":25,"reserved_micro_usd":17408,"settled":1}
+3 checks, 3 failed

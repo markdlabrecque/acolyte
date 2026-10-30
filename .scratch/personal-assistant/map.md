@@ -57,6 +57,10 @@ All integration spikes are complete and closed. The owner reports finding the re
 
 The 68 offline Google/Proton tests passed on 27 October. Raw records remain unchanged; additional owner-confirmed passes do not invent artifact paths or exact measurements. Production runtime/security acceptance remains implementation work. Product policies not selected by experiments remain specification decisions.
 
+## First implementation slice
+
+The owner requested a plan for a terminal-first durable todo slice and local file-based tickets. The separate [implementation tracker](../../docs/tickets/README.md) contains its draft scope, ordered tickets, acceptance checks, and review plan. This is planning only. It does not close specification task 19, amend the PRD, reopen integration spikes, or authorize implementation.
+
 ## Next frontier
 
 PRD-only reconciliation is complete in version 0.5: recorded workflow, scheduling, inference/budget, storage, backup/restore, upgrade, and integration decisions are incorporated without reopening settled choices. This does not complete specification synthesis or owner sign-off.

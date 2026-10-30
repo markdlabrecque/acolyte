@@ -1,0 +1,27 @@
+✔ ledger retries the intent/reservation gap idempotently, preserves conflicts and monthly cap (10.383043ms)
+✔ actual live adapter orders durable intent/reservation/dispatch before loopback wire, then stores response and settles usage (68.568793ms)
+▶ unknown usage and failed dispatch retain conservative charges without hidden wire retries
+  ✔ missing-usage (7.63285ms)
+  ✔ http-error (7.214565ms)
+  ✔ truncated-stream (6.259562ms)
+  ✔ progress-timeout (35.345899ms)
+  ✔ active-timeout (103.67447ms)
+✔ unknown usage and failed dispatch retain conservative charges without hidden wire retries (160.852498ms)
+▶ missing credentials, pricing, funds, model/time/context limits fail before any wire call
+  ✔ credentials (3.315544ms)
+  ✔ missing-file (2.763278ms)
+  ✔ prices (2.739223ms)
+  ✔ funds (3.311026ms)
+  ✔ model-limit (3.061518ms)
+  ✔ time (2.643944ms)
+  ✔ context (2.5567ms)
+✔ missing credentials, pricing, funds, model/time/context limits fail before any wire call (21.080647ms)
+✔ adapter refuses external test endpoints and unbound direct calls (0.738597ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 416.256277

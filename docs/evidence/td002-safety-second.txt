@@ -1,0 +1,27 @@
+✔ real runner refuses duplicate identity, canonical path aliases, hard links, and shared sockets without harming owner (840.766428ms)
+✔ unknown socket and ordinary/symlink paths are never unlinked during startup (454.118653ms)
+✔ failed startup releases all owned resources, allowing corrected configuration without a hung process (361.938777ms)
+✔ socket cleanup retains a replacement inode and refuses a second claimant (19.509707ms)
+✔ distinct same-title receipts, CLI disconnect, queue admission/completion, denied routes and stored retrieval across real processes (854.086154ms)
+✔ gateway forwards durable admission even when the submitting HTTP client disconnects (381.372491ms)
+✔ tool batch records distinct action identities, identical titles, and bounded list cursor pages (32.641009ms)
+▶ denied/unregistered tools, invalid arguments, accepted/current permissions and finite limits create no unauthorized effect
+  ✔ shell (4.176221ms)
+  ✔ empty-title (4.847601ms)
+  ✔ extra-argument (4.291106ms)
+  ✔ negative-cursor (4.780705ms)
+  ✔ large-cursor (7.123504ms)
+  ✔ accepted-denial (4.305834ms)
+  ✔ current-denial (4.641875ms)
+  ✔ tool-limit (5.248223ms)
+  ✔ expired (4.051947ms)
+  ✔ current-time (3.844297ms)
+✔ denied/unregistered tools, invalid arguments, accepted/current permissions and finite limits create no unauthorized effect (48.395567ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1727.728362

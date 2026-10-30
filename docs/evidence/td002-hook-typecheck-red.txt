@@ -1,0 +1,8 @@
+
+> personal-agent-td-002@0.0.0 typecheck
+> tsc --noEmit
+
+tests/inference-acceptance.test.ts(52,5): error TS2322: Type '(_request: { readonly messages: readonly Message[]; }, api: HookApi) => Promise<void>' is not assignable to type '(request: { readonly messages: readonly Message[]; }, api: HookApi, context: Context) => HookResult<{ readonly messages: readonly Message[]; }>'.
+  Type 'Promise<void>' is not assignable to type 'HookResult<{ readonly messages: readonly Message[]; }>'.
+    Type 'Promise<void>' is not assignable to type 'Promise<{ readonly messages: readonly Message[]; } | undefined>'.
+      Type 'void' is not assignable to type '{ readonly messages: readonly Message[]; } | undefined'.
