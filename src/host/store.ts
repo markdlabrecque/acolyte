@@ -105,6 +105,9 @@ export async function ownStore(config: Config) {
       await db.exec('PRAGMA synchronous = FULL');
       if ((await db.get<{ synchronous: number }>('PRAGMA synchronous'))?.synchronous !== 2) throw new Error('SQLite FULL required');
       const storage = await SqliteStorage.open(db);
+      // Pi storage owns this same connection. Check again after initialization,
+      // before handing it to the runtime or allowing the runner to become ready.
+      if ((await db.get<{ synchronous: number }>('PRAGMA synchronous'))?.synchronous !== 2) throw new Error('SQLite FULL required after storage initialization');
       return { storage, ledger, unlock: async () => { await unlockStore!(); await unlockAgent(); } };
     } catch (error) { await db.close(); throw error; }
   } catch (error) { await unlockStore?.(); await unlockAgent(); throw error; }

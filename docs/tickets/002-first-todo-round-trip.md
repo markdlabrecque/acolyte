@@ -46,7 +46,7 @@ These files exist in committed implementation `53f7860`. Keep the public module 
 
 ## Acceptance
 
-- [ ] Record exact artifacts, integrity/lockfile, runtime/storage versions, public exports used, and effective PRAGMAs. Artifact evidence is retained, but FULL-mode verification on the runtime's actual connection remains open in [#6](https://github.com/markdlabrecque/acolyte/issues/6).
+- [x] Record exact artifacts, integrity/lockfile, runtime/storage versions, public exports used, and effective PRAGMAs. [Issue #6 evidence](../evidence/issue-6-storage-durability.md) now verifies FULL inside actual runtime commit transactions and rejects initialization downgrades before readiness. This is not power-loss proof.
 - [x] A normal add/list pair crosses both real processes and Pi Durable, not a replacement loop or direct CLI database write. Deterministic fixture only; see retained test output.
 - [x] CLI disconnect does not cancel the admitted request. Its original receipt returns the stored answer.
 - [x] Reusing an identical request returns the original receipt. Changed content returns 409. Two distinct requests with the same todo title create two todos.
@@ -76,7 +76,7 @@ Independent review REJECTED checkpoint `824494f` on `feat/td-002-todo-round-trip
 
 The raw-usage correction, now included in `53f7860`, uses Pi's supported pre-normalization `onProviderStreamEvent` observer in the mandatory adapter. Live settlement requires complete nonnegative safe-integer raw prompt/completion/total counts, a consistent raw sum, and agreement with normalized usage. Otherwise the reservation stays conservative and unsettled. No dependency or private Pi tables changed. New loopback regressions retain all old assertions and cover missing fields, inconsistent totals, negative/fractional/unsafe/string/null counts, valid usage, and explicit zeros. The new regression ran red before the fix. The owner explicitly authorized these test additions and fixture/type corrections; no test was weakened, retired, or skipped.
 
-Latest reported integrated checks: the prior status snapshot records 94 tests passed with no failures/skips and a passing typecheck for pre-import candidate `7cc1b25`, including the dotenv changes. They were not rerun on `53f7860` for this documentation update, and no separate 94-test output is retained here. The retained pre-dotenv full suite passed 85 tests; its adapter suite passed 48 and focused safety command passed 84. Those historical schema, document, hash and diff checks are not verification of the current candidate.
+Current integrated checks on the issue #6 candidate: 98 tests passed, zero failed/skipped, and typecheck passed. [Retained evidence](../evidence/issue-6-storage-durability.md) includes red/green storage regressions, full-suite output and candidate hashes. The owner authorized this bounded FULL-mode verification and its local tests, not live inference or other implementation tickets. The older 94-test report and retained pre-dotenv 85-test suite remain historical evidence.
 
 The new deterministic loopback HTTP/SSE fixture runs the actual live DeepInfra adapter implementation and Pi's OpenAI-completions implementation, using synthetic authorization only. It proves local wire conversion and guards, not DeepInfra/model availability, current pricing, real usage, or answer quality. No external inference occurred.
 
@@ -89,7 +89,7 @@ Open acceptance and review gaps:
 - Live smoke remains pending, with no retained authorization or real-model pass. The exact selected model is unchanged. No credential file was inspected for this update.
 - [#9](https://github.com/markdlabrecque/acolyte/issues/9) requires independent review of the credential loader. [Review round 2](../evidence/td002-review-round-2.md) approved the pre-dotenv correction after 85 suite tests, typecheck and 13 additional loopback checks, not the later loader or ticket completion.
 - [#4](https://github.com/markdlabrecque/acolyte/issues/4) requires proof that the full tool-call batch is saved before execution, or an explicit decision accepting Pi's persisted task input. The existing replay contract does not close that issue.
-- [#6](https://github.com/markdlabrecque/acolyte/issues/6) requires FULL-mode readback on the connection the runtime actually uses. The retained probe alone is insufficient.
+- [#6](https://github.com/markdlabrecque/acolyte/issues/6) is implemented locally, with [post-initialization readback and actual runtime-transaction evidence](../evidence/issue-6-storage-durability.md). The issue remains open remotely. The old standalone probe is not the basis of this acceptance check.
 - `limits.warningUsd` is schema-validated but unused by the runtime. Its warning behavior belongs to [TD-004](004-persisted-limits.md), not a completed TD-002 feature.
 
 The remaining follow-ups are listed in [CURRENT.md](../../CURRENT.md). Formal ticket status stays `blocked`, with delivery described as implemented, live smoke pending. This documentation update closes no issue and grants no execution or merge authorization.

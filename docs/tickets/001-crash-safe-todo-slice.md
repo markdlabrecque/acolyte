@@ -152,8 +152,8 @@ The owner explicitly authorized implementation of TD-002 in `feat/td-002-todo-ro
 
 ## Acceptance record
 
-TD-002 is implemented, live smoke pending. Code is committed at `53f7860`; formal status stays `blocked` because acceptance is incomplete. The prior snapshot reported 94 passing tests and a passing typecheck for pre-import candidate `7cc1b25`, not rerun for this documentation update. [Runtime evidence](../runtime-contract.md) separates that report from the retained older 85-test outputs and historical manifests.
+TD-002 is implemented, live smoke pending. Code is committed at `53f7860`; formal status stays `blocked` because acceptance is incomplete. The issue #6 candidate passes 98 tests and typecheck. [Runtime evidence](../runtime-contract.md) separates current runtime-connection FULL verification from older test outputs and historical manifests.
 
-[Review round 2](../evidence/td002-review-round-2.md) approved the pre-dotenv usage-settlement correction after the first review rejected it. The later credential loader still needs independent review. The [TD-002 ticket](002-first-todo-round-trip.md#evidence) records the remaining live-smoke, tool-call-batch and runtime-connection FULL-mode gaps. No Pi dependency failure has been demonstrated.
+[Review round 2](../evidence/td002-review-round-2.md) approved the pre-dotenv usage-settlement correction after the first review rejected it. The later credential loader still needs independent review. The [TD-002 ticket](002-first-todo-round-trip.md#evidence) records the remaining live-smoke and tool-call-batch gaps, plus the locally implemented runtime-connection FULL-mode verification. No Pi dependency failure has been demonstrated.
 
 TD-003 through TD-005 remain drafts. No full crash/persisted-race/service/reboot or power-loss proof is claimed. See [CURRENT.md](../../CURRENT.md) for current checkout and GitHub pointers; historical publication authorization does not authorize further execution.

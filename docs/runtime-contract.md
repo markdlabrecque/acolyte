@@ -4,11 +4,13 @@
 
 TD-002 is implemented, live smoke pending. The current Acolyte implementation commit is `53f7860`; its `TD-002 complete.` title is not acceptance evidence. See [CURRENT.md](../CURRENT.md) and the [ticket's open gaps](tickets/002-first-todo-round-trip.md#evidence).
 
-The prior snapshot reported 94 passing tests, no failures/skips, and a passing typecheck for pre-import candidate `7cc1b25`. These checks were not rerun for this documentation update; no standalone 94-test output is retained here. The retained 85-test outputs and `td002-candidate-files.sha256` describe the older pre-dotenv candidate, not current source hashes or approval.
+The issue #6 candidate passes 98 tests with no failures/skips and typecheck passes. [Runtime-connection FULL evidence](evidence/issue-6-storage-durability.md) retains the new red/green regression, full-suite output and source hashes. The prior 94-test report, retained 85-test outputs and `td002-candidate-files.sha256` describe earlier candidates, not current source hashes or approval.
 
 Independent review rejected historical checkpoint `824494f` for unsafe usage settlement. Review round 2 approved the bounded correction, but the later credential loader still needs [independent review, #9](https://github.com/markdlabrecque/acolyte/issues/9). There is no retained live DeepInfra pass. Formal ticket status remains `blocked`.
 
-Current acceptance gaps include [full tool-call-batch persistence, #4](https://github.com/markdlabrecque/acolyte/issues/4) and [FULL-mode verification on the runtime's actual connection, #6](https://github.com/markdlabrecque/acolyte/issues/6). The probe and replay tests below do not close those issues. `limits.warningUsd` is validated but unused; warning implementation belongs to TD-004.
+[FULL-mode verification, #6](https://github.com/markdlabrecque/acolyte/issues/6), is implemented locally. `ownStore()` now checks the same database facade after Pi storage initialization. New tests read FULL inside actual runtime commit transactions and reject initialization downgrades before runner readiness. This supersedes the standalone probe's evidence limitation, not the power-loss limitation. The issue remains open remotely.
+
+[Full tool-call-batch persistence, #4](https://github.com/markdlabrecque/acolyte/issues/4), remains an acceptance gap; the historical replay test below does not close it. `limits.warningUsd` is validated but unused; warning implementation belongs to TD-004.
 
 ## Historical execution record
 

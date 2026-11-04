@@ -44,9 +44,9 @@ The owner confirmed both choices for TD-002:
 
 The [approval record](001-crash-safe-todo-slice.md#approval-record) preserves the response and clarification. TD-002 implementation and subsequent publication were authorized historically; the code is now committed at `53f7860`. This does not authorize live inference, credential access, further publication, or TD-003 through TD-005 implementation.
 
-TD-002 is implemented, live smoke pending. The prior snapshot reported 94 passing tests and a passing typecheck for pre-import candidate `7cc1b25`; these were not rerun for this documentation update. [Runtime evidence](../runtime-contract.md) retains earlier 85-test outputs, the rejected usage-settlement review and the correction. [Review round 2](../evidence/td002-review-round-2.md) approved only the pre-dotenv candidate, not the current source or ticket completion.
+TD-002 is implemented, live smoke pending. The issue #6 candidate passes 98 tests and typecheck, with [retained runtime-connection FULL evidence](../evidence/issue-6-storage-durability.md). [Runtime evidence](../runtime-contract.md) also retains the older test history, rejected usage-settlement review and correction. [Review round 2](../evidence/td002-review-round-2.md) approved only the pre-dotenv candidate, not the current source or ticket completion.
 
-The credential loader still needs independent review, and current issues question full tool-call-batch persistence and FULL-mode verification on the runtime connection. See the [TD-002 evidence and open gaps](002-first-todo-round-trip.md#evidence). The live gate remains unchecked, so formal status stays `blocked`. Full crash/race/service/reboot evidence remains later work. `limits.warningUsd` is validated but unused; implementing its warning behavior belongs to TD-004.
+The credential loader still needs independent review, and full tool-call-batch persistence remains unresolved. FULL-mode verification on the runtime connection is implemented and tested locally; issue #6 remains open remotely. See the [TD-002 evidence and open gaps](002-first-todo-round-trip.md#evidence). The live gate remains unchecked, so formal status stays `blocked`. Full crash/race/service/reboot evidence remains later work. `limits.warningUsd` is validated but unused; implementing its warning behavior belongs to TD-004.
 
 ## Export the plan
 

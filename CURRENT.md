@@ -7,7 +7,7 @@ The public repository is [markdlabrecque/acolyte](https://github.com/markdlabrec
 ## Checkout and GitHub
 
 - Implementation is committed at `53f7860`, titled `TD-002 complete.`, following baseline `62d8b2e`.
-- The checkout was clean on `feat/td-002-todo-round-trip` before this documentation update. The update uses `docs/refresh-project-status`, based on the same implementation commit. There is one local worktree, not a separate TD-002 worktree.
+- Status refresh `343bdf5` was committed and pushed on `docs/refresh-project-status`. The checkout was clean before starting the separately authorized issue #6 implementation on `fix/6-runtime-sqlite-full`, based on that commit. There is one local worktree, not a separate TD-002 worktree.
 - Local `origin/main` points to `53f7860`; local `main` remains at `62d8b2e`. A fresh remote-head check failed because the SSH alias `github-mark` did not resolve, so the cached remote-tracking ref is not fresh remote verification.
 - GitHub CLI queries against the explicit repository returned default branch `main`, public visibility, **10 open issues and no open PRs**. The old Cairn draft-PR and child-issue pointers are not this repository's queue.
 
@@ -15,17 +15,17 @@ The public repository is [markdlabrecque/acolyte](https://github.com/markdlabrec
 
 The CLI, authenticated gateway, separate runner, Pi Durable and SQLite add/list path is committed. It uses schema-validated JSON and exposes `add_todo` and `list_todos`. The selected model remains DeepInfra `deepseek-ai/DeepSeek-V4-Flash-0731`.
 
-The prior status snapshot reported 94 passing tests, no failures/skips, and a passing typecheck for pre-import candidate `7cc1b25`. These checks were not rerun for this documentation update. The retained 85-test outputs and review round 2 are older pre-dotenv evidence, not current-candidate approval. The protected credential loader still needs independent review.
+The issue #6 candidate passes 98 tests with no failures/skips and a passing typecheck; [retained evidence](docs/evidence/issue-6-storage-durability.md) includes the failing regression before the fix. The prior 94-test report and retained 85-test outputs describe earlier candidates. Review round 2 is older pre-dotenv evidence, not current-candidate approval. The protected credential loader still needs independent review.
 
 No retained evidence establishes a real DeepInfra add/list pass. The commit title does not close that acceptance gate. The [TD-002 ticket](docs/tickets/002-first-todo-round-trip.md) therefore keeps formal status `blocked`: implemented, live smoke pending. No live inference or credential access is authorized by this update.
 
-Current issues also identify gaps beyond the live smoke: full tool-call-batch persistence and proof of FULL synchronous mode on the runtime's actual SQLite connection remain unresolved. `limits.warningUsd` is validated but unused; warning behavior belongs to TD-004. Local fixture passes do not settle these claims.
+Issue #6 is implemented locally: the store checks FULL again after Pi storage initialization, and tests read `synchronous=2` inside actual runtime commit transactions on fresh and reopened stores. OFF/NORMAL initialization fault tests reject runner startup before readiness and verify resource release. The GitHub issue remains open; this is not a power-loss proof. Full tool-call-batch persistence remains unresolved. `limits.warningUsd` is validated but unused; warning behavior belongs to TD-004.
 
 Use the [local implementation tracker](docs/tickets/README.md), [TD-002 ticket](docs/tickets/002-first-todo-round-trip.md), [runtime evidence](docs/runtime-contract.md), and [portable credential-file instructions](docs/credentials.md).
 
 ## Current GitHub follow-ups
 
-All ten issues were open when checked. These numbers belong to Acolyte, not the old Cairn planning hierarchy.
+All ten issues were open at the status check. Issue #6 now has a local implementation and retained evidence, but this work does not close it remotely. These numbers belong to Acolyte, not the old Cairn planning hierarchy.
 
 - [#1: Long todo lists can make the assistant fail](https://github.com/markdlabrecque/acolyte/issues/1)
 - [#2: Status errors say "rejected" when the service is down](https://github.com/markdlabrecque/acolyte/issues/2)
@@ -38,7 +38,7 @@ All ten issues were open when checked. These numbers belong to Acolyte, not the 
 - [#9: Get an independent review of the credential file loader](https://github.com/markdlabrecque/acolyte/issues/9)
 - [#10: Trim overlapping tests and decide on the Pi library tests](https://github.com/markdlabrecque/acolyte/issues/10)
 
-This documentation update addresses stale records but does not close or modify GitHub issues.
+The status refresh addresses stale records; the issue #6 branch adds runtime-connection verification. Neither update closes or modifies GitHub issues.
 
 ## Later implementation
 

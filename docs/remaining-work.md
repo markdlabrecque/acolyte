@@ -6,7 +6,7 @@ There are **no remaining spike tests, browser observations, reboot windows, moni
 
 ## Implementation status, 2026-11-03
 
-TD-002 is implemented, live smoke pending, at commit `53f7860`. Its formal acceptance remains blocked by the live gate and documented review/evidence gaps. The prior snapshot reported 94 passing tests and a passing typecheck; this documentation update did not rerun them. See [CURRENT.md](../CURRENT.md), the [local implementation tracker](tickets/README.md), and [Acolyte's open issues](https://github.com/markdlabrecque/acolyte/issues).
+TD-002 is implemented, live smoke pending, at commit `53f7860`. Its formal acceptance remains blocked by the live gate and documented review/evidence gaps. The issue #6 candidate now passes 98 tests and typecheck, including [runtime-connection FULL verification](evidence/issue-6-storage-durability.md). The issue remains open remotely. See [CURRENT.md](../CURRENT.md), the [local implementation tracker](tickets/README.md), and [Acolyte's open issues](https://github.com/markdlabrecque/acolyte/issues).
 
 The next local tickets remain TD-003 crash-safe recovery, TD-004 persisted limits including the unused `warningUsd` setting, and TD-005 Linux services/demo. Their dependencies and authorization gates still apply. This retained todo implementation is progress toward M0/M1, not completion of either milestone or the full specification.
 
