@@ -1,0 +1,17 @@
+✔ runtime commits use the FULL connection supplied to Pi storage, including after reopen (117.018455ms)
+ℹ fresh runtime: PRAGMA synchronous=2 (FULL) inside 28 Pi storage transactions, including request commits
+ℹ reopened runtime: PRAGMA synchronous=2 (FULL) inside 32 Pi storage transactions, including request commits
+▶ runner fails before readiness if storage initialization downgrades FULL
+  ✔ OFF (380.59869ms)
+  ℹ OFF: startup exited 2 without readiness/socket; clean restart acquired the same store and agent locks
+  ✔ NORMAL (377.476921ms)
+  ℹ NORMAL: startup exited 2 without readiness/socket; clean restart acquired the same store and agent locks
+✔ runner fails before readiness if storage initialization downgrades FULL (758.530234ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1011.328453

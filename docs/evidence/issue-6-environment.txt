@@ -1,0 +1,18 @@
+2026-11-03
+fix/6-runtime-sqlite-full
+343bdf551511645143309c1006cbf5d22e7742bb
+v24.20.0
+11.19.0
+personal-agent-td-002@0.0.0 /home/mark/Projects/acolyte/code/main
+├── @earendil-works/chord@1.4.0
+├── @earendil-works/pi-ai@1.4.0
+├── @earendil-works/pi-durable@1.4.0
+├── @modelcontextprotocol/sdk@1.32.2
+├── @types/node@24.10.0
+├── typebox@1.3.27
+└── typescript@5.9.3
+
+[Object: null prototype] { version: '3.53.4' }
+0eab982631617a7721dd0022949cb10db3eb6c37165fb7e822e5b03c233d85db  src/host/store.ts
+8b0d1a923c74f78723ef27034061c3b8d349bf26c2a7e5859e50e9c01d9d6232  tests/storage-durability.test.ts
+5f2996f87dad39dd788dbc7c5dc8b8219b555149a59d6312494337ee06d24e65  package-lock.json

@@ -1,6 +1,20 @@
 # TD-002 runtime contract evidence
 
-Independent review rejected checkpoint `824494f` for unsafe usage settlement. Review round 2 later approved the bounded pre-dotenv correction, as recorded below. The subsequent protected dotenv loader and synthetic tests are locally tested but not independently re-reviewed. The `*-current.txt` outputs and `td002-candidate-files.sha256` are retained historical pre-dotenv snapshot evidence, not a manifest or approval of the published source. The owner authorized public publication and a draft PR into `develop`, not merging, live inference, or service installation. Live acceptance remains pending and TD-002 remains BLOCKED. No pipeline-final approval or Pi dependency stop condition is claimed.
+## Current evidence status, 2026-11-03
+
+TD-002 is implemented, live smoke pending. The current Acolyte implementation commit is `53f7860`; its `TD-002 complete.` title is not acceptance evidence. See [CURRENT.md](../CURRENT.md) and the [ticket's open gaps](tickets/002-first-todo-round-trip.md#evidence).
+
+The issue #6 candidate passes 98 tests with no failures/skips and typecheck passes. [Runtime-connection FULL evidence](evidence/issue-6-storage-durability.md) retains the new red/green regression, full-suite output and source hashes. The prior 94-test report, retained 85-test outputs and `td002-candidate-files.sha256` describe earlier candidates, not current source hashes or approval.
+
+Independent review rejected historical checkpoint `824494f` for unsafe usage settlement. Review round 2 approved the bounded correction, but the later credential loader still needs [independent review, #9](https://github.com/markdlabrecque/acolyte/issues/9). There is no retained live DeepInfra pass. Formal ticket status remains `blocked`.
+
+[FULL-mode verification, #6](https://github.com/markdlabrecque/acolyte/issues/6), is implemented locally. `ownStore()` now checks the same database facade after Pi storage initialization. New tests read FULL inside actual runtime commit transactions and reject initialization downgrades before runner readiness. This supersedes the standalone probe's evidence limitation, not the power-loss limitation. The issue remains open remotely.
+
+[Full tool-call-batch persistence, #4](https://github.com/markdlabrecque/acolyte/issues/4), remains an acceptance gap; the historical replay test below does not close it. `limits.warningUsd` is validated but unused; warning implementation belongs to TD-004.
+
+## Historical execution record
+
+The sections below preserve earlier sessions, commands, failures and reviews. References to uncommitted work, the former worktree, `develop`, old checkpoint hashes, and "current" outputs describe those sessions, not today's checkout. The old Cairn draft PR is not a current Acolyte PR. Historical artifact hashes and absolute paths are intentionally unchanged; `td002-review2-adversarial.ts` also contains old worktree imports and is a retained review artifact, not a portable current test command.
 
 ## Authorization and worktree
 

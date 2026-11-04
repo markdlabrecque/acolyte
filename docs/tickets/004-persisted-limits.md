@@ -11,6 +11,10 @@ Depends on: TD-003
 
 Restart, repeated requests, concurrency, or provider failure cannot grant extra work, spend unreserved funds, or restore revoked tool permissions.
 
+## Existing TD-002 boundary
+
+`limits.warningUsd` already exists in the JSON schema and is checked against `monthlyUsd`, but the runtime does not use it to emit warnings. Implementing and testing the durable threshold warning belongs to this ticket. TD-002's finite fixture checks do not establish this ticket's persisted-limit or concurrency acceptance.
+
 ## Implementation
 
 1. Enforce one active request and 20 queued requests across all conversations of the agent. Atomically apply capacity and admission order. Look up an existing receipt before rejecting for queue capacity.

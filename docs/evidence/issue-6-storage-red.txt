@@ -1,0 +1,59 @@
+✔ runtime commits use the FULL connection supplied to Pi storage, including after reopen (101.356713ms)
+ℹ fresh runtime: PRAGMA synchronous=2 (FULL) inside 28 Pi commit transactions
+ℹ reopened runtime: PRAGMA synchronous=2 (FULL) inside 1 Pi commit transactions
+▶ runner fails before readiness if storage initialization downgrades FULL
+  ✖ OFF (196.420936ms)
+  ✖ NORMAL (195.508093ms)
+✖ runner fails before readiness if storage initialization downgrades FULL (392.515209ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 1
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 630.418283
+
+✖ failing tests:
+
+test at tests/storage-durability.test.ts:62:58
+✖ OFF (196.420936ms)
+  AssertionError [ERR_ASSERTION]: injected storage synchronous=0
+  runner ready
+
+
+  null !== 2
+
+      at TestContext.<anonymous> (file:///home/mark/Projects/acolyte/code/main/tests/storage-durability.test.ts:82:14)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async TestContext.<anonymous> (file:///home/mark/Projects/acolyte/code/main/tests/storage-durability.test.ts:62:50)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/storage-durability.test.ts:62:58
+✖ NORMAL (195.508093ms)
+  AssertionError [ERR_ASSERTION]: injected storage synchronous=1
+  runner ready
+
+
+  null !== 2
+
+      at TestContext.<anonymous> (file:///home/mark/Projects/acolyte/code/main/tests/storage-durability.test.ts:82:14)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async TestContext.<anonymous> (file:///home/mark/Projects/acolyte/code/main/tests/storage-durability.test.ts:62:50)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
