@@ -1,44 +1,59 @@
-# Cairn status
+# Acolyte repository status
 
-## Snapshot, 2026-10-29
+## Snapshot, 2026-11-03
 
-Cairn is a personal durable agent framework built on Pi Durable. The repository is public at [markdlabrecque/cairn](https://github.com/markdlabrecque/cairn). This is a checked snapshot, not an automatically maintained status feed.
+The public repository is [markdlabrecque/acolyte](https://github.com/markdlabrecque/acolyte). The PRD and glossary retain the owner-selected product name Cairn; this status update does not rename the product. This is a checked snapshot, not an automatically maintained feed.
 
-## Branches and publication
+## Checkout and GitHub
 
-- This document is on `docs/cairn-project-name`, at `2fa678f` before this addition. Its working tree was clean before creating this file.
-- Implementation is in the separate `../pi-durable-agents-td-002` worktree on `feat/td-002-todo-round-trip`, at `7cc1b25`. That worktree was also clean. The naming/docs branch is already integrated there.
-- [PR #1](https://github.com/markdlabrecque/cairn/pull/1) is open and draft into `develop`, with 8 commits ahead. GitHub branch heads match the local heads above. `develop` and `main` share baseline `176e67f`.
-- This status update does not switch branches, merge, commit, push, or change the PR.
+- Implementation is committed at `53f7860`, titled `TD-002 complete.`, following baseline `62d8b2e`.
+- The checkout was clean on `feat/td-002-todo-round-trip` before this documentation update. The update uses `docs/refresh-project-status`, based on the same implementation commit. There is one local worktree, not a separate TD-002 worktree.
+- Local `origin/main` points to `53f7860`; local `main` remains at `62d8b2e`. A fresh remote-head check failed because the SSH alias `github-mark` did not resolve, so the cached remote-tracking ref is not fresh remote verification.
+- GitHub CLI queries against the explicit repository returned default branch `main`, public visibility, **10 open issues and no open PRs**. The old Cairn draft-PR and child-issue pointers are not this repository's queue.
 
-## TD-002 is implemented locally but blocked
+## TD-002: implemented, live smoke pending
 
-The real CLI, authenticated gateway, separate runner, Pi Durable and SQLite add/list path is implemented. The slice uses schema-validated JSON only and exposes `add_todo` and `list_todos`. DeepInfra is selected with exact model `deepseek-ai/DeepSeek-V4-Flash-0731`.
+The CLI, authenticated gateway, separate runner, Pi Durable and SQLite add/list path is committed. It uses schema-validated JSON and exposes `add_todo` and `list_todos`. The selected model remains DeepInfra `deepseek-ai/DeepSeek-V4-Flash-0731`.
 
-The last executed integrated checks reported `npm test` with 94 passed and 0 failed/skipped, and `npm run typecheck` passed, for candidate `7cc1b25`. They were not rerun for this docs-only update. Independent review round 2 approved the corrected pre-dotenv code; the subsequent dotenv loader changes have not received independent re-review. Neither that historical approval nor local green checks establish approval of the current candidate or completion of TD-002.
+The prior status snapshot reported 94 passing tests, no failures/skips, and a passing typecheck for pre-import candidate `7cc1b25`. These checks were not rerun for this documentation update. The retained 85-test outputs and review round 2 are older pre-dotenv evidence, not current-candidate approval. The protected credential loader still needs independent review.
 
-The required bounded live add/list smoke is pending, unauthorized and unexecuted. No real inference or credential access occurred in this update. The implementation worktree has an ignored, owner-only `.env`, verified by metadata only, with mode `600`. Its contents were not read. Live configuration must point `credentialFile` at that protected `.env`, using `DEEPINFRA_API_KEY`; no secret belongs in tracked configuration or evidence.
+No retained evidence establishes a real DeepInfra add/list pass. The commit title does not close that acceptance gate. The [TD-002 ticket](docs/tickets/002-first-todo-round-trip.md) therefore keeps formal status `blocked`: implemented, live smoke pending. No live inference or credential access is authorized by this update.
 
-Canonical implementation records, **on the implementation branch**, are the [local tracker](https://github.com/markdlabrecque/cairn/blob/feat/td-002-todo-round-trip/docs/tickets/README.md), [TD-002 ticket](https://github.com/markdlabrecque/cairn/blob/feat/td-002-todo-round-trip/docs/tickets/002-first-todo-round-trip.md) and [runtime evidence](https://github.com/markdlabrecque/cairn/blob/feat/td-002-todo-round-trip/docs/runtime-contract.md). Older 85-test outputs and review manifests there are historical pre-dotenv evidence. The draft PR records the later 94-test publication checks.
+Current issues also identify gaps beyond the live smoke: full tool-call-batch persistence and proof of FULL synchronous mode on the runtime's actual SQLite connection remain unresolved. `limits.warningUsd` is validated but unused; warning behavior belongs to TD-004. Local fixture passes do not settle these claims.
 
-## Planned work, not execution authorization
+Use the [local implementation tracker](docs/tickets/README.md), [TD-002 ticket](docs/tickets/002-first-todo-round-trip.md), [runtime evidence](docs/runtime-contract.md), and [portable credential-file instructions](docs/credentials.md).
 
-All parents and children below are open, unstarted plans with defined deliverables and linked native GitHub subissues.
+## Current GitHub follow-ups
 
-- [TD-003, #2](https://github.com/markdlabrecque/cairn/issues/2): crash-safe recovery, children [#5](https://github.com/markdlabrecque/cairn/issues/5), [#6](https://github.com/markdlabrecque/cairn/issues/6), [#7](https://github.com/markdlabrecque/cairn/issues/7), [#8](https://github.com/markdlabrecque/cairn/issues/8). Recover admission/Pi identity, persisted todo batches, interrupted inference, and final outcomes/lost HTTP results.
-- [TD-004, #3](https://github.com/markdlabrecque/cairn/issues/3): persisted limits, children [#9](https://github.com/markdlabrecque/cairn/issues/9), [#10](https://github.com/markdlabrecque/cairn/issues/10), [#11](https://github.com/markdlabrecque/cairn/issues/11), [#12](https://github.com/markdlabrecque/cairn/issues/12), [#13](https://github.com/markdlabrecque/cairn/issues/13). Cover queues, request allowances, retries/timeouts, monthly spending/warning, and permissions/ingress.
-- [TD-005, #4](https://github.com/markdlabrecque/cairn/issues/4): Linux operation/demo, children [#14](https://github.com/markdlabrecque/cairn/issues/14), [#15](https://github.com/markdlabrecque/cairn/issues/15), [#16](https://github.com/markdlabrecque/cairn/issues/16), [#17](https://github.com/markdlabrecque/cairn/issues/17). Cover ownership/shutdown, truthful status, isolated services, and recorded demo/runbook.
+All ten issues were open when checked. These numbers belong to Acolyte, not the old Cairn planning hierarchy.
 
-The owner-confirmed [#7 recovery policy](https://github.com/markdlabrecque/cairn/issues/7) automatically creates a new inference attempt after uncertain dispatch only within the shared initial-attempt-plus-two-retries cap and remaining funds, time and model-call limits. Retain the prior possible charge conservatively; never resend its identity. A fresh attempt needs a new durable identity and reservation. Reuse stored completed responses. Exhausted limits produce a visible blocked/partial outcome. This does not permit tool or external-write replay, reset budgets on restart, or authorize implementation.
+- [#1: Long todo lists can make the assistant fail](https://github.com/markdlabrecque/acolyte/issues/1)
+- [#2: Status errors say "rejected" when the service is down](https://github.com/markdlabrecque/acolyte/issues/2)
+- [#3: Make command-line answers readable by default](https://github.com/markdlabrecque/acolyte/issues/3)
+- [#4: Save the full list of tool calls before running any](https://github.com/markdlabrecque/acolyte/issues/4)
+- [#5: Decide whether users see progress while the assistant works](https://github.com/markdlabrecque/acolyte/issues/5)
+- [#6: Prove the database safe-write setting on the connection in use](https://github.com/markdlabrecque/acolyte/issues/6)
+- [#7: Split the model-call code and remove copied code](https://github.com/markdlabrecque/acolyte/issues/7)
+- [#8: Bring TD-002 records in line with what was built](https://github.com/markdlabrecque/acolyte/issues/8)
+- [#9: Get an independent review of the credential file loader](https://github.com/markdlabrecque/acolyte/issues/9)
+- [#10: Trim overlapping tests and decide on the Pi library tests](https://github.com/markdlabrecque/acolyte/issues/10)
 
-## Broader scope and preserved boundaries
+This documentation update addresses stale records but does not close or modify GitHub issues.
 
-[Specification task 19](.scratch/personal-assistant/issues/19-finalize-implementation-specification.md) remains open. Full M0–M4 implementation, acceptance and owner sign-off are not complete. Slack remains the final user interface; CLI/HTTP are internal interfaces for this slice. See the [PRD](pi-durable-personal-agent-prd.md) and [remaining work](docs/remaining-work.md).
+## Later implementation
 
-Slack, Google and Proton spikes remain complete and closed. Preserve their [completion ledger](docs/evidence/integration-spike-ledger.md), retained evidence and exclusions, including lock/suspend exclusions and the deliberately uncertain Proton no-write action. Do not rerun them for this slice. No services were installed, host settings changed, or connectors run in this update. Planning and public issue publication do not authorize implementation, credential access, live inference, service work or deployment.
+The local dependency order remains:
 
-## Next actions
+1. [TD-003: crash-safe recovery](docs/tickets/003-crash-safe-recovery.md), after TD-002 acceptance.
+2. [TD-004: persisted limits](docs/tickets/004-persisted-limits.md), after TD-003.
+3. [TD-005: Linux services and recorded demo](docs/tickets/005-linux-service-demo.md), after TD-004.
 
-1. Obtain fresh independent review of the current TD-002 candidate, explicitly including dotenv changes.
-2. Obtain owner authorization for a bounded DeepInfra add/list live smoke, then execute and retain sanitized evidence within the approved limits. These outstanding checks are not merge authorization.
-3. Only after TD-002 gates and separate implementation authorization, follow TD-003 child planning/review order #5, #6, #7, #8, respecting each child's prerequisites. TD-004 follows TD-003; TD-005 follows TD-004. None is declared ready or done here.
+These remain draft plans, not implementation authorization. The former snapshot recorded an owner-confirmed recovery policy: uncertain inference may create a fresh attempt only within the shared initial-attempt-plus-two-retries cap and remaining funds, time and model-call limits. Preserve the prior possible charge; use a new durable identity and reservation; reuse completed responses. Exhausted limits produce a visible blocked/partial outcome. This historical decision does not authorize tool or external-write replay or reset budgets on restart, and is not Acolyte issue #7.
+
+## Broader scope and boundaries
+
+[Specification task 19](.scratch/personal-assistant/issues/19-finalize-implementation-specification.md) remains open. Full M0–M4 implementation, acceptance and owner sign-off are incomplete. Slack remains the final user interface; CLI/HTTP are internal interfaces for this slice. See the [PRD](pi-durable-personal-agent-prd.md) and [remaining work](docs/remaining-work.md).
+
+Slack, Google and Proton spikes remain complete and closed. Preserve their [completion ledger](docs/evidence/integration-spike-ledger.md), retained evidence and exclusions, including lock/suspend exclusions and the deliberately uncertain Proton no-write action. Do not rerun them for this slice. Historical artifact paths and review hashes are retained as provenance, not current runnable instructions.
+
+Before claiming TD-002 acceptance, resolve the documented acceptance gaps, obtain independent credential-loader review, and obtain separate owner authorization for a bounded live add/list smoke with sanitized evidence. This update installs no services, changes no host settings, reads no credentials, and authorizes no deployment.

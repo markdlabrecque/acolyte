@@ -1,6 +1,18 @@
 # TD-002 runtime contract evidence
 
-Independent review rejected checkpoint `824494f` for unsafe usage settlement. Review round 2 later approved the bounded pre-dotenv correction, as recorded below. The subsequent protected dotenv loader and synthetic tests are locally tested but not independently re-reviewed. The `*-current.txt` outputs and `td002-candidate-files.sha256` are retained historical pre-dotenv snapshot evidence, not a manifest or approval of the published source. The owner authorized public publication and a draft PR into `develop`, not merging, live inference, or service installation. Live acceptance remains pending and TD-002 remains BLOCKED. No pipeline-final approval or Pi dependency stop condition is claimed.
+## Current evidence status, 2026-11-03
+
+TD-002 is implemented, live smoke pending. The current Acolyte implementation commit is `53f7860`; its `TD-002 complete.` title is not acceptance evidence. See [CURRENT.md](../CURRENT.md) and the [ticket's open gaps](tickets/002-first-todo-round-trip.md#evidence).
+
+The prior snapshot reported 94 passing tests, no failures/skips, and a passing typecheck for pre-import candidate `7cc1b25`. These checks were not rerun for this documentation update; no standalone 94-test output is retained here. The retained 85-test outputs and `td002-candidate-files.sha256` describe the older pre-dotenv candidate, not current source hashes or approval.
+
+Independent review rejected historical checkpoint `824494f` for unsafe usage settlement. Review round 2 approved the bounded correction, but the later credential loader still needs [independent review, #9](https://github.com/markdlabrecque/acolyte/issues/9). There is no retained live DeepInfra pass. Formal ticket status remains `blocked`.
+
+Current acceptance gaps include [full tool-call-batch persistence, #4](https://github.com/markdlabrecque/acolyte/issues/4) and [FULL-mode verification on the runtime's actual connection, #6](https://github.com/markdlabrecque/acolyte/issues/6). The probe and replay tests below do not close those issues. `limits.warningUsd` is validated but unused; warning implementation belongs to TD-004.
+
+## Historical execution record
+
+The sections below preserve earlier sessions, commands, failures and reviews. References to uncommitted work, the former worktree, `develop`, old checkpoint hashes, and "current" outputs describe those sessions, not today's checkout. The old Cairn draft PR is not a current Acolyte PR. Historical artifact hashes and absolute paths are intentionally unchanged; `td002-review2-adversarial.ts` also contains old worktree imports and is a retained review artifact, not a portable current test command.
 
 ## Authorization and worktree
 

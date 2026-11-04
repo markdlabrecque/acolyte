@@ -4,6 +4,12 @@ Updated 27 October 2026. Slack, Google, and Proton spikes are **complete and clo
 
 There are **no remaining spike tests, browser observations, reboot windows, monitoring approvals, or evidence-recovery tasks for the owner**. Lock/suspend tests remain excluded. Do not restart the old checklist just because raw artifacts for owner-confirmed passes are not copied locally.
 
+## Implementation status, 2026-11-03
+
+TD-002 is implemented, live smoke pending, at commit `53f7860`. Its formal acceptance remains blocked by the live gate and documented review/evidence gaps. The prior snapshot reported 94 passing tests and a passing typecheck; this documentation update did not rerun them. See [CURRENT.md](../CURRENT.md), the [local implementation tracker](tickets/README.md), and [Acolyte's open issues](https://github.com/markdlabrecque/acolyte/issues).
+
+The next local tickets remain TD-003 crash-safe recovery, TD-004 persisted limits including the unused `warningUsd` setting, and TD-005 Linux services/demo. Their dependencies and authorization gates still apply. This retained todo implementation is progress toward M0/M1, not completion of either milestone or the full specification.
+
 ## Agent work
 
 - [ ] Complete [the M0–M4 implementation specification](../.scratch/personal-assistant/issues/19-finalize-implementation-specification.md), using the completed integration results and settled workflow, authorization, schedule, budget, and operational decisions.
@@ -21,7 +27,7 @@ There are **no remaining spike tests, browser observations, reboot windows, moni
 
 ## Framework implementation, after specification review
 
-These are future implementation tasks, not unfinished spike work.
+These are full-framework milestones, not unfinished spike work. TD-002 supplies part of the first path; unchecked milestones below describe the remaining acceptance, not an absence of code.
 
 - [ ] M0: pin Pi Durable/Pi AI/runtime/storage versions and verify the selected APIs. Stop for an owner dependency decision if recovery needs substantial additional machinery.
 - [ ] M1: build the retained end-to-end path through authenticated gateway, one configured agent, real inference, durable storage/reply, and Linux service. Verify restart/reboot on the implemented stack.

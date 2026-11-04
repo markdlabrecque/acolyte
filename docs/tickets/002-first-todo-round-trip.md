@@ -3,7 +3,8 @@
 ID: TD-002
 Type: implementation
 Status: blocked
-Assignee: implementation agent, TD-002 worktree
+Delivery: implemented, live smoke pending
+Assignee: unassigned for remaining acceptance and review
 Parent: [TD-001](001-crash-safe-todo-slice.md)
 Depends on: none
 Start gate: recorded slice approval and explicit implementation authorization
@@ -31,7 +32,7 @@ The existing research names Pi Durable and Pi AI 1.4.0 as candidates. Pin the ac
 
 Each step ends in runnable code or a focused passing test. Do not build unused multi-agent, connector, scheduler, plugin, or portability frameworks.
 
-## Proposed files
+## Implemented files
 
 - `package.json`, `package-lock.json`, `tsconfig.json`
 - `config/assistant.example.json`, using the confirmed JSON format
@@ -41,11 +42,11 @@ Each step ends in runnable code or a focused passing test. Do not build unused m
 - `src/inference/deepinfra.ts`, `src/inference/budget.ts`
 - `tests/slice.test.ts`, `docs/runtime-contract.md`
 
-These are proposed locations, not existing exports or files. Keep the public module interface small: submit, inspect status, retrieve result, resume, and close. The deterministic provider and DeepInfra adapter share the same inference checks.
+These files exist in committed implementation `53f7860`. Keep the public module interface small: submit, inspect status, retrieve result, resume, and close. The deterministic provider and DeepInfra adapter share the same inference checks.
 
 ## Acceptance
 
-- [x] Record exact artifacts, integrity/lockfile, runtime/storage versions, public exports used, and effective PRAGMAs.
+- [ ] Record exact artifacts, integrity/lockfile, runtime/storage versions, public exports used, and effective PRAGMAs. Artifact evidence is retained, but FULL-mode verification on the runtime's actual connection remains open in [#6](https://github.com/markdlabrecque/acolyte/issues/6).
 - [x] A normal add/list pair crosses both real processes and Pi Durable, not a replacement loop or direct CLI database write. Deterministic fixture only; see retained test output.
 - [x] CLI disconnect does not cancel the admitted request. Its original receipt returns the stored answer.
 - [x] Reusing an identical request returns the original receipt. Changed content returns 409. Two distinct requests with the same todo title create two todos.
@@ -63,32 +64,34 @@ If the public Pi interfaces cannot provide the required transaction, replay, or 
 
 The owner explicitly authorized TD-002 implementation in the clean worktree on `feat/td-002-todo-round-trip`, off develop with the planning commit cherry-picked. Test the actual dependency first and stop with a retained executable reproduction if its public contract fails. Deterministic local fixtures only. No live inference, credentials, connector tests, or host/service installation. The parent coordinates local commits and fresh review. The owner authorized a local merge only after completion and passing review. No push is authorized.
 
-## Publication update
+## Publication and current checkout
 
-The owner subsequently authorized committing all authored work, publishing to the public `markdlabrecque/cairn` repository, and opening a draft PR into `develop`. This supersedes the earlier no-push restriction, not the live-acceptance gate or merge restriction. TD-002 remains blocked pending a separately authorized live DeepInfra smoke. No live inference or service installation is part of publication.
+The authorization above describes the original implementation session. Later publication to Cairn and a draft PR into `develop` were authorized historically. The current repository is [markdlabrecque/acolyte](https://github.com/markdlabrecque/acolyte), with implementation committed at `53f7860`, titled `TD-002 complete.`. GitHub reported no open PRs on 2026-11-03. The old draft PR is not the current delivery pointer; see [CURRENT.md](../../CURRENT.md).
 
-The protected dotenv credential loader and its synthetic tests were added after independent review round 2. They are locally tested but have not been independently re-reviewed. The review record, `*-current.txt` outputs, and `td002-candidate-files.sha256` below are historical pre-dotenv snapshot evidence, not hashes or approval for the published source. Publication checks are reported on the draft PR.
+TD-002 is implemented, live smoke pending. The commit title does not establish acceptance. The protected dotenv loader and synthetic tests were added after independent review round 2 and still need independent review. The review record, `*-current.txt` outputs, and `td002-candidate-files.sha256` are historical pre-dotenv evidence, not hashes or approval for `53f7860`.
 
 ## Evidence
 
 Independent review REJECTED checkpoint `824494f` on `feat/td-002-todo-round-trip`. The reviewer showed that Pi AI normalizes missing raw counts to zero and recomputes the total, allowing incomplete or inconsistent usage to settle the 17,408-microdollar reservation at 20, 5, or 25. [Reviewer usage checks](../evidence/td002-independent-usage-check.txt) and [adversarial records](../evidence/td002-independent-adversarial.txt) retain the failure.
 
-The current uncommitted correction on `824494f` uses Pi's supported pre-normalization `onProviderStreamEvent` observer in the mandatory adapter. Live settlement requires complete nonnegative safe-integer raw prompt/completion/total counts, a consistent raw sum, and agreement with normalized usage. Otherwise the reservation stays conservative and unsettled. No dependency or private Pi tables changed. New loopback regressions retain all old assertions and cover missing fields, inconsistent totals, negative/fractional/unsafe/string/null counts, valid usage, and explicit zeros. The new regression ran red before the fix. The owner explicitly authorized these test additions and fixture/type corrections; no test was weakened, retired, or skipped.
+The raw-usage correction, now included in `53f7860`, uses Pi's supported pre-normalization `onProviderStreamEvent` observer in the mandatory adapter. Live settlement requires complete nonnegative safe-integer raw prompt/completion/total counts, a consistent raw sum, and agreement with normalized usage. Otherwise the reservation stays conservative and unsettled. No dependency or private Pi tables changed. New loopback regressions retain all old assertions and cover missing fields, inconsistent totals, negative/fractional/unsafe/string/null counts, valid usage, and explicit zeros. The new regression ran red before the fix. The owner explicitly authorized these test additions and fixture/type corrections; no test was weakened, retired, or skipped.
 
-Latest local checks: `npm test` exits 0 with 85 passed and 0 failed/skipped; `npm run typecheck` exits 0 with no diagnostics. The adapter suite passes 48 tests and the focused safety command passes 84. Example schema validation, local document checks, manifest verification, and `git diff --check` pass. These are cheap green checks, not fresh reviewer or authoritative-gate approval.
+Latest reported integrated checks: the prior status snapshot records 94 tests passed with no failures/skips and a passing typecheck for pre-import candidate `7cc1b25`, including the dotenv changes. They were not rerun on `53f7860` for this documentation update, and no separate 94-test output is retained here. The retained pre-dotenv full suite passed 85 tests; its adapter suite passed 48 and focused safety command passed 84. Those historical schema, document, hash and diff checks are not verification of the current candidate.
 
 The new deterministic loopback HTTP/SSE fixture runs the actual live DeepInfra adapter implementation and Pi's OpenAI-completions implementation, using synthetic authorization only. It proves local wire conversion and guards, not DeepInfra/model availability, current pricing, real usage, or answer quality. No external inference occurred.
 
 This is not a Pi dependency stop: the executed document/FULL and stable replay contracts passed. No public-contract failure justifies replacing the dependency. The requested transaction/replay reproduction remains executable in `tests/pi-durable-contract.test.ts` and `tests/pi-replay-contract.test.ts`.
 
-[Runtime contract evidence](../runtime-contract.md) records package/runtime/storage pins, public APIs, commands/results, changed paths, limitations, and corrected history. Current [focused safety output](../evidence/td002-safety-focused-current.txt), [full cheap suite](../evidence/td002-tests-current.txt), [green typecheck](../evidence/td002-typecheck-current.txt), and [candidate source/document hashes](../evidence/td002-candidate-files.sha256). Historical [three-test pass](../evidence/td002-focused-tests.txt), [original red typecheck](../evidence/td002-typecheck.txt), and [artifact/PRAGMA output](../evidence/td002-runtime-versions.json) remain intact. The new real-process socket replacement failure and its correction are retained in the runtime evidence.
+[Runtime contract evidence](../runtime-contract.md) records package/runtime/storage pins, public APIs, commands/results, changed paths, limitations, and corrected history. Historical [focused safety output](../evidence/td002-safety-focused-current.txt), [full cheap suite](../evidence/td002-tests-current.txt), [green typecheck](../evidence/td002-typecheck-current.txt), and [candidate source/document hashes](../evidence/td002-candidate-files.sha256). Historical [three-test pass](../evidence/td002-focused-tests.txt), [original red typecheck](../evidence/td002-typecheck.txt), and [artifact/PRAGMA output](../evidence/td002-runtime-versions.json) remain intact. The new real-process socket replacement failure and its correction are retained in the runtime evidence.
 
-Blocked conditions:
+Open acceptance and review gaps:
 
-- Live smoke remains unauthorized and real credentials were not supplied or accessed. The exact selected model is unchanged. Its acceptance checkbox stays open and the ticket stays blocked, not done.
-- Review round 1 REJECTED the checkpoint. Fresh independent review round 2 APPROVED the corrected code with no must-fix findings. It reran all 85 tests, typecheck, and 13 additional loopback checks. See the [review record](../evidence/td002-review-round-2.md). This is code approval, not completion or merge approval.
-- The full ticket remains BLOCKED until the separately authorized live smoke passes. No partial merge authorization is assumed.
+- Live smoke remains pending, with no retained authorization or real-model pass. The exact selected model is unchanged. No credential file was inspected for this update.
+- [#9](https://github.com/markdlabrecque/acolyte/issues/9) requires independent review of the credential loader. [Review round 2](../evidence/td002-review-round-2.md) approved the pre-dotenv correction after 85 suite tests, typecheck and 13 additional loopback checks, not the later loader or ticket completion.
+- [#4](https://github.com/markdlabrecque/acolyte/issues/4) requires proof that the full tool-call batch is saved before execution, or an explicit decision accepting Pi's persisted task input. The existing replay contract does not close that issue.
+- [#6](https://github.com/markdlabrecque/acolyte/issues/6) requires FULL-mode readback on the connection the runtime actually uses. The retained probe alone is insufficient.
+- `limits.warningUsd` is schema-validated but unused by the runtime. Its warning behavior belongs to [TD-004](004-persisted-limits.md), not a completed TD-002 feature.
 
-The earlier test-correction approval blocker is resolved. The local correction passed fresh code review; the failed first review remains recorded. Unknown/stale sockets intentionally fail closed rather than being automatically reclaimed. TD-003 must define and test crash restart/stale-endpoint recovery. The full crash matrix, persisted race suite, service/reboot and power-loss proofs remain outside this TD-002 candidate.
+The remaining follow-ups are listed in [CURRENT.md](../../CURRENT.md). Formal ticket status stays `blocked`, with delivery described as implemented, live smoke pending. This documentation update closes no issue and grants no execution or merge authorization.
 
-This continuation made no commit, merge, push, subagent, service installation, connector test, or live-inference call. The parent checkpoint is prior history. TD-003 through TD-005 remain drafts.
+Unknown/stale sockets intentionally fail closed rather than being automatically reclaimed. TD-003 must define and test crash restart/stale-endpoint recovery. The full crash matrix, persisted race suite, service/reboot and power-loss proofs remain outside this candidate. TD-003 through TD-005 remain drafts.
