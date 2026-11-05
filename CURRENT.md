@@ -7,8 +7,8 @@ The public repository is [markdlabrecque/acolyte](https://github.com/markdlabrec
 ## Checkout and GitHub
 
 - A fresh fetch confirms local `main` matches remote `main` at merge commit `7a61dc1`, after [PR #14](https://github.com/markdlabrecque/acolyte/pull/14). Earlier merges: [PR #13](https://github.com/markdlabrecque/acolyte/pull/13) (`4f56801`, issue #4 evidence), [status PR #12](https://github.com/markdlabrecque/acolyte/pull/12) (`f0c7a7e`) and [PR #11](https://github.com/markdlabrecque/acolyte/pull/11) (SQLite FULL fix `c59e172`). The original TD-002 implementation is `53f7860`, following baseline `62d8b2e`.
-- [Issue #6](https://github.com/markdlabrecque/acolyte/issues/6) and [issue #4](https://github.com/markdlabrecque/acolyte/issues/4) are closed. [Issue #1](https://github.com/markdlabrecque/acolyte/issues/1) is still open even though its fix (PR #14) is merged; the PR did not close it.
-- GitHub reports **8 open issues and no open PRs**. No CI checks are configured. The owner authorized merging on passing local tests and typecheck.
+- Issues [#1](https://github.com/markdlabrecque/acolyte/issues/1), [#4](https://github.com/markdlabrecque/acolyte/issues/4) and [#6](https://github.com/markdlabrecque/acolyte/issues/6) are closed. Issue #1 was closed by hand after PR #14 merged.
+- GitHub reports **7 open issues and no open PRs**. No CI checks are configured. The owner authorized merging on passing local tests and typecheck.
 - The saved remote now uses `ssh://git@github.com/markdlabrecque/acolyte`; fetching succeeds. The earlier `github-mark` alias failure is no longer the current remote configuration.
 - The checkout is clean on `main`. There is one local worktree. No remote `develop` branch existed when checked; the owner selected `main` as the PR target instead.
 
@@ -22,7 +22,7 @@ The public repository is [markdlabrecque/acolyte](https://github.com/markdlabrec
 
 ## Issue #1: todo page size bounded by input limits (merged)
 
-[PR #14](https://github.com/markdlabrecque/acolyte/pull/14) (`f48c7d2`) makes startup config validation require `limits.inputTokens` to cover a full `limits.listPage` of worst-case escaped 500-character titles (see `src/tools/todo-limits.ts`). `list_todos` also sets a Pi output limit so a full page's JSON is not truncated. The example config now uses 98,304 input tokens for 20 items. Old configs with 20 items and 8,192 tokens fail validation until raised. Raising the limit raises the per-call reservation; the monthly cap is unchanged. Tests cover full pages with escaped titles and the config check; details are in the README section "Todo list size limits". Long conversation histories or multiple pages can still hit the overall input limit. I did not rerun the suite for this update, and no evidence file records PR #14's test counts. The owner should confirm and close issue #1.
+[PR #14](https://github.com/markdlabrecque/acolyte/pull/14) (`f48c7d2`) makes startup config validation require `limits.inputTokens` to cover a full `limits.listPage` of worst-case escaped 500-character titles (see `src/tools/todo-limits.ts`). `list_todos` also sets a Pi output limit so a full page's JSON is not truncated. The example config now uses 98,304 input tokens for 20 items. Old configs with 20 items and 8,192 tokens fail validation until raised. Raising the limit raises the per-call reservation; the monthly cap is unchanged. Tests cover full pages with escaped titles and the config check; details are in the README section "Todo list size limits". Long conversation histories or multiple pages can still hit the overall input limit. I did not rerun the suite for this update, and no evidence file records PR #14's test counts.
 
 ## Issue #4: persisted batch contract verified (merged, closed)
 
@@ -44,9 +44,8 @@ Use the [local implementation tracker](docs/tickets/README.md), [TD-002 ticket](
 
 ## Current GitHub follow-ups
 
-These eight issues remain open after issues #4 and #6 closed. These numbers belong to Acolyte, not the old Cairn planning hierarchy.
+These seven issues remain open after issues #1, #4 and #6 closed. These numbers belong to Acolyte, not the old Cairn planning hierarchy.
 
-- [#1: Long todo lists can make the assistant fail](https://github.com/markdlabrecque/acolyte/issues/1) (fix merged in PR #14; awaiting owner close)
 - [#2: Status errors say "rejected" when the service is down](https://github.com/markdlabrecque/acolyte/issues/2)
 - [#3: Make command-line answers readable by default](https://github.com/markdlabrecque/acolyte/issues/3)
 - [#5: Decide whether users see progress while the assistant works](https://github.com/markdlabrecque/acolyte/issues/5)
