@@ -79,6 +79,12 @@ test('CLI crosses authenticated gateway and runner to Pi Durable add/list', { ti
       throw new Error('result timeout');
     };
     assert.match((await result('add-1')).answer, /Book dentist/);
+    const progressStatus = await cli('status', '--agent', 'assistant', 'add-1');
+    assert.equal(progressStatus.code, 0, progressStatus.stderr);
+    const progress = JSON.parse(progressStatus.stdout).progress;
+    assert.ok(progress.deltaCount > 0);
+    assert.ok(progress.lastActivityAt > 0);
+    assert.deepEqual(Object.keys(progress).sort(), ['deltaCount', 'lastActivityAt']);
     const duplicate = await cli('submit', '--agent', 'assistant', '--conversation', 'demo', '--request-id', 'add-1', 'Add "Book dentist"');
     assert.equal(JSON.parse(duplicate.stdout).receipt, JSON.parse(added.stdout).receipt);
     assert.equal((await cli('submit', '--agent', 'assistant', '--conversation', 'demo', '--request-id', 'add-1', 'changed')).code, 2);

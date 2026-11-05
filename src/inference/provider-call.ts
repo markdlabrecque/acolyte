@@ -28,7 +28,7 @@ export function inferenceProvider(config: Config, testEndpoint?: string) {
     : Promise.resolve(liveDriver);
 
   async function call(selected: Model<Api>, input: Parameters<ProviderStreams['streamSimple']>[1],
-    options: StreamOptions, credential: string | undefined, remaining: number) {
+    options: StreamOptions, credential: string | undefined, remaining: number, onProgress?: () => Promise<void>) {
     const controller = new AbortController();
     const signal = options?.signal ? AbortSignal.any([options.signal, controller.signal]) : controller.signal;
     const deadline = setTimeout(() => controller.abort(), Math.max(1, remaining));
@@ -50,6 +50,7 @@ export function inferenceProvider(config: Config, testEndpoint?: string) {
         if ((event.type === 'text_delta' || event.type === 'thinking_delta' || event.type === 'toolcall_delta') && event.delta.length > 0) {
           clearTimeout(progress);
           progress = setTimeout(() => controller.abort(), config.limits.progressMs);
+          await onProgress?.();
         }
         // Pi persists partial events, so publish only the sanitized terminal result.
       }

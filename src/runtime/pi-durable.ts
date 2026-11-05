@@ -134,6 +134,7 @@ export async function openRuntime(storage: Storage, config: Config, ledger: Rese
       return { status: result && item.state !== 'completed' && item.state !== 'failed' ? 202 : 200,
         requestId: item.requestId, receipt: item.receipt, state: item.state,
         fixture: item.config.inference.mode === 'fixture',
+        ...(!result ? { progress: item.progress ?? { deltaCount: 0, lastActivityAt: null } } : {}),
         ...(result && item.answer !== undefined ? { answer: item.answer } : {}),
         ...(item.failure !== undefined ? { failure: item.failure } : {}),
       };

@@ -73,7 +73,12 @@ export function inference(config: Config, ledger: Reservations, getHarness: () =
         state.calls[attempt.id]!.state = 'dispatched';
         return remaining;
       }, context);
-      const { response, knownUsage } = await provider.call(selected, input, options, credential, remaining);
+      const { response, knownUsage } = await provider.call(selected, input, options, credential, remaining, async () => {
+        await harness.commit(async tx => {
+          const request = active(await tx.doc(StateDoc));
+          request.progress = { deltaCount: (request.progress?.deltaCount ?? 0) + 1, lastActivityAt: Date.now() };
+        }, context);
+      });
       await harness.commit(async tx => {
         const state = await tx.doc(StateDoc);
         state.calls[attempt.id] = { state: 'answered', response: JSON.stringify(response) };
