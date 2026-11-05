@@ -1,16 +1,24 @@
 # Acolyte repository status
 
-## Snapshot, 2026-11-04
+## Snapshot, 2026-11-05
 
 The public repository is [markdlabrecque/acolyte](https://github.com/markdlabrecque/acolyte). The PRD and glossary retain the owner-selected product name Cairn; this status update does not rename the product. This is a checked snapshot, not an automatically maintained feed.
 
 ## Checkout and GitHub
 
-- A fresh fetch confirms local `main` matches remote `main` at merge commit `3b1b012`, after [PR #15](https://github.com/markdlabrecque/acolyte/pull/15). This status-only commit follows that merge. Earlier merges: [PR #14](https://github.com/markdlabrecque/acolyte/pull/14) (`7a61dc1`), [PR #13](https://github.com/markdlabrecque/acolyte/pull/13) (`4f56801`, issue #4 evidence), [status PR #12](https://github.com/markdlabrecque/acolyte/pull/12) (`f0c7a7e`) and [PR #11](https://github.com/markdlabrecque/acolyte/pull/11) (SQLite FULL fix `c59e172`). The original TD-002 implementation is `53f7860`, following baseline `62d8b2e`.
-- Issues [#1](https://github.com/markdlabrecque/acolyte/issues/1), [#4](https://github.com/markdlabrecque/acolyte/issues/4) [#6](https://github.com/markdlabrecque/acolyte/issues/6) and [#9](https://github.com/markdlabrecque/acolyte/issues/9) are closed. Issue #1 was closed by hand after PR #14 merged.
-- GitHub reports **6 open issues and no open PRs**. No CI checks are configured. The owner authorized merging on passing local tests and typecheck.
+- A fresh fetch and fast-forward brought local `main` to remote merge commit `d2e6764`, after [PR #16](https://github.com/markdlabrecque/acolyte/pull/16), containing reviewed implementation `7908716`. This separate status-only commit follows that merge. Earlier merges: [PR #15](https://github.com/markdlabrecque/acolyte/pull/15) (`3b1b012`), [PR #14](https://github.com/markdlabrecque/acolyte/pull/14) (`7a61dc1`), [PR #13](https://github.com/markdlabrecque/acolyte/pull/13) (`4f56801`, issue #4 evidence), [status PR #12](https://github.com/markdlabrecque/acolyte/pull/12) (`f0c7a7e`) and [PR #11](https://github.com/markdlabrecque/acolyte/pull/11) (SQLite FULL fix `c59e172`). The original TD-002 implementation is `53f7860`, following baseline `62d8b2e`.
+- Issues [#1](https://github.com/markdlabrecque/acolyte/issues/1), [#4](https://github.com/markdlabrecque/acolyte/issues/4), [#6](https://github.com/markdlabrecque/acolyte/issues/6), [#7](https://github.com/markdlabrecque/acolyte/issues/7) and [#9](https://github.com/markdlabrecque/acolyte/issues/9) are closed. Issue #7 closure and PR #16 merge were verified on GitHub. Issue #1 was closed by hand after PR #14 merged.
+- GitHub reports **5 open issues and no open PRs**. No CI checks are configured. The owner authorized merging on passing local tests and typecheck.
 - The saved remote now uses `ssh://git@github.com/markdlabrecque/acolyte`; fetching succeeds. The earlier `github-mark` alias failure is no longer the current remote configuration.
 - The checkout is clean on `main`. There is one local worktree. No remote `develop` branch existed when checked; the owner selected `main` as the PR target instead.
+
+## Issue #7: model-call refactor approved, merged
+
+[PR #16](https://github.com/markdlabrecque/acolyte/pull/16) merged `7908716` into `main` at `d2e6764` and closed issue #7. Fixture and live drivers now use a shared interface; common code owns transport deadlines and sanitized responses. Effective limits, todo authorization, route validation, terminal events and missing-file checks each have shared implementations. Plain configuration uses `structuredClone`; Pi transaction proxies retain their required JSON copy.
+
+Independent review rejected the first split, then a fresh review approved the corrected candidate. All 13 reviewed source/test hashes match the merged files. Parent and reviewer each passed 119 tests and typecheck with no existing assertions changed. Parent reran both checks before publication and again on merged `main`; all 119 tests passed with no failures or skips. `git diff --check` passed. GitHub reported no CI checks configured, so the merge used the project's accepted local checks and independent review. [Review rounds, finding dispositions, exact hashes and retained outputs](docs/evidence/issue-7-model-call-refactor.md) remain available.
+
+The owner explicitly authorized commit, push, PR merge, local synchronization and this separate `CURRENT.md` commit on `main`. Earlier candidate-only statements in the runtime and ticket evidence describe the pre-publication stage. No real credentials or live inference were used; TD-002 remains blocked on its separately authorized live acceptance. Issues #8 and #10 remain open.
 
 ## Issue #9: credential loader independently approved, merged
 
@@ -40,7 +48,7 @@ New tests send SIGKILL before the first tool executes and after its todo/result 
 
 The CLI, authenticated gateway, separate runner, Pi Durable and SQLite add/list path is committed. It uses schema-validated JSON and exposes `add_todo` and `list_todos`. The selected model remains DeepInfra `deepseek-ai/DeepSeek-V4-Flash-0731`.
 
-The issue #4 merge candidate passed 101 tests with no failures/skips and typecheck (before PR #14, which added tests and was not recorded in evidence); [batch-contract evidence](docs/evidence/issue-4-tool-batch.md) retains the outputs. The merged issue #6 source passed 98 tests; its [evidence](docs/evidence/issue-6-storage-durability.md) includes the earlier failing regression. The prior 94-test report and retained 85-test outputs describe older candidates. Review round 2 is pre-dotenv evidence, not current-candidate approval. The protected credential loader and adapter fixes now have independent approval at `932b7ba`; the current suite passes 117 tests and typecheck.
+The issue #4 merge candidate passed 101 tests with no failures/skips and typecheck (before PR #14, which added tests and was not recorded in evidence); [batch-contract evidence](docs/evidence/issue-4-tool-batch.md) retains the outputs. The merged issue #6 source passed 98 tests; its [evidence](docs/evidence/issue-6-storage-durability.md) includes the earlier failing regression. The prior 94-test report and retained 85-test outputs describe older candidates. Review round 2 is pre-dotenv evidence, not current-candidate approval. The protected credential loader and adapter fixes have independent approval at `932b7ba`. The subsequent issue #7 refactor has fresh independent approval, and the merged current suite passes 119 tests and typecheck.
 
 No retained evidence establishes a real DeepInfra add/list pass. The commit title does not close that acceptance gate. The [TD-002 ticket](docs/tickets/002-first-todo-round-trip.md) therefore keeps formal status `blocked`: implemented, live smoke pending. No live inference or credential access is authorized by this update.
 
@@ -50,16 +58,15 @@ Use the [local implementation tracker](docs/tickets/README.md), [TD-002 ticket](
 
 ## Current GitHub follow-ups
 
-These six issues remain open after issues #1, #4, #6 and #9 closed. These numbers belong to Acolyte, not the old Cairn planning hierarchy.
+These five issues remain open after issues #1, #4, #6, #7 and #9 closed. These numbers belong to Acolyte, not the old Cairn planning hierarchy.
 
 - [#2: Status errors say "rejected" when the service is down](https://github.com/markdlabrecque/acolyte/issues/2)
 - [#3: Make command-line answers readable by default](https://github.com/markdlabrecque/acolyte/issues/3)
 - [#5: Decide whether users see progress while the assistant works](https://github.com/markdlabrecque/acolyte/issues/5)
-- [#7: Split the model-call code and remove copied code](https://github.com/markdlabrecque/acolyte/issues/7)
 - [#8: Bring TD-002 records in line with what was built](https://github.com/markdlabrecque/acolyte/issues/8)
 - [#10: Trim overlapping tests and decide on the Pi library tests](https://github.com/markdlabrecque/acolyte/issues/10)
 
-Credential-loader review is complete. TD-002 still requires a separately authorized live smoke. The documentation reconciliation in [#8](https://github.com/markdlabrecque/acolyte/issues/8) remains open; this update does not authorize another issue or live inference.
+Credential-loader review and the model-call refactor are complete and merged. TD-002 still requires a separately authorized live smoke. The documentation reconciliation in [#8](https://github.com/markdlabrecque/acolyte/issues/8) remains open; this update does not authorize another issue or live inference.
 
 ## Later implementation
 
