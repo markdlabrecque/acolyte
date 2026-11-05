@@ -140,6 +140,12 @@ export function inference(config: Config, ledger: Reservations, getHarness: () =
           if (event.type !== 'done' && event.type !== 'error') events.push(event);
         }
         const response = await upstream.result();
+        // Provider/HTTP errors can echo Authorization values. Never persist or
+        // publish their diagnostic text or partial content on failed calls.
+        if (response.stopReason === 'error' || response.stopReason === 'aborted') {
+          response.errorMessage = 'Inference provider failed';
+          response.content = [];
+        }
         await harness.commit(async tx => {
           const state = await tx.doc(StateDoc);
           state.calls[attempt.id] = { state: 'answered', response: JSON.stringify(response) };
@@ -160,7 +166,7 @@ export function inference(config: Config, ledger: Reservations, getHarness: () =
       } finally { clearTimeout(deadline); clearTimeout(progress); }
     })().catch(error => {
       const response = { ...fauxAssistantMessage(''), provider: config.inference.provider, model: config.inference.model,
-        api: model.api, stopReason: 'error' as const, errorMessage: error instanceof Error ? error.message : 'Inference blocked' };
+        api: model.api, stopReason: 'error' as const, errorMessage: 'Inference blocked' };
       events.push({ type: 'error', reason: 'error', error: response });
       events.end(response);
     });

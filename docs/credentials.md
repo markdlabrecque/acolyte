@@ -14,7 +14,9 @@ This is a placeholder, not an existing credential location. Prefer a location ou
 DEEPINFRA_API_KEY=your-api-key
 ```
 
-Keep permissions at `0600`. The adapter requires the file to belong to the current user, be owner-only, and be at most 16 KiB. Missing or empty keys fail closed. No file contents are logged. Dotenv loading does not populate `process.env`, expand variables, or search parent directories.
+Keep permissions at `0600`. The adapter opens once, checks that descriptor for current-user ownership, owner-only permissions and regular-file type, and reads at most 16 KiB plus one overflow-detection byte. Symlinks are supported; the opened target must pass those checks. Keep the containing directory private too. These checks do not protect against another process running as the same user modifying the opened file.
+
+Missing or empty keys fail closed. After trimming surrounding whitespace, both formats require visible ASCII without spaces or control characters. Provider failure diagnostics and partial failure content are replaced before persistence; unexpected adapter exceptions return a generic error. Dotenv loading does not populate `process.env`, expand variables, or search parent directories.
 
 The eventual local live-test JSON configuration must use:
 
