@@ -29,6 +29,9 @@ try {
     catch { throw new Error(payload ? 'Acceptance unconfirmed. Retry the same request ID.' : 'Status unavailable; retry later.'); }
     if (response.status >= 400) {
       if (payload && response.status >= 500) throw new Error('Acceptance unconfirmed. Retry the same request ID.');
+      if (response.status >= 500) throw new Error('Service unavailable; retry later. Your request is not rejected.');
+      if (response.status === 429) throw new Error('Service is busy; retry later.');
+      if (response.status === 409) throw new Error('Conflict: this request ID was already used with different content.');
       throw new Error(`Request rejected: HTTP ${response.status}`);
     }
     console.log(values.json ? JSON.stringify(response.value) : JSON.stringify(response.value, null, 2));
