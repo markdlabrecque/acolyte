@@ -6,7 +6,7 @@ import { dirname, join } from 'node:path';
 import { writeFile, chmod } from 'node:fs/promises';
 import { DatabaseSync } from 'node:sqlite';
 import { BACKGROUND_CONTEXT as context } from '@earendil-works/chord/context';
-import { Harness, MemoryStorage, createRegistry, defineExtension, hook, GenerationTask, type TaskId } from '@earendil-works/pi-durable';
+import { Harness, MemoryStorage, LiveDoc, ROOT_CONVERSATION_ID, createRegistry, defineExtension, hook, GenerationTask, type TaskId } from '@earendil-works/pi-durable';
 import { fauxAssistantMessage } from '@earendil-works/pi-ai';
 import { inference } from '../src/inference/deepinfra.ts';
 import { spendingLedger, type Reservations } from '../src/inference/budget.ts';
@@ -287,13 +287,18 @@ test('raw wire usage must be complete and consistent before normalized usage can
 });
 
 test('missing credentials, pricing, funds, model/time/context limits fail before any wire call', { timeout: 15000 }, async t => {
-  for (const mode of ['credentials', 'missing-file', 'unsafe-file', 'prices', 'funds', 'model-limit', 'time', 'context'] as const) await t.test(mode, async () => {
+  for (const mode of ['credentials', 'missing-file', 'unsafe-file', 'malformed-raw', 'malformed-env', 'prices', 'funds', 'model-limit', 'time', 'context'] as const) await t.test(mode, async () => {
     const f = await fixture();
     f.config.inference.mode = 'live'; f.config.inference.credentialFile = f.config.authFile;
     await writeFile(f.config.authFile, 'synthetic-model-token');
     if (mode === 'credentials') f.config.inference.credentialFile = null;
     if (mode === 'missing-file') f.config.inference.credentialFile = f.config.authFile + '-absent';
     if (mode === 'unsafe-file') await chmod(f.config.authFile, 0o644);
+    if (mode === 'malformed-raw') await writeFile(f.config.authFile, 'synthetic\nsecret');
+    if (mode === 'malformed-env') {
+      f.config.inference.credentialFile = join(dirname(f.config.authFile), '.env');
+      await writeFile(f.config.inference.credentialFile, 'OTHER=synthetic-secret', { mode: 0o600 });
+    }
     if (mode === 'prices') f.config.inference.outputUsdPerMillion = null;
     if (mode === 'funds') f.config.limits.monthlyUsd = 0;
     if (mode === 'context') f.config.limits.inputTokens = 1;
@@ -305,10 +310,72 @@ test('missing credentials, pricing, funds, model/time/context limits fail before
       assert.equal((await app.run()).status, 'unanswered');
       assert.equal(local.calls(), 0);
       assert.deepEqual((await app.state())!.todos, []);
+      if (mode === 'malformed-raw' || mode === 'malformed-env') assert.deepEqual((await app.state())!.calls, {});
       const db = new DatabaseSync(f.config.ledger);
       try { assert.equal(db.prepare('SELECT COUNT(*) AS n FROM reservations').get()?.n, 0); } finally { db.close(); }
     } finally { await app.close(); await local.close(); real.close(); await f.cleanup(); }
   });
+});
+
+test('provider errors reflecting authorization are sanitized before persistence', async () => {
+  const f = await fixture();
+  f.config.inference.mode = 'live'; f.config.inference.credentialFile = f.config.authFile;
+  await writeFile(f.config.authFile, 'synthetic-model-token');
+  const ledger = spendingLedger(f.config.ledger, f.config);
+  const local = await wire((_body, res) => {
+    res.writeHead(401, { 'content-type': 'application/json' });
+    res.end(JSON.stringify({ error: { message: 'Rejected Bearer synthetic-model-token', type: 'invalid_api_key' } }));
+  });
+  const app = await adapter(f.config, ledger, local.endpoint);
+  try {
+    const result = await app.run();
+    assert.equal(result.status, 'unanswered');
+    assert.equal(local.calls(), 1);
+    const state = (await app.state())!;
+    const calls = Object.values(state.calls);
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0]!.state, 'answered');
+    const response = JSON.parse(calls[0]!.response!);
+    assert.equal(response.errorMessage, 'Inference provider failed');
+    assert.deepEqual(response.content, []);
+    assert.ok(!JSON.stringify([state, result]).includes('synthetic-model-token'));
+  } finally { await app.close(); await local.close(); ledger.close(); await f.cleanup(); }
+});
+
+test('failed streams never publish partial secrets or retain provider metadata', { timeout: 15000 }, async () => {
+  const f = await fixture();
+  f.config.inference.mode = 'live'; f.config.inference.credentialFile = f.config.authFile;
+  await writeFile(f.config.authFile, 'synthetic-model-token');
+  const ledger = spendingLedger(f.config.ledger, f.config);
+  const sent = Promise.withResolvers<void>();
+  const release = Promise.withResolvers<void>();
+  const local = await wire(async (_body, res) => {
+    res.writeHead(200, { 'content-type': 'text/event-stream' });
+    const chunk = { id: 'synthetic', object: 'chat.completion.chunk', created: 1, model: f.config.inference.model };
+    res.write(`data: ${JSON.stringify({ ...chunk, choices: [{ index: 0, delta: { role: 'assistant', content: 'Rejected Bearer synthetic-model-token' }, finish_reason: null }] })}\n\n`);
+    sent.resolve();
+    await release.promise;
+    res.write(`data: ${JSON.stringify({ ...chunk, choices: [{ index: 0, delta: {}, finish_reason: 'Rejected Bearer synthetic-model-token' }] })}\n\n`);
+    res.end('data: [DONE]\n\n');
+  });
+  const app = await adapter(f.config, ledger, local.endpoint);
+  try {
+    const result = app.run();
+    await sent.promise;
+    // Allow the client to consume the chunk while the server withholds failure.
+    await new Promise(resolve => setTimeout(resolve, 100));
+    const live = await app.harness.snapshot(LiveDoc, ROOT_CONVERSATION_ID, context);
+    assert.ok(live, 'generation has created its live document');
+    assert.ok(!JSON.stringify(live).includes('synthetic-model-token'));
+    release.resolve();
+    assert.equal((await result).status, 'unanswered');
+    const state = (await app.state())!;
+    assert.ok(!JSON.stringify(state).includes('synthetic-model-token'));
+    const response = JSON.parse(Object.values(state.calls)[0]!.response!);
+    assert.equal(response.errorMessage, 'Inference provider failed');
+    assert.equal(response.rawStopReason, undefined);
+    assert.deepEqual(response.content, []);
+  } finally { release.resolve(); await app.close(); await local.close(); ledger.close(); await f.cleanup(); }
 });
 
 test('persisted application attempt states reuse reservations/responses but never resend uncertain dispatch', async t => {

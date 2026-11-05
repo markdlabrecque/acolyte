@@ -1,4 +1,5 @@
-import { readFile, stat } from 'node:fs/promises';
+import { readFile, open } from 'node:fs/promises';
+import { constants } from 'node:fs';
 import { isAbsolute } from 'node:path';
 import { Type, type Static } from '@earendil-works/pi-ai';
 import { Compile } from 'typebox/compile';
@@ -46,11 +47,24 @@ export async function loadConfig(path: string): Promise<Config> {
 }
 
 export async function protectedFile(path: string): Promise<string> {
-  const info = await stat(path);
-  if (!info.isFile() || info.uid !== process.getuid?.() || (info.mode & 0o077) !== 0 || info.size > 16384) {
-    throw new Error('Credential/authentication file must be owner-only and bounded');
-  }
-  const value = (await readFile(path, 'utf8')).trim();
-  if (!value) throw new Error('Credential/authentication file is empty');
-  return value;
+  // Nonblocking open lets us reject FIFOs without waiting for a writer. Symlinks
+  // are supported; all checks and reads refer to the same opened target.
+  const file = await open(path, constants.O_RDONLY | constants.O_NONBLOCK);
+  try {
+    const info = await file.stat();
+    if (!info.isFile() || info.uid !== process.getuid?.() || (info.mode & 0o077) !== 0 || info.size > 16384) {
+      throw new Error('Credential/authentication file must be owner-only and bounded');
+    }
+    const buffer = Buffer.alloc(16385);
+    let length = 0;
+    while (length < buffer.length) {
+      const { bytesRead } = await file.read(buffer, length, buffer.length - length, null);
+      if (!bytesRead) break;
+      length += bytesRead;
+    }
+    if (length > 16384) throw new Error('Credential/authentication file must be owner-only and bounded');
+    const value = buffer.subarray(0, length).toString('utf8').trim();
+    if (!value) throw new Error('Credential/authentication file is empty');
+    return value;
+  } finally { await file.close(); }
 }

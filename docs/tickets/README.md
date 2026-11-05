@@ -9,7 +9,7 @@ Start with [TD-001: crash-safe todo slice](001-crash-safe-todo-slice.md). Review
 | Ticket | Deliverable | Status | Depends on |
 | --- | --- | --- | --- |
 | [TD-001](001-crash-safe-todo-slice.md) | Crash-safe terminal todo assistant | draft | TD-002 through TD-005 |
-| [TD-002](002-first-todo-round-trip.md) | First bounded CLI-to-todo round trip | blocked | Implemented, live smoke pending; batch contract tested, credential review remains |
+| [TD-002](002-first-todo-round-trip.md) | First bounded CLI-to-todo round trip | blocked | Implemented, live smoke pending; batch contract tested, credential review approved |
 | [TD-003](003-crash-safe-recovery.md) | Same receipts, actions, and results after a crash | draft | TD-002 |
 | [TD-004](004-persisted-limits.md) | Admission, permissions, and limits across restart | draft | TD-003 |
 | [TD-005](005-linux-service-demo.md) | Isolated Linux services and recorded demo | draft | TD-004 |
@@ -46,7 +46,7 @@ The [approval record](001-crash-safe-todo-slice.md#approval-record) preserves th
 
 TD-002 is implemented, live smoke pending. The issue #4 candidate passes 101 tests and typecheck, with a [tested persisted-batch decision](../evidence/issue-4-tool-batch.md). The merged issue #6 retains its separate [runtime-connection FULL evidence](../evidence/issue-6-storage-durability.md). [Runtime evidence](../runtime-contract.md) also retains the older test history, rejected usage-settlement review and correction. [Review round 2](../evidence/td002-review-round-2.md) approved only the pre-dotenv candidate, not the current source or ticket completion.
 
-The credential loader still needs independent review. Full tool-call-batch persistence is covered by issue #4's local SIGKILL tests and written decision to use Pi's existing records; full runner recovery is not claimed. FULL-mode verification on the runtime connection is merged, and issue #6 is closed. See the [TD-002 evidence and open gaps](002-first-todo-round-trip.md#evidence). The live gate remains unchecked, so formal status stays `blocked`. Full crash/race/service/reboot evidence remains later work. `limits.warningUsd` is validated but unused; implementing its warning behavior belongs to TD-004.
+The credential loader and adapter fixes have [independent approval at `932b7ba`](../evidence/issue-9-credential-review.md), with 117 tests and typecheck passing. Full tool-call-batch persistence is covered by issue #4's local SIGKILL tests and written decision to use Pi's existing records; full runner recovery is not claimed. FULL-mode verification on the runtime connection is merged, and issue #6 is closed. See the [TD-002 evidence and open gaps](002-first-todo-round-trip.md#evidence). The live gate remains unchecked, so formal status stays `blocked`. Full crash/race/service/reboot evidence remains later work. `limits.warningUsd` is validated but unused; implementing its warning behavior belongs to TD-004.
 
 ## Export the plan
 

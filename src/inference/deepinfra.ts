@@ -137,9 +137,16 @@ export function inference(config: Config, ledger: Reservations, getHarness: () =
             clearTimeout(progress);
             progress = setTimeout(() => controller.abort(), config.limits.progressMs);
           }
-          if (event.type !== 'done' && event.type !== 'error') events.push(event);
+          // Do not publish partial provider messages. Pi persists these events
+          // before the terminal result, which may still report a failed call.
         }
-        const response = await upstream.result();
+        const upstreamResponse = await upstream.result();
+        // Allowlist failed responses, including metadata: provider diagnostics
+        // can echo Authorization anywhere, not only in errorMessage.
+        const response: AssistantMessage = upstreamResponse.stopReason === 'error' || upstreamResponse.stopReason === 'aborted'
+          ? { ...fauxAssistantMessage([]), provider: config.inference.provider, model: config.inference.model,
+              api: model.api, stopReason: upstreamResponse.stopReason, errorMessage: 'Inference provider failed' }
+          : upstreamResponse;
         await harness.commit(async tx => {
           const state = await tx.doc(StateDoc);
           state.calls[attempt.id] = { state: 'answered', response: JSON.stringify(response) };
@@ -160,7 +167,7 @@ export function inference(config: Config, ledger: Reservations, getHarness: () =
       } finally { clearTimeout(deadline); clearTimeout(progress); }
     })().catch(error => {
       const response = { ...fauxAssistantMessage(''), provider: config.inference.provider, model: config.inference.model,
-        api: model.api, stopReason: 'error' as const, errorMessage: error instanceof Error ? error.message : 'Inference blocked' };
+        api: model.api, stopReason: 'error' as const, errorMessage: 'Inference blocked' };
       events.push({ type: 'error', reason: 'error', error: response });
       events.end(response);
     });
