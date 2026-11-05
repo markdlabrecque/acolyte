@@ -4,13 +4,13 @@
 
 TD-002 is implemented, live smoke pending. The current Acolyte implementation commit is `53f7860`; its `TD-002 complete.` title is not acceptance evidence. See [CURRENT.md](../CURRENT.md) and the [ticket's open gaps](tickets/002-first-todo-round-trip.md#evidence).
 
-The issue #6 candidate passes 98 tests with no failures/skips and typecheck passes. [Runtime-connection FULL evidence](evidence/issue-6-storage-durability.md) retains the new red/green regression, full-suite output and source hashes. The prior 94-test report, retained 85-test outputs and `td002-candidate-files.sha256` describe earlier candidates, not current source hashes or approval.
+The issue #4 candidate passes 101 tests with no failures/skips and typecheck passes. [Batch decision and crash evidence](evidence/issue-4-tool-batch.md) retain the new SIGKILL tests and full-suite output. The merged issue #6's [98-test runtime-connection FULL evidence](evidence/issue-6-storage-durability.md) retains its red/green regression and source hashes. The prior 94-test report, retained 85-test outputs and `td002-candidate-files.sha256` describe earlier candidates, not current source hashes or approval.
 
 Independent review rejected historical checkpoint `824494f` for unsafe usage settlement. Review round 2 approved the bounded correction, but the later credential loader still needs [independent review, #9](https://github.com/markdlabrecque/acolyte/issues/9). There is no retained live DeepInfra pass. Formal ticket status remains `blocked`.
 
-[FULL-mode verification, #6](https://github.com/markdlabrecque/acolyte/issues/6), is implemented locally. `ownStore()` now checks the same database facade after Pi storage initialization. New tests read FULL inside actual runtime commit transactions and reject initialization downgrades before runner readiness. This supersedes the standalone probe's evidence limitation, not the power-loss limitation. The issue remains open remotely.
+[FULL-mode verification, #6](https://github.com/markdlabrecque/acolyte/issues/6), is merged and closed. `ownStore()` now checks the same database facade after Pi storage initialization. New tests read FULL inside actual runtime commit transactions and reject initialization downgrades before runner readiness. This supersedes the standalone probe's evidence limitation, not the power-loss limitation.
 
-[Full tool-call-batch persistence, #4](https://github.com/markdlabrecque/acolyte/issues/4), remains an acceptance gap; the historical replay test below does not close it. `limits.warningUsd` is validated but unused; warning implementation belongs to TD-004.
+[Full tool-call-batch persistence, #4](https://github.com/markdlabrecque/acolyte/issues/4), now has a [tested ownership decision](evidence/issue-4-tool-batch.md): Pi's assistant entry and generation checkpoint preserve the entire original batch before execution. New SIGKILL tests inspect that state in a separate paused process, then resume the original submission and production todo tools without duplicating the saved effect or regenerating the batch. This supersedes the historical cooperative replay test's evidence limitation for this bounded contract, not the full runner-recovery gap. The issue is still open remotely. `limits.warningUsd` is validated but unused; warning implementation belongs to TD-004.
 
 ## Historical execution record
 

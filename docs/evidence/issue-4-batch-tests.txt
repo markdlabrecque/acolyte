@@ -1,0 +1,14 @@
+▶ the full Pi tool-call batch survives SIGKILL before execution and between todo effects
+  ✔ before-first (502.924707ms)
+  ℹ before-first: SIGKILL retained both original calls and the pending second call; recovery created exactly two todos without regenerating the batch
+  ✔ after-first (514.693427ms)
+  ℹ after-first: SIGKILL retained both original calls and the pending second call; recovery created exactly two todos without regenerating the batch
+✔ the full Pi tool-call batch survives SIGKILL before execution and between todo effects (1018.504498ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1146.358752

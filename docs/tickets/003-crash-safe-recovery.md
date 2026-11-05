@@ -51,7 +51,7 @@ Additional checks:
 
 - [ ] Changing the arguments under an existing action ID fails closed.
 - [ ] Separate owner requests with equal titles remain separate actions.
-- [ ] A stored batch contains two add calls. Kill after the first todo/result commit. Recovery preserves both original action IDs and creates exactly two todos, without regenerating the batch.
+- [ ] A stored batch contains two add calls. Kill after the first todo/result commit. Recovery preserves both original call identities and any already-created task/action IDs, then creates exactly two todos without regenerating the batch. See the sequential-identity clarification in Evidence.
 - [ ] A crash at each reservation/dispatch transition conservatively retains possible charges.
 - [ ] Lost dispatch outcomes never cause unreserved or uncounted provider attempts.
 - [ ] Test failpoints cannot be enabled by normal agent configuration.
@@ -64,4 +64,6 @@ These tests establish process-kill behavior on the pinned stack only. They do no
 
 ## Evidence
 
-Pending. No crash tests executed.
+Full TD-003 runner recovery remains unstarted. [Issue #4's bounded contract tests](../evidence/issue-4-tool-batch.md) now SIGKILL a direct Pi/production-todo worker before the first effect and after its todo/result commit. A fresh paused process observes the stored full batch; another process resumes it without regenerating the calls or duplicating the first effect. This is supporting dependency evidence, not acceptance of the runner admission, socket, inference-accounting or outcome-recovery paths above.
+
+In the tested sequential runtime, the second call has a durable assistant-entry/call-ID identity before execution, but no task ID or application action ID until Pi schedules it. Preserve that original call identity and any already-created task/action IDs; do not assume every pending call already has an application action record. The full runner matrix and its checkboxes remain pending.
