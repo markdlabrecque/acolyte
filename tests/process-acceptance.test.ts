@@ -84,6 +84,8 @@ test('distinct same-title receipts, CLI disconnect, queue admission/completion, 
     await stop(runner);
     const unavailable = await fetch(`http://127.0.0.1:${f.config.port}${root}/first/result`, { headers });
     assert.equal(unavailable.status, 503, 'unavailable storage is never an empty 404');
+    const resultUnavailable = await child('src/cli.ts', ['--config', f.file, '--json', 'result', '--agent', f.config.agentId, 'first']).exited;
+    assert.equal(resultUnavailable.code, 2); assert.match(resultUnavailable.output, /Service unavailable; retry later/);
     const submitUnavailable = await child('src/cli.ts', ['--config', f.file, '--json', 'submit', '--agent', f.config.agentId,
       '--conversation', 'uncertain', '--request-id', 'uncertain', 'test']).exited;
     assert.equal(submitUnavailable.code, 2); assert.match(submitUnavailable.output, /Acceptance unconfirmed.*same request ID/);
