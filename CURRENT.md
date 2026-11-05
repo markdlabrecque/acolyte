@@ -1,6 +1,18 @@
 # Acolyte repository status
 
-## Snapshot, 2026-11-05
+## Verified delivery update, 2026-11-05
+
+[PR #21](https://github.com/markdlabrecque/acolyte/pull/21) merged at `947c3a8`; [issue #5](https://github.com/markdlabrecque/acolyte/issues/5) is verified closed. The owner chose request status for metadata-only model progress. JSON status includes cumulative delta count and last-activity milliseconds; plain status shows count and an ISO timestamp, or zero/none before activity. No partial model content is exposed.
+
+Fresh independent review approved integration `05bbda0` against `abb9320`, after the earlier rejected transport-cleanup finding was fixed. Parent and reviewer passed all 114 tests and typecheck. The parent repeated both checks successfully on merged `main`. [Evidence](docs/evidence/issue-5-progress.md) preserves all review rounds and limitations. No remote CI checks are configured.
+
+GitHub now reports zero open issues and zero open PRs. Local `main` was fast-forwarded to `origin/main` at `947c3a8`; this status-only commit follows the merge. The main checkout was clean before this update. Other feature/review worktrees exist, so the older single-worktree statement below is historical.
+
+TD-002 remains blocked on separately authorized live DeepInfra add/list acceptance. Tests used synthetic credentials and local providers only. Running progress is covered at adapter/state level rather than through a polling CLI process; per-delta durable-write overhead remains unbenchmarked. No real credentials, live inference, production operations or 1Password access were used.
+
+## Historical snapshot, 2026-11-05
+
+The sections below retain the earlier snapshot and are superseded by the verified delivery update above where they describe current checkout or GitHub state.
 
 The public repository is [markdlabrecque/acolyte](https://github.com/markdlabrecque/acolyte). The PRD and glossary retain the owner-selected product name Cairn; this status update does not rename the product. This is a checked snapshot, not an automatically maintained feed.
 
