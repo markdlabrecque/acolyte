@@ -1,5 +1,9 @@
 # TD-002 runtime contract evidence
 
+## Issue #5 progress update
+
+The owner selected status progress. Independently approved candidate `7453049` persists only a cumulative nonempty model-delta count and last-activity timestamp; status defaults to zero/null before activity. Partial stream content remains unpublished. Provider cleanup aborts transport if a progress write fails. Parent and reviewer passed 111 tests and typecheck. [Evidence and review rounds](evidence/issue-5-progress.md) record the initial rejection, correction and coverage limits. No live inference was used; TD-002 remains blocked on live acceptance. Earlier sections below remain historical evidence.
+
 ## Current evidence status, 2026-11-03
 
 TD-002 is implemented, live smoke pending. The current Acolyte implementation commit is `53f7860`; its `TD-002 complete.` title is not acceptance evidence. See [CURRENT.md](../CURRENT.md) and the [ticket's open gaps](tickets/002-first-todo-round-trip.md#evidence).
