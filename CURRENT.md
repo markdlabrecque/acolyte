@@ -1,16 +1,16 @@
 # Acolyte repository status
 
-## Snapshot, 2026-11-03
+## Snapshot, 2026-11-04
 
 The public repository is [markdlabrecque/acolyte](https://github.com/markdlabrecque/acolyte). The PRD and glossary retain the owner-selected product name Cairn; this status update does not rename the product. This is a checked snapshot, not an automatically maintained feed.
 
 ## Checkout and GitHub
 
-- A fresh fetch confirms remote `main` at merge commit `f0c7a7e`, after the owner-authorized merge of [status PR #12](https://github.com/markdlabrecque/acolyte/pull/12). It includes documentation refresh `343bdf5`, SQLite FULL fix `c59e172`, and session status `55c5b59`. The original TD-002 implementation is `53f7860`, following baseline `62d8b2e`.
-- [PR #11](https://github.com/markdlabrecque/acolyte/pull/11) merged into `main` at `2026-11-04T06:42:10Z`, November 3 in Vancouver. [Issue #6](https://github.com/markdlabrecque/acolyte/issues/6) is closed.
-- GitHub reports **9 open issues and no open PRs**. No CI checks are configured for PR #11. The owner explicitly authorized merging on the passing local tests and typecheck.
+- A fresh fetch confirms local `main` matches remote `main` at merge commit `7a61dc1`, after [PR #14](https://github.com/markdlabrecque/acolyte/pull/14). Earlier merges: [PR #13](https://github.com/markdlabrecque/acolyte/pull/13) (`4f56801`, issue #4 evidence), [status PR #12](https://github.com/markdlabrecque/acolyte/pull/12) (`f0c7a7e`) and [PR #11](https://github.com/markdlabrecque/acolyte/pull/11) (SQLite FULL fix `c59e172`). The original TD-002 implementation is `53f7860`, following baseline `62d8b2e`.
+- [Issue #6](https://github.com/markdlabrecque/acolyte/issues/6) and [issue #4](https://github.com/markdlabrecque/acolyte/issues/4) are closed. [Issue #1](https://github.com/markdlabrecque/acolyte/issues/1) is still open even though its fix (PR #14) is merged; the PR did not close it.
+- GitHub reports **8 open issues and no open PRs**. No CI checks are configured. The owner authorized merging on passing local tests and typecheck.
 - The saved remote now uses `ssh://git@github.com/markdlabrecque/acolyte`; fetching succeeds. The earlier `github-mark` alias failure is no longer the current remote configuration.
-- The checkout was clean before starting the owner-authorized issue #4 work on `fix/4-persisted-tool-batch`, based on fetched `origin/main` at `f0c7a7e`. There is one local worktree. No remote `develop` branch existed when checked; the owner selected `main` as the PR target instead.
+- The checkout is clean on `main`. There is one local worktree. No remote `develop` branch existed when checked; the owner selected `main` as the PR target instead.
 
 ## Completed this session
 
@@ -20,17 +20,21 @@ The public repository is [markdlabrecque/acolyte](https://github.com/markdlabrec
 - Passed all 98 tests with no failures/skips and typecheck, including a rerun before commit. Independent review found no must-fix implementation findings; its reopened-commit coverage observation was corrected and tests rerun. The reviewer could not issue authoritative workflow approval because its workflow/gate configuration was unavailable. This is not final TD-002 approval.
 - Committed, pushed, opened PR #11 into `main`, and merged it after explicit owner confirmation that local green checks were sufficient without remote CI. Retained [implementation, test and review evidence](docs/evidence/issue-6-storage-durability.md) describes the pre-publication work; this snapshot records the later merge and issue closure.
 
-## Issue #4: persisted batch contract verified locally
+## Issue #1: todo page size bounded by input limits (merged)
+
+[PR #14](https://github.com/markdlabrecque/acolyte/pull/14) (`f48c7d2`) makes startup config validation require `limits.inputTokens` to cover a full `limits.listPage` of worst-case escaped 500-character titles (see `src/tools/todo-limits.ts`). `list_todos` also sets a Pi output limit so a full page's JSON is not truncated. The example config now uses 98,304 input tokens for 20 items. Old configs with 20 items and 8,192 tokens fail validation until raised. Raising the limit raises the per-call reservation; the monthly cap is unchanged. Tests cover full pages with escaped titles and the config check; details are in the README section "Todo list size limits". Long conversation histories or multiple pages can still hit the overall input limit. I did not rerun the suite for this update, and no evidence file records PR #14's test counts. The owner should confirm and close issue #1.
+
+## Issue #4: persisted batch contract verified (merged, closed)
 
 The pinned Pi runtime already commits the full assistant tool-call message and a generation checkpoint before dispatching any call. The [written decision and evidence](docs/evidence/issue-4-tool-batch.md) accept those records as the authoritative batch, rather than adding an application copy. Per-call application actions still own authorization and the atomic todo/result write.
 
-New tests send SIGKILL before the first tool executes and after its todo/result commit. A separate paused process reads the original batch and pending second call from SQLite before another process resumes the submission. Both original calls complete with exactly two todos; the first saved effect and action identity survive unchanged. No production code or schema changed. Independent technical review found no must-fix findings and reproduced the passing tests and typecheck. Final workflow approval remains unavailable. This proves the bounded Pi/production-todo contract, not full runner admission, socket, budget or final-outcome recovery. Issue #4 remains open pending PR review and merge. The owner authorized committing and pushing this branch and opening its PR into `main`, not merging it.
+New tests send SIGKILL before the first tool executes and after its todo/result commit. A separate paused process reads the original batch and pending second call from SQLite before another process resumes the submission. Both original calls complete with exactly two todos; the first saved effect and action identity survive unchanged. No production code or schema changed. Independent technical review found no must-fix findings and reproduced the passing tests and typecheck. Final workflow approval remains unavailable. This proves the bounded Pi/production-todo contract, not full runner admission, socket, budget or final-outcome recovery. Merged in [PR #13](https://github.com/markdlabrecque/acolyte/pull/13); issue #4 is closed.
 
 ## TD-002: implemented, live smoke pending
 
 The CLI, authenticated gateway, separate runner, Pi Durable and SQLite add/list path is committed. It uses schema-validated JSON and exposes `add_todo` and `list_todos`. The selected model remains DeepInfra `deepseek-ai/DeepSeek-V4-Flash-0731`.
 
-The issue #4 candidate passes 101 tests with no failures/skips and typecheck; [batch-contract evidence](docs/evidence/issue-4-tool-batch.md) retains the outputs. The merged issue #6 source passed 98 tests; its [evidence](docs/evidence/issue-6-storage-durability.md) includes the earlier failing regression. The prior 94-test report and retained 85-test outputs describe older candidates. Review round 2 is pre-dotenv evidence, not current-candidate approval. The protected credential loader still needs independent review.
+The issue #4 merge candidate passed 101 tests with no failures/skips and typecheck (before PR #14, which added tests and was not recorded in evidence); [batch-contract evidence](docs/evidence/issue-4-tool-batch.md) retains the outputs. The merged issue #6 source passed 98 tests; its [evidence](docs/evidence/issue-6-storage-durability.md) includes the earlier failing regression. The prior 94-test report and retained 85-test outputs describe older candidates. Review round 2 is pre-dotenv evidence, not current-candidate approval. The protected credential loader still needs independent review.
 
 No retained evidence establishes a real DeepInfra add/list pass. The commit title does not close that acceptance gate. The [TD-002 ticket](docs/tickets/002-first-todo-round-trip.md) therefore keeps formal status `blocked`: implemented, live smoke pending. No live inference or credential access is authorized by this update.
 
@@ -40,19 +44,18 @@ Use the [local implementation tracker](docs/tickets/README.md), [TD-002 ticket](
 
 ## Current GitHub follow-ups
 
-These nine issues remain open after issue #6 closed. These numbers belong to Acolyte, not the old Cairn planning hierarchy.
+These eight issues remain open after issues #4 and #6 closed. These numbers belong to Acolyte, not the old Cairn planning hierarchy.
 
-- [#1: Long todo lists can make the assistant fail](https://github.com/markdlabrecque/acolyte/issues/1)
+- [#1: Long todo lists can make the assistant fail](https://github.com/markdlabrecque/acolyte/issues/1) (fix merged in PR #14; awaiting owner close)
 - [#2: Status errors say "rejected" when the service is down](https://github.com/markdlabrecque/acolyte/issues/2)
 - [#3: Make command-line answers readable by default](https://github.com/markdlabrecque/acolyte/issues/3)
-- [#4: Save the full list of tool calls before running any](https://github.com/markdlabrecque/acolyte/issues/4)
 - [#5: Decide whether users see progress while the assistant works](https://github.com/markdlabrecque/acolyte/issues/5)
 - [#7: Split the model-call code and remove copied code](https://github.com/markdlabrecque/acolyte/issues/7)
 - [#8: Bring TD-002 records in line with what was built](https://github.com/markdlabrecque/acolyte/issues/8)
 - [#9: Get an independent review of the credential file loader](https://github.com/markdlabrecque/acolyte/issues/9)
 - [#10: Trim overlapping tests and decide on the Pi library tests](https://github.com/markdlabrecque/acolyte/issues/10)
 
-Issue #4 now has a tested decision prepared for PR review. The next recommended implementation task is the full-page listing fix in [#1](https://github.com/markdlabrecque/acolyte/issues/1), followed by credential-loader review in [#9](https://github.com/markdlabrecque/acolyte/issues/9) and a separately authorized live smoke before TD-002 acceptance. This ordering is a recommendation, not authorization to start another issue.
+The next recommended task is credential-loader review in [#9](https://github.com/markdlabrecque/acolyte/issues/9), then a separately authorized live smoke before TD-002 acceptance. This ordering is a recommendation, not authorization to start another issue.
 
 ## Later implementation
 
