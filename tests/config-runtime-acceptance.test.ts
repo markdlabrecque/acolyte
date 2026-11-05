@@ -4,9 +4,28 @@ import { lstat, writeFile } from 'node:fs/promises';
 import { BACKGROUND_CONTEXT as context } from '@earendil-works/chord/context';
 import { MemoryStorage, type StorageWrite } from '@earendil-works/pi-durable';
 import { loadConfig } from '../src/config.ts';
+import { minimumListInputTokens } from '../src/tools/todo-limits.ts';
 import { openRuntime } from '../src/runtime/pi-durable.ts';
 import { spendingLedger } from '../src/inference/budget.ts';
 import { fixture, until, child } from './support.ts';
+
+test('configuration couples full list pages to the conservative input bound', async () => {
+  const f = await fixture();
+  try {
+    for (const page of [1, 20, 100]) {
+      const config = structuredClone(f.config);
+      config.prompt = '\u0000界'.repeat(500);
+      config.limits.listPage = page;
+      const minimum = minimumListInputTokens(page, config.prompt);
+      config.limits.inputTokens = minimum - 1;
+      await writeFile(f.file, JSON.stringify(config));
+      await assert.rejects(loadConfig(f.file), /limits.inputTokens must be at least/);
+      config.limits.inputTokens = minimum;
+      await writeFile(f.file, JSON.stringify(config));
+      assert.equal((await loadConfig(f.file)).limits.inputTokens, minimum);
+    }
+  } finally { await f.cleanup(); }
+});
 
 test('strict configuration rejects unknown keys, unsafe paths, unbounded limits and unavailable model selection without starting a run', async t => {
   const f = await fixture();

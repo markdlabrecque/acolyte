@@ -25,7 +25,7 @@
     "modelCalls": 20,
     "toolCalls": 50,
     "queued": 20,
-    "inputTokens": 8192,
+    "inputTokens": 98304,
     "outputTokens": 1024,
     "connectMs": 30000,
     "progressMs": 90000,

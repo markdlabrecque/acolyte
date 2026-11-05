@@ -2,6 +2,7 @@ import { readFile, stat } from 'node:fs/promises';
 import { isAbsolute } from 'node:path';
 import { Type, type Static } from '@earendil-works/pi-ai';
 import { Compile } from 'typebox/compile';
+import { minimumListInputTokens } from './tools/todo-limits.ts';
 
 const object = { additionalProperties: false };
 const text = Type.String({ minLength: 1, maxLength: 4096 });
@@ -36,6 +37,10 @@ export async function loadConfig(path: string): Promise<Config> {
   }
   if (value.store === value.ledger || Buffer.byteLength(value.socket) > 100 || value.limits.warningUsd > value.limits.monthlyUsd) {
     throw new Error('Invalid storage, socket, or warning configuration');
+  }
+  const minimum = minimumListInputTokens(value.limits.listPage, value.prompt);
+  if (value.limits.inputTokens < minimum) {
+    throw new Error(`limits.inputTokens must be at least ${minimum} for limits.listPage=${value.limits.listPage}`);
   }
   return value;
 }

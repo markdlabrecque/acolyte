@@ -6,6 +6,22 @@ The initial assistant's scope includes durable todos and reminders, calendar man
 
 Repository: [markdlabrecque/acolyte](https://github.com/markdlabrecque/acolyte). TD-002 is implemented, live smoke pending. Full crash recovery and service acceptance remain unfinished.
 
+## Todo list size limits
+
+`limits.listPage` and `limits.inputTokens` are validated together at startup.
+The input guard conservatively counts serialized UTF-8 bytes as tokens. A full
+page needs `3756 * listPage + JSON-encoded prompt bytes + 8192` input tokens,
+including worst-case escaping of 500-character titles and space for tool schemas
+and a short listing exchange. Pi's tool-output limit also accommodates that page
+without truncating its JSON. Long conversation histories or multiple pages can
+still hit the overall input limit.
+
+The example uses 20 items and 98,304 input tokens. Existing configurations with
+20 items and 8,192 input tokens must raise the input limit or lower the page size
+and meet the minimum reported by config validation. Raising the input limit also
+raises the conservative per-call spending reservation; the monthly cap remains
+unchanged.
+
 ## Project documents
 
 - [Current status and open follow-ups](CURRENT.md)

@@ -13,7 +13,9 @@ import { spendingLedger, type Reservations } from '../src/inference/budget.ts';
 import { StateDoc } from '../src/runtime/documents.ts';
 import { todoExtension } from '../src/tools/todos.ts';
 import { fixture } from './support.ts';
-import type { Config } from '../src/config.ts';
+import { loadConfig, type Config } from '../src/config.ts';
+import { minimumListInputTokens, TODO_TITLE_LENGTH } from '../src/tools/todo-limits.ts';
+import { randomUUID } from 'node:crypto';
 
 async function wire(handler: (body: Record<string, unknown>, res: ServerResponse, req: IncomingMessage) => Promise<void> | void) {
   const failures: unknown[] = [];
@@ -68,6 +70,55 @@ async function adapter(config: Config, ledger: Reservations, endpoint: string, s
     return submission.wait(context);
   }, state: () => harness.snapshot(StateDoc, context), close: () => harness.close(context) };
 }
+
+test('a full page of maximum-length escaped titles reaches the model and gets an answer', { timeout: 15000 }, async t => {
+  for (const page of [1, 20, 100]) await t.test(`page size ${page}`, async () => {
+    const f = await fixture();
+    f.config.limits.listPage = page;
+    f.config.limits.inputTokens = minimumListInputTokens(page, f.config.prompt);
+    f.config.inference.mode = 'live';
+    f.config.inference.credentialFile = f.config.authFile;
+    await writeFile(f.config.authFile, 'synthetic-model-token');
+    await writeFile(f.file, JSON.stringify(f.config));
+    const config = await loadConfig(f.file);
+    const ledger = spendingLedger(config.ledger, config);
+    let app: Awaited<ReturnType<typeof adapter>> | undefined;
+    let count = 0;
+    // Include worst-case nested JSON escaping, multibyte text and surrogate pairs.
+    const titles = ['\u0000'.repeat(TODO_TITLE_LENGTH), String.fromCharCode(0xd800).repeat(TODO_TITLE_LENGTH),
+      '界'.repeat(TODO_TITLE_LENGTH), '😀'.repeat(TODO_TITLE_LENGTH / 2),
+      String.fromCharCode(34).repeat(TODO_TITLE_LENGTH)];
+    const todos = Array.from({ length: page + 1 }, (_, i) => ({ id: randomUUID(),
+      title: titles[i % titles.length]!, state: 'open' as const, createdAt: Date.now() }));
+    const local = await wire((body, res) => {
+      if (++count === 1) {
+        res.writeHead(200, { 'content-type': 'text/event-stream' });
+        const chunk = { id: 'full-page', object: 'chat.completion.chunk', created: 1, model: config.inference.model };
+        res.write(`data: ${JSON.stringify({ ...chunk, choices: [{ index: 0, delta: { role: 'assistant',
+          tool_calls: [{ index: 0, id: 'list-page', type: 'function', function: { name: 'list_todos', arguments: '{}' } }] }, finish_reason: null }] })}\n\n`);
+        res.write(`data: ${JSON.stringify({ ...chunk, choices: [{ index: 0, delta: {}, finish_reason: 'tool_calls' }],
+          usage: { prompt_tokens: 20, completion_tokens: 5, total_tokens: 25 } })}\n\n`);
+        res.end('data: [DONE]\n\n');
+      } else {
+        assert.equal(count, 2);
+        const messages = body.messages as { role: string; content: string }[];
+        const result = JSON.parse(messages.find(m => m.role === 'tool')!.content);
+        assert.deepEqual(result, { items: todos.slice(0, page), next: page });
+        answer(res, 'Here is your full page of todos.');
+      }
+    });
+    try {
+      app = await adapter(config, ledger, local.endpoint);
+      await app.harness.commit(async tx => { (await tx.doc(StateDoc)).todos = todos; }, context);
+      assert.equal((await app.run()).status, 'done');
+      assert.equal(local.calls(), 2);
+      const calls = Object.values((await app.state())!.calls);
+      assert.equal(calls.length, 2);
+      assert.ok(calls.every(call => call.state === 'answered'));
+      assert.match(calls[1]!.response!, /Here is your full page/);
+    } finally { await app?.close(); await local.close(); ledger.close(); await f.cleanup(); }
+  });
+});
 
 test('ledger retries the intent/reservation gap idempotently, preserves conflicts and monthly cap', async () => {
   const f = await fixture();

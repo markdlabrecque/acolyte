@@ -53,7 +53,7 @@ test('CLI crosses authenticated gateway and runner to Pi Durable add/list', { ti
       credentialFile: null, inputUsdPerMillion: 1, outputUsdPerMillion: 1,
     },
     limits: { monthlyUsd: 10, warningUsd: 5, activeMs: 300000, modelCalls: 20,
-      toolCalls: 50, queued: 20, inputTokens: 8192, outputTokens: 1024,
+      toolCalls: 50, queued: 20, inputTokens: 98304, outputTokens: 1024,
       connectMs: 30000, progressMs: 90000, bodyBytes: 16384, listPage: 20 },
   };
   await writeFile(configFile, JSON.stringify(config));
