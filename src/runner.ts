@@ -7,7 +7,7 @@ import { loadConfig, protectedFile } from './config.ts';
 import { ownStore, ownSocket } from './host/store.ts';
 import { spendingLedger } from './inference/budget.ts';
 import { openRuntime, Rejection } from './runtime/pi-durable.ts';
-import { authenticated, body, send, failure } from './http.ts';
+import { authenticated, body, send, failure, requestRoute } from './http.ts';
 
 process.umask(0o077);
 let store: Awaited<ReturnType<typeof ownStore>> | undefined;
@@ -45,15 +45,14 @@ try {
     void (async () => {
       if (!authenticated(req, token)) throw new Rejection(401, 'Authentication required');
       if (req.headers['x-sender'] !== config.owner || req.headers['x-source'] !== 'cli') throw new Rejection(403, 'Route denied');
-      const match = /^\/v1\/agents\/([^/]+)\/requests(?:\/([^/]+)(\/result)?)?$/.exec(req.url ?? '');
-      if (!match || match[1] !== config.agentId) throw new Rejection(403, 'Route denied');
-      if (req.method === 'POST' && !match[2]) {
+      const route = requestRoute(req, config.agentId);
+      if (!route.receipt) {
         const result = await runtime!.submit(await body(req, config.limits.bodyBytes));
         send(res, result.status, result);
-      } else if (req.method === 'GET' && match[2]) {
-        const result = await runtime!.inspect(decodeURIComponent(match[2]), !!match[3]);
+      } else {
+        const result = await runtime!.inspect(decodeURIComponent(route.receipt), route.result);
         send(res, result.status, result);
-      } else throw new Rejection(400, 'Unsupported method');
+      }
     })().catch(error => failure(res, error));
   });
   server.listen(socket.bindPath);

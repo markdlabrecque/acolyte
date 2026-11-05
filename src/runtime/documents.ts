@@ -1,5 +1,6 @@
 import { defineDoc, type ConversationId, type SubmissionId } from '@earendil-works/pi-durable';
 import type { Config } from '../config.ts';
+import { remainingActiveMs } from './limits.ts';
 
 export type Receipt = {
   receipt: string; requestId: string; conversationId: string; message: string; digest: string;
@@ -21,6 +22,6 @@ export const StateDoc = defineDoc<State>({
 export function active(state: State): Receipt {
   const receipt = state.active === null ? undefined : state.receipts[state.active];
   if (!receipt) throw new Error('No active request');
-  if (Date.now() - receipt.startedAt >= receipt.config.limits.activeMs) throw new Error('Active work limit exhausted');
+  remainingActiveMs(receipt);
   return receipt;
 }

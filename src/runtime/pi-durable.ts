@@ -51,6 +51,7 @@ export async function openRuntime(storage: Storage, config: Config, ledger: Rese
           state.active = next.requestId;
           next.state = 'running';
           if (next.startedAt === 0) next.startedAt = Date.now();
+          // Transaction documents are proxies, which structuredClone cannot copy.
           return JSON.parse(JSON.stringify(next)) as Receipt;
         }, context);
         if (!request) return;
@@ -118,7 +119,7 @@ export async function openRuntime(storage: Storage, config: Config, ledger: Rese
           doc.conversations[input.conversationId] = conversation.id;
         }
         const receipt = randomUUID();
-        doc.receipts[input.requestId] = { ...input, digest, receipt, config: JSON.parse(JSON.stringify(config)),
+        doc.receipts[input.requestId] = { ...input, digest, receipt, config: structuredClone(config),
           order: doc.next++, state: 'queued', startedAt: 0, modelCalls: 0, toolCalls: 0 };
         return { status: 202, receipt };
       }, context);
