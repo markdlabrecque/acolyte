@@ -1,0 +1,2 @@
+> personal-agent-td-002@0.0.0 typecheck
+> tsc --noEmit

@@ -12,6 +12,10 @@ Independent review rejected historical checkpoint `824494f` for unsafe usage set
 
 [Full tool-call-batch persistence, #4](https://github.com/markdlabrecque/acolyte/issues/4), now has a [tested ownership decision](evidence/issue-4-tool-batch.md): Pi's assistant entry and generation checkpoint preserve the entire original batch before execution. New SIGKILL tests inspect that state in a separate paused process, then resume the original submission and production todo tools without duplicating the saved effect or regenerating the batch. This supersedes the historical cooperative replay test's evidence limitation for this bounded contract, not the full runner-recovery gap. The issue is still open remotely. `limits.warningUsd` is validated but unused; warning implementation belongs to TD-004.
 
+## Issue 7 refactor candidate
+
+The local `refactor/7-model-call` candidate separates fixture/live drivers, shares limit and route checks, and consolidates terminal events and missing-file handling. [Review history and exact candidate hashes](evidence/issue-7-model-call-refactor.md) record an initial rejection and fresh approval after correction. Parent and reviewer each passed 119 tests and typecheck without changing existing assertions. Plain configuration uses `structuredClone`; Pi transaction proxies retain the required JSON copy. This is local candidate evidence, not publication or live acceptance. TD-002 remains implemented, live smoke pending.
+
 ## Historical execution record
 
 The sections below preserve earlier sessions, commands, failures and reviews. References to uncommitted work, the former worktree, `develop`, old checkpoint hashes, and "current" outputs describe those sessions, not today's checkout. The old Cairn draft PR is not a current Acolyte PR. Historical artifact hashes and absolute paths are intentionally unchanged; `td002-review2-adversarial.ts` also contains old worktree imports and is a retained review artifact, not a portable current test command.

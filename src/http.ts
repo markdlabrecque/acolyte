@@ -7,6 +7,12 @@ import { Rejection } from './runtime/pi-durable.ts';
 const id = Type.String({ pattern: '^[a-zA-Z0-9][a-zA-Z0-9_-]{0,127}$' });
 const inputSchema = Compile(Type.Object({ schemaVersion: Type.Literal(1), conversationId: id, requestId: id,
   message: Type.String({ minLength: 1, maxLength: 16384 }) }, { additionalProperties: false }));
+export function requestRoute(req: Pick<IncomingMessage, 'url' | 'method'>, agentId: string) {
+  const match = /^\/v1\/agents\/([^/]+)\/requests(?:\/([^/]+)(\/result)?)?$/.exec(req.url ?? '');
+  if (!match || match[1] !== agentId) throw new Rejection(403, 'Route denied');
+  if (!(req.method === 'POST' && !match[2]) && !(req.method === 'GET' && match[2])) throw new Rejection(400, 'Unsupported method');
+  return { receipt: match[2], result: !!match[3] };
+}
 export function authenticated(req: IncomingMessage, token: string) {
   const value = Buffer.from(req.headers.authorization ?? '');
   const expected = Buffer.from(`Bearer ${token}`);

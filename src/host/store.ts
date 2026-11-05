@@ -8,6 +8,15 @@ import { SqliteStorage } from '@earendil-works/pi-durable/storage/sqlite';
 import { openNodeSqliteDatabase } from '@earendil-works/pi-durable/storage/sqlite/node';
 import type { Config } from '../config.ts';
 
+function missing(error: unknown) {
+  return error instanceof Error && 'code' in error && error.code === 'ENOENT';
+}
+
+async function lstatIfPresent(path: string) {
+  try { return await lstat(path); }
+  catch (error) { if (!missing(error)) throw error; return undefined; }
+}
+
 export async function canonical(path: string): Promise<string> {
   await mkdir(dirname(path), { recursive: true, mode: 0o700 });
   try {
@@ -15,13 +24,10 @@ export async function canonical(path: string): Promise<string> {
     if (info.nlink !== 1) throw new Error('Hard-linked stores are not supported');
     return await realpath(path);
   } catch (error) {
-    if (!(error instanceof Error && 'code' in error && error.code === 'ENOENT')) throw error;
+    if (!missing(error)) throw error;
     // A dangling symlink is not a new canonical file. Never lock one path then
     // let SQLite follow it to another path when creating the store.
-    const entry = await lstat(path).catch(cause => {
-      if (cause.code === 'ENOENT') return undefined;
-      throw cause;
-    });
+    const entry = await lstatIfPresent(path);
     if (entry) throw new Error('Dangling store alias is not supported');
     return join(await realpath(dirname(path)), basename(path));
   }
@@ -47,10 +53,7 @@ export async function ownSocket(socket: string) {
   let created: Awaited<ReturnType<typeof lstat>> | undefined;
   let privateDirectory: string | undefined;
   try {
-    const existing = await lstat(path).catch(error => {
-      if (error.code === 'ENOENT') return undefined;
-      throw error;
-    });
+    const existing = await lstatIfPresent(path);
     // Refuse unknown/stale sockets rather than unlinking another owner's endpoint.
     if (existing) throw new Error('Socket path already exists');
     privateDirectory = await mkdtemp(join(dirname(path), '.runner-'));
@@ -68,15 +71,9 @@ export async function ownSocket(socket: string) {
       },
       async close() {
         try {
-          const info = await lstat(path).catch(error => {
-            if (error.code === 'ENOENT') return undefined;
-            throw error;
-          });
+          const info = await lstatIfPresent(path);
           if (created && info?.dev === created.dev && info.ino === created.ino) await rm(path);
-          const inner = await lstat(bindPath).catch(error => {
-            if (error.code === 'ENOENT') return undefined;
-            throw error;
-          });
+          const inner = await lstatIfPresent(bindPath);
           if (created && inner?.dev === created.dev && inner.ino === created.ino) await rm(bindPath);
           await rmdir(privateDirectory!);
         } finally { await unlock(); }

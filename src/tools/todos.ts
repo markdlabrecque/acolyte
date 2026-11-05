@@ -2,33 +2,35 @@ import { randomUUID } from 'node:crypto';
 import { Type } from '@earendil-works/pi-ai';
 import { defineTool, defineExtension, type ToolExecutionApi } from '@earendil-works/pi-durable';
 import type { Context } from '@earendil-works/chord/context';
-import { StateDoc, active } from '../runtime/documents.ts';
+import { StateDoc, active, type State } from '../runtime/documents.ts';
+import { remainingActiveMs, countCall, effectiveLimit } from '../runtime/limits.ts';
 import type { Config } from '../config.ts';
 import { TODO_TITLE_LENGTH, TODO_INPUT_BYTES } from './todo-limits.ts';
 
 export function todoExtension(config: Config) {
+  function authorizedRequest(state: State, name: 'add_todo' | 'list_todos') {
+    const request = active(state);
+    if (!config.tools.includes(name) || !request.config.tools.includes(name)) throw new Error('Tool denied');
+    remainingActiveMs(request, config);
+    return request;
+  }
   async function execute(name: 'add_todo' | 'list_todos', args: { title?: string; cursor?: number }, api: ToolExecutionApi, context: Context) {
     const key = `todo-v1:${api.taskId}`;
     const encoded = JSON.stringify(args);
     await api.commit(async tx => {
       const state = await tx.doc(StateDoc);
-      const request = active(state);
-      if (!config.tools.includes(name) || !request.config.tools.includes(name)) throw new Error('Tool denied');
-      if (Date.now() - request.startedAt >= config.limits.activeMs) throw new Error('Active work limit exhausted');
+      const request = authorizedRequest(state, name);
       const prior = state.actions[key];
       if (prior) {
         if (prior.name !== name || prior.args !== encoded || (prior.callId !== undefined && prior.callId !== api.callId)) throw new Error('Changed action arguments');
         return;
       }
-      if (request.toolCalls >= Math.min(request.config.limits.toolCalls, config.limits.toolCalls)) throw new Error('Tool call limit exhausted');
-      request.toolCalls++;
+      countCall(request, config, 'toolCalls');
       state.actions[key] = { name, args: encoded, taskId: api.taskId, callId: api.callId, toolVersion: 1 };
     }, context);
     const result = await api.commit(async tx => {
       const state = await tx.doc(StateDoc);
-      const request = active(state);
-      if (!config.tools.includes(name) || !request.config.tools.includes(name)) throw new Error('Tool denied');
-      if (Date.now() - request.startedAt >= config.limits.activeMs) throw new Error('Active work limit exhausted');
+      const request = authorizedRequest(state, name);
       const action = state.actions[key]!;
       if (action.result !== undefined) return action.result;
       if (name === 'add_todo') {
@@ -37,7 +39,7 @@ export function todoExtension(config: Config) {
         action.result = JSON.stringify(todo);
       } else {
         const start = args.cursor ?? 0;
-        const end = start + Math.min(config.limits.listPage, request.config.limits.listPage, 100);
+        const end = start + Math.min(effectiveLimit(request, config, 'listPage'), 100);
         action.result = JSON.stringify({ items: state.todos.slice(start, end), next: end < state.todos.length ? end : null });
       }
       return action.result!;
