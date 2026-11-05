@@ -69,7 +69,7 @@ The owner explicitly authorized TD-002 implementation in the clean worktree on `
 
 The authorization above describes the original implementation session. Later publication to Cairn and a draft PR into `develop` were authorized historically. The current repository is [markdlabrecque/acolyte](https://github.com/markdlabrecque/acolyte), with implementation committed at `53f7860`, titled `TD-002 complete.`. GitHub reported no open PRs on 2026-11-03. The old draft PR is not the current delivery pointer; see [CURRENT.md](../../CURRENT.md).
 
-TD-002 is implemented, live smoke pending. The commit title does not establish acceptance. The protected dotenv loader and synthetic tests were added after independent review round 2 and still need independent review. The review record, `*-current.txt` outputs, and `td002-candidate-files.sha256` are historical pre-dotenv evidence, not hashes or approval for `53f7860`.
+TD-002 is implemented, live smoke pending. The commit title does not establish acceptance. The protected dotenv loader and synthetic tests were added after independent review round 2. [Issue #9 review](../evidence/issue-9-credential-review.md) now approves the corrected loader and adapter at `932b7ba` after two rejected candidates. The review record, `*-current.txt` outputs, and `td002-candidate-files.sha256` are historical pre-dotenv evidence, not hashes or approval for `53f7860`.
 
 ## Evidence
 
@@ -88,7 +88,7 @@ This is not a Pi dependency stop: the executed document/FULL and stable replay c
 Open acceptance and review gaps:
 
 - Live smoke remains pending, with no retained authorization or real-model pass. The exact selected model is unchanged. No credential file was inspected for this update.
-- [#9](https://github.com/markdlabrecque/acolyte/issues/9) requires independent review of the credential loader. [Review round 2](../evidence/td002-review-round-2.md) approved the pre-dotenv correction after 85 suite tests, typecheck and 13 additional loopback checks, not the later loader or ticket completion.
+- [#9](https://github.com/markdlabrecque/acolyte/issues/9) has [independent approval](../evidence/issue-9-credential-review.md) of the credential loader, adapter fixes and tests at `932b7ba`. All findings were fixed; 117 tests and typecheck pass. Live acceptance is still pending. [Review round 2](../evidence/td002-review-round-2.md) approved the pre-dotenv correction after 85 suite tests, typecheck and 13 additional loopback checks, not the later loader or ticket completion.
 - [#4](https://github.com/markdlabrecque/acolyte/issues/4) has a [written decision and SIGKILL tests](../evidence/issue-4-tool-batch.md) accepting Pi's assistant entry and generation checkpoint as the authoritative full batch. No duplicate application batch is needed on the pinned path. The issue remains open pending publication; full runner recovery is not claimed.
 - [#6](https://github.com/markdlabrecque/acolyte/issues/6) is merged and closed, with [post-initialization readback and actual runtime-transaction evidence](../evidence/issue-6-storage-durability.md). The old standalone probe is not the basis of this acceptance check.
 - `limits.warningUsd` is schema-validated but unused by the runtime. Its warning behavior belongs to [TD-004](004-persisted-limits.md), not a completed TD-002 feature.

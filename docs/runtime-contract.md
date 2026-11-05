@@ -6,7 +6,7 @@ TD-002 is implemented, live smoke pending. The current Acolyte implementation co
 
 The issue #4 candidate passes 101 tests with no failures/skips and typecheck passes. [Batch decision and crash evidence](evidence/issue-4-tool-batch.md) retain the new SIGKILL tests and full-suite output. The merged issue #6's [98-test runtime-connection FULL evidence](evidence/issue-6-storage-durability.md) retains its red/green regression and source hashes. The prior 94-test report, retained 85-test outputs and `td002-candidate-files.sha256` describe earlier candidates, not current source hashes or approval.
 
-Independent review rejected historical checkpoint `824494f` for unsafe usage settlement. Review round 2 approved the bounded correction, but the later credential loader still needs [independent review, #9](https://github.com/markdlabrecque/acolyte/issues/9). There is no retained live DeepInfra pass. Formal ticket status remains `blocked`.
+Independent review rejected historical checkpoint `824494f` for unsafe usage settlement. Review round 2 approved the bounded correction. The later credential loader and adapter fixes now have [independent approval under #9](evidence/issue-9-credential-review.md) at `932b7ba`, with 117 tests and typecheck passing. There is no retained live DeepInfra pass. Formal ticket status remains `blocked`.
 
 [FULL-mode verification, #6](https://github.com/markdlabrecque/acolyte/issues/6), is merged and closed. `ownStore()` now checks the same database facade after Pi storage initialization. New tests read FULL inside actual runtime commit transactions and reject initialization downgrades before runner readiness. This supersedes the standalone probe's evidence limitation, not the power-loss limitation.
 

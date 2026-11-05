@@ -26,4 +26,4 @@ The eventual local live-test JSON configuration must use:
 }
 ```
 
-This is the `inference.credentialFile` field, not a complete configuration. No live-test configuration or inference run is created by adding dotenv support. TD-002 is implemented, live smoke pending. Independent review of this loader is tracked in [Acolyte #9](https://github.com/markdlabrecque/acolyte/issues/9). Tests use temporary synthetic credentials only.
+This is the `inference.credentialFile` field, not a complete configuration. No live-test configuration or inference run is created by adding dotenv support. TD-002 is implemented, live smoke pending. [Independent review for Acolyte #9](evidence/issue-9-credential-review.md) approved the loader, adapter fixes and tests at `932b7ba`. Tests use temporary synthetic credentials only.

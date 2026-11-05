@@ -1,0 +1,146 @@
+
+> personal-agent-td-002@0.0.0 test
+> node --test tests/*.test.ts
+
+✔ configuration couples full list pages to the conservative input bound (7.014494ms)
+▶ strict configuration rejects unknown keys, unsafe paths, unbounded limits and unavailable model selection without starting a run
+  ✔ malformed (0.72988ms)
+  ✔ unknown (0.857009ms)
+  ✔ tool (0.870333ms)
+  ✔ model (0.660991ms)
+  ✔ relative (0.675929ms)
+  ✔ infinite (0.81551ms)
+  ✔ zero (0.753865ms)
+  ✔ queue (1.059268ms)
+  ✔ price (1.205091ms)
+  ✔ fault-injection (0.634751ms)
+✔ strict configuration rejects unknown keys, unsafe paths, unbounded limits and unavailable model selection without starting a run (289.408339ms)
+✔ atomic queue capacity preserves duplicate receipt before fullness and drains requests admitted around idle completion (352.626231ms)
+✔ failed application storage rejects admission and lookup rather than returning acceptance or 404 (4.899775ms)
+▶ protected raw keys and dotenv credentials without process environment mutation
+  ✔ model.key (3.112381ms)
+  ✔ .env (2.405534ms)
+  ✔ .env.literal (2.514429ms)
+  ✔ .env.live (1.255757ms)
+  ✔ missing, empty or multiline key fails without revealing contents (2.407699ms)
+  ✔ missing, empty or multiline key fails without revealing contents (0.931458ms)
+  ✔ missing, empty or multiline key fails without revealing contents (4.762638ms)
+  ✔ missing, empty or multiline key fails without revealing contents (6.752282ms)
+  ✔ raw malformed keys fail without revealing contents (7.912089ms)
+  ✔ no parent search (0.790504ms)
+  ✔ dotenv requires owner-only permissions (3.411563ms)
+✔ protected raw keys and dotenv credentials without process environment mutation (43.525775ms)
+▶ protected file checks the opened target and bounds actual bytes
+  ✔ replacement (3.294543ms)
+  ✔ growth (0.779924ms)
+  ✔ owner (0.59102ms)
+✔ protected file checks the opened target and bounds actual bytes (7.033159ms)
+▶ a full page of maximum-length escaped titles reaches the model and gets an answer
+  ✔ page size 1 (177.48302ms)
+  ✔ page size 20 (38.808652ms)
+  ✔ page size 100 (29.703344ms)
+✔ a full page of maximum-length escaped titles reaches the model and gets an answer (247.090192ms)
+✔ ledger retries the intent/reservation gap idempotently, preserves conflicts and monthly cap (2.549324ms)
+✔ actual live adapter orders durable intent/reservation/dispatch before loopback wire, then stores response and settles usage (16.017651ms)
+✔ actual live wire authenticates from dotenv and executes add/list from a persisted assistant batch (24.183696ms)
+▶ unknown usage and failed dispatch retain conservative charges without hidden wire retries
+  ✔ missing-usage (9.207329ms)
+  ✔ http-error (9.351751ms)
+  ✔ truncated-stream (8.991283ms)
+  ✔ connect-timeout (39.022563ms)
+  ✔ progress-timeout (38.257037ms)
+  ✔ active-timeout (105.337446ms)
+✔ unknown usage and failed dispatch retain conservative charges without hidden wire retries (211.223842ms)
+▶ raw wire usage must be complete and consistent before normalized usage can settle
+  ✔ missing prompt (9.931077ms)
+  ✔ missing completion (7.872484ms)
+  ✔ missing total (7.461804ms)
+  ✔ inconsistent total (10.068576ms)
+  ✔ valid usage (9.108354ms)
+  ✔ explicit zero completion (10.820797ms)
+  ✔ explicit zero prompt (8.162469ms)
+  ✔ prompt_tokens=-1 (11.948634ms)
+  ✔ prompt_tokens=0.5 (8.634415ms)
+  ✔ prompt_tokens=9007199254740992 (9.88429ms)
+  ✔ prompt_tokens=5 (13.647432ms)
+  ✔ prompt_tokens=null (7.834613ms)
+  ✔ completion_tokens=-1 (7.723906ms)
+  ✔ completion_tokens=0.5 (8.424129ms)
+  ✔ completion_tokens=9007199254740992 (9.552798ms)
+  ✔ completion_tokens=5 (15.616617ms)
+  ✔ completion_tokens=null (8.039398ms)
+  ✔ total_tokens=-1 (6.554541ms)
+  ✔ total_tokens=0.5 (6.930587ms)
+  ✔ total_tokens=9007199254740992 (9.688262ms)
+  ✔ total_tokens=5 (7.951873ms)
+  ✔ total_tokens=null (8.304325ms)
+✔ raw wire usage must be complete and consistent before normalized usage can settle (206.957465ms)
+▶ missing credentials, pricing, funds, model/time/context limits fail before any wire call
+  ✔ credentials (4.262159ms)
+  ✔ missing-file (3.264677ms)
+  ✔ unsafe-file (2.815273ms)
+  ✔ malformed-raw (10.774581ms)
+  ✔ malformed-env (4.682498ms)
+  ✔ prices (3.882146ms)
+  ✔ funds (3.696046ms)
+  ✔ model-limit (4.878104ms)
+  ✔ time (4.153064ms)
+  ✔ context (3.537959ms)
+✔ missing credentials, pricing, funds, model/time/context limits fail before any wire call (46.918532ms)
+✔ provider errors reflecting authorization are sanitized before persistence (7.877694ms)
+✔ failed streams never publish partial secrets or retain provider metadata (113.31138ms)
+▶ persisted application attempt states reuse reservations/responses but never resend uncertain dispatch
+  ✔ intent-gap (12.295475ms)
+  ✔ answered (8.067701ms)
+  ✔ dispatched (24.956656ms)
+✔ persisted application attempt states reuse reservations/responses but never resend uncertain dispatch (46.006951ms)
+✔ finite model-call allowance blocks the next generation in a real live-adapter tool loop (23.369107ms)
+✔ adapter refuses external test endpoints and unbound direct calls (3.038502ms)
+✔ real runner refuses duplicate identity, canonical path aliases, hard links, and shared sockets without harming owner (1514.786035ms)
+✔ unknown socket and ordinary/symlink paths are never unlinked during startup (625.815072ms)
+✔ failed startup releases all owned resources, allowing corrected configuration without a hung process (1060.901456ms)
+✔ runner shutdown does not unlink a replacement socket path (231.718154ms)
+✔ socket cleanup retains a replacement inode and refuses a second claimant (19.314247ms)
+✔ public application document commit survives SQLite reopen in FULL mode (27.441259ms)
+✔ public safe replay retains the tool decision and atomic application result (57.286058ms)
+✔ distinct same-title receipts, CLI disconnect, queue admission/completion, denied routes and stored retrieval across real processes (1506.227514ms)
+✔ terminal guard failure is persisted and CLI result exits 1 without a false answer (1057.542091ms)
+✔ gateway forwards durable admission even when the submitting HTTP client disconnects (474.810273ms)
+✔ CLI crosses authenticated gateway and runner to Pi Durable add/list (2415.615254ms)
+✔ runtime commits use the FULL connection supplied to Pi storage, including after reopen (198.634485ms)
+ℹ fresh runtime: PRAGMA synchronous=2 (FULL) inside 28 Pi storage transactions, including request commits
+ℹ reopened runtime: PRAGMA synchronous=2 (FULL) inside 32 Pi storage transactions, including request commits
+▶ runner fails before readiness if storage initialization downgrades FULL
+  ✔ OFF (762.067285ms)
+  ℹ OFF: startup exited 2 without readiness/socket; clean restart acquired the same store and agent locks
+  ✔ NORMAL (564.949205ms)
+  ℹ NORMAL: startup exited 2 without readiness/socket; clean restart acquired the same store and agent locks
+✔ runner fails before readiness if storage initialization downgrades FULL (1327.73021ms)
+▶ the full Pi tool-call batch survives SIGKILL before execution and between todo effects
+  ✔ before-first (1033.037482ms)
+  ℹ before-first: SIGKILL retained both original calls and the pending second call; recovery created exactly two todos without regenerating the batch
+  ✔ after-first (747.713448ms)
+  ℹ after-first: SIGKILL retained both original calls and the pending second call; recovery created exactly two todos without regenerating the batch
+✔ the full Pi tool-call batch survives SIGKILL before execution and between todo effects (1781.809346ms)
+✔ tool batch records distinct action identities, identical titles, and bounded list cursor pages (70.628377ms)
+✔ finite tool limit stops a returned batch after the allowed effect (9.967996ms)
+▶ denied/unregistered tools, invalid arguments, accepted/current permissions and finite limits create no unauthorized effect
+  ✔ shell (6.470744ms)
+  ✔ empty-title (11.824761ms)
+  ✔ extra-argument (8.688816ms)
+  ✔ negative-cursor (5.244522ms)
+  ✔ large-cursor (7.709068ms)
+  ✔ accepted-denial (6.97477ms)
+  ✔ current-denial (7.963245ms)
+  ✔ tool-limit (8.708863ms)
+  ✔ expired (14.250544ms)
+  ✔ current-time (9.450626ms)
+✔ denied/unregistered tools, invalid arguments, accepted/current permissions and finite limits create no unauthorized effect (90.040117ms)
+ℹ tests 117
+ℹ suites 0
+ℹ pass 117
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3542.88335
