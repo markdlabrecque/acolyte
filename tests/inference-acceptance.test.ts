@@ -8,7 +8,9 @@ import { DatabaseSync } from 'node:sqlite';
 import { BACKGROUND_CONTEXT as context } from '@earendil-works/chord/context';
 import { Harness, MemoryStorage, LiveDoc, ROOT_CONVERSATION_ID, createRegistry, defineExtension, hook, GenerationTask, type TaskId } from '@earendil-works/pi-durable';
 import { fauxAssistantMessage } from '@earendil-works/pi-ai';
+import { normalizeContext } from '@earendil-works/pi-ai/utils/transcript';
 import { inference } from '../src/inference/deepinfra.ts';
+import { inferenceProvider } from '../src/inference/provider-call.ts';
 import { spendingLedger, type Reservations } from '../src/inference/budget.ts';
 import { StateDoc } from '../src/runtime/documents.ts';
 import { todoExtension } from '../src/tools/todos.ts';
@@ -118,6 +120,67 @@ test('a full page of maximum-length escaped titles reaches the model and gets an
       assert.match(calls[1]!.response!, /Here is your full page/);
     } finally { await app?.close(); await local.close(); ledger.close(); await f.cleanup(); }
   });
+});
+
+test('stream progress changes before the provider finishes without retaining partial content', { timeout: 10000 }, async () => {
+  const f = await fixture();
+  f.config.inference.mode = 'live';
+  f.config.inference.credentialFile = f.config.authFile;
+  await writeFile(f.config.authFile, 'synthetic-model-token');
+  const ledger = spendingLedger(f.config.ledger, f.config);
+  let response: ServerResponse | undefined;
+  const local = await wire((_body, res) => {
+    response = res;
+    res.writeHead(200, { 'content-type': 'text/event-stream' });
+    res.flushHeaders();
+  });
+  const app = await adapter(f.config, ledger, local.endpoint);
+  const until = async (check: () => Promise<boolean>) => {
+    for (let i = 0; i < 200; i++) {
+      if (await check()) return;
+      await new Promise(resolve => setTimeout(resolve, 10));
+    }
+    assert.fail('Progress did not arrive');
+  };
+  try {
+    let finished = false;
+    const running = app.run().then(result => { finished = true; return result; });
+    await until(async () => response !== undefined);
+    assert.equal((await app.state())!.receipts.request!.progress, undefined);
+    for (const deltaCount of [1, 2]) {
+      response!.write(`data: ${JSON.stringify({ id: 'progress', object: 'chat.completion.chunk', created: 1,
+        model: f.config.inference.model, choices: [{ index: 0, delta: { content: 'private partial text' }, finish_reason: null }] })}\n\n`);
+      await until(async () => (await app.state())!.receipts.request!.progress?.deltaCount === deltaCount);
+      const state = (await app.state())!;
+      assert.equal(finished, false);
+      assert.equal(state.receipts.request!.state, 'running');
+      assert.ok(state.receipts.request!.progress!.lastActivityAt > 0);
+      assert.equal(JSON.stringify(state).includes('private partial text'), false);
+    }
+    response!.end('data: [DONE]\n\n');
+    await running;
+    assert.equal((await app.state())!.receipts.request!.progress!.deltaCount, 2);
+  } finally { response?.end(); await app.close(); await local.close(); ledger.close(); await f.cleanup(); }
+});
+
+test('a failed progress write aborts the upstream connection', { timeout: 10000 }, async () => {
+  const f = await fixture();
+  f.config.inference.mode = 'live';
+  let closed = false;
+  const local = await wire((_body, res) => {
+    res.on('close', () => { closed = true; });
+    res.writeHead(200, { 'content-type': 'text/event-stream' });
+    res.write(`data: ${JSON.stringify({ id: 'progress-failure', object: 'chat.completion.chunk', created: 1,
+      model: f.config.inference.model, choices: [{ index: 0, delta: { content: 'working' }, finish_reason: null }] })}\n\n`);
+  });
+  try {
+    const provider = inferenceProvider(f.config, local.endpoint);
+    await assert.rejects(provider.call(provider.model,
+      normalizeContext({ messages: [{ role: 'user', content: 'test', timestamp: Date.now() }] }), undefined,
+      'synthetic-model-token', 30000, async () => { throw new Error('synthetic storage failure'); }), /synthetic storage failure/);
+    for (let i = 0; i < 100 && !closed; i++) await new Promise(resolve => setTimeout(resolve, 10));
+    assert.equal(closed, true, 'Upstream must close without waiting for a deadline');
+  } finally { await local.close(); await f.cleanup(); }
 });
 
 test('ledger retries the intent/reservation gap idempotently, preserves conflicts and monthly cap', async () => {

@@ -73,6 +73,8 @@ TD-002 is implemented, live smoke pending. The commit title does not establish a
 
 ## Evidence
 
+Issue #5's owner selected metadata-only progress in status. Candidate `7453049` has independent approval after fixing a rejected transport-cleanup finding. Status exposes a cumulative delta count and last-activity timestamp without partial model content or CLI formatting changes. All 111 tests and typecheck pass. [Progress evidence](../evidence/issue-5-progress.md) records both review rounds and test limitations. This does not change TD-002's blocked live-acceptance status.
+
 The local issue [#7](https://github.com/markdlabrecque/acolyte/issues/7) refactor candidate has [fresh independent approval after an initial rejection](../evidence/issue-7-model-call-refactor.md). Fixture/live drivers, shared limits/routes and terminal events are separated without weakening existing tests. Parent and reviewer passed 119 tests and typecheck. The evidence records exact source hashes and the necessary JSON-copy exception for Pi transaction proxies. This candidate is not published or merged and does not close the live acceptance gate.
 
 Independent review REJECTED checkpoint `824494f` on `feat/td-002-todo-round-trip`. The reviewer showed that Pi AI normalizes missing raw counts to zero and recomputes the total, allowing incomplete or inconsistent usage to settle the 17,408-microdollar reservation at 20, 5, or 25. [Reviewer usage checks](../evidence/td002-independent-usage-check.txt) and [adversarial records](../evidence/td002-independent-adversarial.txt) retain the failure.

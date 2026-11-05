@@ -42,6 +42,10 @@ try {
       const { requestId, state, answer, failure } = response.value;
       const summary = state === 'queued' || state === 'running' ? `pending (${state})` : state;
       console.log(`Request ${requestId}: ${summary}.`);
+      const progress = response.value.progress as { deltaCount: number; lastActivityAt: number | null } | undefined;
+      if (command === 'status' && progress) {
+        console.log(`Model progress: ${progress.deltaCount} deltas. Last activity: ${progress.lastActivityAt === null ? 'none' : new Date(progress.lastActivityAt).toISOString()}.`);
+      }
       if (answer !== undefined) console.log(answer);
       if (failure !== undefined) console.log(failure);
     }

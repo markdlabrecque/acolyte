@@ -7,6 +7,7 @@ export type Receipt = {
   order: number; state: 'queued' | 'running' | 'completed' | 'failed'; config: Config;
   startedAt: number; modelCalls: number; toolCalls: number;
   submission?: SubmissionId; answer?: string; failure?: string;
+  progress?: { deltaCount: number; lastActivityAt: number };
 };
 export type State = {
   agentId: string; next: number; active: string | null;

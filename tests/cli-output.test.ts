@@ -31,9 +31,12 @@ for (const command of ['submit', 'status', 'result']) {
         : ['queued', 'running', 'completed', 'failed'].map(state => ({
           value: { status: command === 'result' && ['queued', 'running'].includes(state) ? 202 : 200,
             requestId: 'request-1', receipt: 'receipt-1', state, fixture: true,
+            ...(command === 'status' ? { progress: { deltaCount: state === 'queued' ? 0 : 2,
+              lastActivityAt: state === 'queued' ? null : 1700000000000 } } : {}),
             ...(command === 'result' && state === 'completed' ? { answer: 'Your todos:\n- Buy milk' } : {}),
             ...(state === 'failed' ? { failure: 'Model call limit reached' } : {}) },
           text: `Request request-1: ${['queued', 'running'].includes(state) ? `pending (${state})` : state}.\n`
+            + (command === 'status' ? `Model progress: ${state === 'queued' ? 0 : 2} deltas. Last activity: ${state === 'queued' ? 'none' : '2023-11-14T22:13:20.000Z'}.\n` : '')
             + (command === 'result' && state === 'completed' ? 'Your todos:\n- Buy milk\n' : '')
             + (state === 'failed' ? 'Model call limit reached\n' : ''),
           code: state === 'failed' ? 1 : 0,
