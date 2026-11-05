@@ -1,5 +1,9 @@
 # TD-002 runtime contract evidence
 
+## Issue #3 CLI output
+
+The readable-output candidate preserves JSON and issue #2 errors/exit codes, labels queued/running requests pending and separates submission acceptance from completion. [Review and test evidence](evidence/issue-3-readable-cli.md) records independent approval and 112 passing local tests. No inference behavior changed; TD-002 live acceptance remains pending.
+
 ## Current evidence status, 2026-11-03
 
 TD-002 is implemented, live smoke pending. The current Acolyte implementation commit is `53f7860`; its `TD-002 complete.` title is not acceptance evidence. See [CURRENT.md](../CURRENT.md) and the [ticket's open gaps](tickets/002-first-todo-round-trip.md#evidence).
