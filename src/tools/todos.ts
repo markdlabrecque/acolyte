@@ -4,6 +4,7 @@ import { defineTool, defineExtension, type ToolExecutionApi } from '@earendil-wo
 import type { Context } from '@earendil-works/chord/context';
 import { StateDoc, active } from '../runtime/documents.ts';
 import type { Config } from '../config.ts';
+import { TODO_TITLE_LENGTH, TODO_INPUT_BYTES } from './todo-limits.ts';
 
 export function todoExtension(config: Config) {
   async function execute(name: 'add_todo' | 'list_todos', args: { title?: string; cursor?: number }, api: ToolExecutionApi, context: Context) {
@@ -44,10 +45,12 @@ export function todoExtension(config: Config) {
     return { output: [{ type: 'text' as const, text: result }] };
   }
   const add = defineTool({ name: 'add_todo', description: 'Add one open todo.', callers: ['model'], replay: 'safe',
-    parameters: Type.Object({ title: Type.String({ minLength: 1, maxLength: 500, pattern: '\\S' }) }, { additionalProperties: false }),
+    parameters: Type.Object({ title: Type.String({ minLength: 1, maxLength: TODO_TITLE_LENGTH, pattern: '\\S' }) }, { additionalProperties: false }),
     execute: (args, api, ctx) => execute('add_todo', args, api, ctx),
   });
   const list = defineTool({ name: 'list_todos', description: 'List a bounded page of todos.', callers: ['model'], replay: 'safe',
+    // Keep Pi's output truncation from cutting the JSON in a valid full page.
+    outputLimits: { maxBytes: config.limits.listPage * TODO_INPUT_BYTES + 256 },
     parameters: Type.Object({ cursor: Type.Optional(Type.Integer({ minimum: 0, maximum: 1_000_000 })) }, { additionalProperties: false }),
     execute: (args, api, ctx) => execute('list_todos', args, api, ctx),
   });
