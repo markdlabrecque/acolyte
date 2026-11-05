@@ -4,6 +4,12 @@ The owner chose status output over logs. Status now returns `progress.deltaCount
 
 Only nonempty text, thinking and tool-call deltas count. The adapter persists metadata, never partial model text, and keeps the existing progress timeout refresh. Each delta adds one durable commit. This overhead has not been benchmarked.
 
+## Integration with readable CLI
+
+After main gained readable CLI output, merge candidate `05bbda0995fc6c5f107ff5e04a7c41002806970f` preserved both runtime evidence sections and added a status-only progress line. Plain status shows the count and ISO last-activity timestamp, or `0`/`none` before activity. JSON output and unrelated CLI behavior remain unchanged. This supersedes the original no-formatting-change statement above.
+
+Fresh independent review against `abb9320`: **APPROVE**, no must-fix findings. Parent and reviewer each passed all 114 tests, typecheck and whitespace checks. The prior transport-abort correction remains intact. Existing readable CLI cases now verify progress for queued, running, completed and failed status. Running real-stream updates remain covered at the adapter/state layer, not through a polling CLI process. Per-delta storage overhead remains unbenchmarked; TD-002 live acceptance remains blocked.
+
 ## Independent review
 
 - First candidate `86ab008`: **REJECT**. The reviewer reproduced a loopback connection remaining open after a progress callback threw because cleanup cleared deadlines without aborting transport.
