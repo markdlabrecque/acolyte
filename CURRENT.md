@@ -6,13 +6,19 @@ The public repository is [markdlabrecque/acolyte](https://github.com/markdlabrec
 
 ## Checkout and GitHub
 
-- A fresh fetch confirms local `main` matches remote `main` at merge commit `7a61dc1`, after [PR #14](https://github.com/markdlabrecque/acolyte/pull/14). Earlier merges: [PR #13](https://github.com/markdlabrecque/acolyte/pull/13) (`4f56801`, issue #4 evidence), [status PR #12](https://github.com/markdlabrecque/acolyte/pull/12) (`f0c7a7e`) and [PR #11](https://github.com/markdlabrecque/acolyte/pull/11) (SQLite FULL fix `c59e172`). The original TD-002 implementation is `53f7860`, following baseline `62d8b2e`.
-- Issues [#1](https://github.com/markdlabrecque/acolyte/issues/1), [#4](https://github.com/markdlabrecque/acolyte/issues/4) and [#6](https://github.com/markdlabrecque/acolyte/issues/6) are closed. Issue #1 was closed by hand after PR #14 merged.
-- GitHub reports **7 open issues and no open PRs**. No CI checks are configured. The owner authorized merging on passing local tests and typecheck.
+- A fresh fetch confirms local `main` matches remote `main` at merge commit `3b1b012`, after [PR #15](https://github.com/markdlabrecque/acolyte/pull/15). This status-only commit follows that merge. Earlier merges: [PR #14](https://github.com/markdlabrecque/acolyte/pull/14) (`7a61dc1`), [PR #13](https://github.com/markdlabrecque/acolyte/pull/13) (`4f56801`, issue #4 evidence), [status PR #12](https://github.com/markdlabrecque/acolyte/pull/12) (`f0c7a7e`) and [PR #11](https://github.com/markdlabrecque/acolyte/pull/11) (SQLite FULL fix `c59e172`). The original TD-002 implementation is `53f7860`, following baseline `62d8b2e`.
+- Issues [#1](https://github.com/markdlabrecque/acolyte/issues/1), [#4](https://github.com/markdlabrecque/acolyte/issues/4) [#6](https://github.com/markdlabrecque/acolyte/issues/6) and [#9](https://github.com/markdlabrecque/acolyte/issues/9) are closed. Issue #1 was closed by hand after PR #14 merged.
+- GitHub reports **6 open issues and no open PRs**. No CI checks are configured. The owner authorized merging on passing local tests and typecheck.
 - The saved remote now uses `ssh://git@github.com/markdlabrecque/acolyte`; fetching succeeds. The earlier `github-mark` alias failure is no longer the current remote configuration.
 - The checkout is clean on `main`. There is one local worktree. No remote `develop` branch existed when checked; the owner selected `main` as the PR target instead.
 
-## Completed this session
+## Issue #9: credential loader independently approved, merged
+
+[PR #15](https://github.com/markdlabrecque/acolyte/pull/15) fixes the independent review's credential-disclosure and file-check race findings. The helper checks and reads one descriptor with an actual byte limit. Raw and dotenv keys receive the same validation before dispatch. Failed provider responses contain only safe fields; partial streaming messages are no longer published or persisted. Progress deadlines still refresh on incoming deltas.
+
+Fresh independent technical review approved `932b7ba`, with no remaining must-fix findings. Parent and reviewer each passed all 117 tests and typecheck. [Review history, finding dispositions, outputs and limitations](docs/evidence/issue-9-credential-review.md) are retained. The owner authorized the PR merge and this separate status update on `main`. No real credentials, live inference or production systems were used. TD-002 still needs separately authorized live acceptance.
+
+## Earlier completed work
 
 - Refreshed this snapshot and nine related documents, corrected stale Cairn repository/PR/worktree pointers, removed the personal credential-file path, and separated historical test evidence from current acceptance claims. The recorded Cairn product name remains unchanged. Documentation issue #8 remains open.
 - Implemented issue #6 through the supported Pi database API. The pinned runtime retains the supplied connection; the missing guard was a readback after storage initialization, not a check on a second connection. `ownStore()` now requires FULL both before and after initialization, before the runner can become ready.
@@ -34,7 +40,7 @@ New tests send SIGKILL before the first tool executes and after its todo/result 
 
 The CLI, authenticated gateway, separate runner, Pi Durable and SQLite add/list path is committed. It uses schema-validated JSON and exposes `add_todo` and `list_todos`. The selected model remains DeepInfra `deepseek-ai/DeepSeek-V4-Flash-0731`.
 
-The issue #4 merge candidate passed 101 tests with no failures/skips and typecheck (before PR #14, which added tests and was not recorded in evidence); [batch-contract evidence](docs/evidence/issue-4-tool-batch.md) retains the outputs. The merged issue #6 source passed 98 tests; its [evidence](docs/evidence/issue-6-storage-durability.md) includes the earlier failing regression. The prior 94-test report and retained 85-test outputs describe older candidates. Review round 2 is pre-dotenv evidence, not current-candidate approval. The protected credential loader still needs independent review.
+The issue #4 merge candidate passed 101 tests with no failures/skips and typecheck (before PR #14, which added tests and was not recorded in evidence); [batch-contract evidence](docs/evidence/issue-4-tool-batch.md) retains the outputs. The merged issue #6 source passed 98 tests; its [evidence](docs/evidence/issue-6-storage-durability.md) includes the earlier failing regression. The prior 94-test report and retained 85-test outputs describe older candidates. Review round 2 is pre-dotenv evidence, not current-candidate approval. The protected credential loader and adapter fixes now have independent approval at `932b7ba`; the current suite passes 117 tests and typecheck.
 
 No retained evidence establishes a real DeepInfra add/list pass. The commit title does not close that acceptance gate. The [TD-002 ticket](docs/tickets/002-first-todo-round-trip.md) therefore keeps formal status `blocked`: implemented, live smoke pending. No live inference or credential access is authorized by this update.
 
@@ -44,17 +50,16 @@ Use the [local implementation tracker](docs/tickets/README.md), [TD-002 ticket](
 
 ## Current GitHub follow-ups
 
-These seven issues remain open after issues #1, #4 and #6 closed. These numbers belong to Acolyte, not the old Cairn planning hierarchy.
+These six issues remain open after issues #1, #4, #6 and #9 closed. These numbers belong to Acolyte, not the old Cairn planning hierarchy.
 
 - [#2: Status errors say "rejected" when the service is down](https://github.com/markdlabrecque/acolyte/issues/2)
 - [#3: Make command-line answers readable by default](https://github.com/markdlabrecque/acolyte/issues/3)
 - [#5: Decide whether users see progress while the assistant works](https://github.com/markdlabrecque/acolyte/issues/5)
 - [#7: Split the model-call code and remove copied code](https://github.com/markdlabrecque/acolyte/issues/7)
 - [#8: Bring TD-002 records in line with what was built](https://github.com/markdlabrecque/acolyte/issues/8)
-- [#9: Get an independent review of the credential file loader](https://github.com/markdlabrecque/acolyte/issues/9)
 - [#10: Trim overlapping tests and decide on the Pi library tests](https://github.com/markdlabrecque/acolyte/issues/10)
 
-The next recommended task is credential-loader review in [#9](https://github.com/markdlabrecque/acolyte/issues/9), then a separately authorized live smoke before TD-002 acceptance. This ordering is a recommendation, not authorization to start another issue.
+Credential-loader review is complete. TD-002 still requires a separately authorized live smoke. The documentation reconciliation in [#8](https://github.com/markdlabrecque/acolyte/issues/8) remains open; this update does not authorize another issue or live inference.
 
 ## Later implementation
 
@@ -72,4 +77,4 @@ These remain draft plans, not implementation authorization. The former snapshot 
 
 Slack, Google and Proton spikes remain complete and closed. Preserve their [completion ledger](docs/evidence/integration-spike-ledger.md), retained evidence and exclusions, including lock/suspend exclusions and the deliberately uncertain Proton no-write action. Do not rerun them for this slice. Historical artifact paths and review hashes are retained as provenance, not current runnable instructions.
 
-Before claiming TD-002 acceptance, resolve the documented acceptance gaps, obtain independent credential-loader review, and obtain separate owner authorization for a bounded live add/list smoke with sanitized evidence. This update installs no services, changes no host settings, reads no credentials, and authorizes no deployment.
+Before claiming TD-002 acceptance, resolve the remaining documented acceptance gaps and obtain separate owner authorization for a bounded live add/list smoke with sanitized evidence. This update installs no services, changes no host settings, reads no credentials, and authorizes no deployment.
