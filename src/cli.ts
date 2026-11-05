@@ -34,7 +34,21 @@ try {
       if (response.status === 409) throw new Error('Conflict: this request ID was already used with different content.');
       throw new Error(`Request rejected: HTTP ${response.status}`);
     }
-    console.log(values.json ? JSON.stringify(response.value) : JSON.stringify(response.value, null, 2));
+    if (values.json) console.log(JSON.stringify(response.value));
+    else if (command === 'submit') {
+      console.log(`Request ${values['request-id']} accepted. Receipt: ${response.value.receipt}`);
+      console.log('Acceptance is not completion. Use status or result with the request ID to check.');
+    } else {
+      const { requestId, state, answer, failure } = response.value;
+      const summary = state === 'queued' || state === 'running' ? `pending (${state})` : state;
+      console.log(`Request ${requestId}: ${summary}.`);
+      const progress = response.value.progress as { deltaCount: number; lastActivityAt: number | null } | undefined;
+      if (command === 'status' && progress) {
+        console.log(`Model progress: ${progress.deltaCount} deltas. Last activity: ${progress.lastActivityAt === null ? 'none' : new Date(progress.lastActivityAt).toISOString()}.`);
+      }
+      if (answer !== undefined) console.log(answer);
+      if (failure !== undefined) console.log(failure);
+    }
     if (response.value.state === 'failed') process.exitCode = 1;
   }
 } catch (error) {
