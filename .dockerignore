@@ -1,0 +1,13 @@
+# Only test inputs enter the build context. Excludes credentials, .mill,
+# Git metadata, host dependencies, local stores and generated output.
+**
+!Dockerfile
+!.dockerignore
+!.nvmrc
+!package.json
+!package-lock.json
+!tsconfig.json
+!src/
+!src/**
+!tests/
+!tests/**
