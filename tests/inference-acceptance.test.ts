@@ -8,6 +8,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { BACKGROUND_CONTEXT as context } from '@earendil-works/chord/context';
 import { Harness, MemoryStorage, LiveDoc, ROOT_CONVERSATION_ID, createRegistry, defineExtension, hook, GenerationTask, type TaskId } from '@earendil-works/pi-durable';
 import { fauxAssistantMessage } from '@earendil-works/pi-ai';
+import { normalizeContext } from '@earendil-works/pi-ai/utils/transcript';
 import { inference } from '../src/inference/deepinfra.ts';
 import { inferenceProvider } from '../src/inference/provider-call.ts';
 import { spendingLedger, type Reservations } from '../src/inference/budget.ts';
@@ -175,7 +176,7 @@ test('a failed progress write aborts the upstream connection', { timeout: 10000 
   try {
     const provider = inferenceProvider(f.config, local.endpoint);
     await assert.rejects(provider.call(provider.model,
-      { messages: [{ role: 'user', content: 'test', timestamp: Date.now() }] }, undefined,
+      normalizeContext({ messages: [{ role: 'user', content: 'test', timestamp: Date.now() }] }), undefined,
       'synthetic-model-token', 30000, async () => { throw new Error('synthetic storage failure'); }), /synthetic storage failure/);
     for (let i = 0; i < 100 && !closed; i++) await new Promise(resolve => setTimeout(resolve, 10));
     assert.equal(closed, true, 'Upstream must close without waiting for a deadline');
