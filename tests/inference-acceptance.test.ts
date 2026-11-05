@@ -6,7 +6,7 @@ import { dirname, join } from 'node:path';
 import { writeFile, chmod } from 'node:fs/promises';
 import { DatabaseSync } from 'node:sqlite';
 import { BACKGROUND_CONTEXT as context } from '@earendil-works/chord/context';
-import { Harness, MemoryStorage, createRegistry, defineExtension, hook, GenerationTask, type TaskId } from '@earendil-works/pi-durable';
+import { Harness, MemoryStorage, LiveDoc, ROOT_CONVERSATION_ID, createRegistry, defineExtension, hook, GenerationTask, type TaskId } from '@earendil-works/pi-durable';
 import { fauxAssistantMessage } from '@earendil-works/pi-ai';
 import { inference } from '../src/inference/deepinfra.ts';
 import { spendingLedger, type Reservations } from '../src/inference/budget.ts';
@@ -340,6 +340,42 @@ test('provider errors reflecting authorization are sanitized before persistence'
     assert.deepEqual(response.content, []);
     assert.ok(!JSON.stringify([state, result]).includes('synthetic-model-token'));
   } finally { await app.close(); await local.close(); ledger.close(); await f.cleanup(); }
+});
+
+test('failed streams never publish partial secrets or retain provider metadata', { timeout: 15000 }, async () => {
+  const f = await fixture();
+  f.config.inference.mode = 'live'; f.config.inference.credentialFile = f.config.authFile;
+  await writeFile(f.config.authFile, 'synthetic-model-token');
+  const ledger = spendingLedger(f.config.ledger, f.config);
+  const sent = Promise.withResolvers<void>();
+  const release = Promise.withResolvers<void>();
+  const local = await wire(async (_body, res) => {
+    res.writeHead(200, { 'content-type': 'text/event-stream' });
+    const chunk = { id: 'synthetic', object: 'chat.completion.chunk', created: 1, model: f.config.inference.model };
+    res.write(`data: ${JSON.stringify({ ...chunk, choices: [{ index: 0, delta: { role: 'assistant', content: 'Rejected Bearer synthetic-model-token' }, finish_reason: null }] })}\n\n`);
+    sent.resolve();
+    await release.promise;
+    res.write(`data: ${JSON.stringify({ ...chunk, choices: [{ index: 0, delta: {}, finish_reason: 'Rejected Bearer synthetic-model-token' }] })}\n\n`);
+    res.end('data: [DONE]\n\n');
+  });
+  const app = await adapter(f.config, ledger, local.endpoint);
+  try {
+    const result = app.run();
+    await sent.promise;
+    // Allow the client to consume the chunk while the server withholds failure.
+    await new Promise(resolve => setTimeout(resolve, 100));
+    const live = await app.harness.snapshot(LiveDoc, ROOT_CONVERSATION_ID, context);
+    assert.ok(live, 'generation has created its live document');
+    assert.ok(!JSON.stringify(live).includes('synthetic-model-token'));
+    release.resolve();
+    assert.equal((await result).status, 'unanswered');
+    const state = (await app.state())!;
+    assert.ok(!JSON.stringify(state).includes('synthetic-model-token'));
+    const response = JSON.parse(Object.values(state.calls)[0]!.response!);
+    assert.equal(response.errorMessage, 'Inference provider failed');
+    assert.equal(response.rawStopReason, undefined);
+    assert.deepEqual(response.content, []);
+  } finally { release.resolve(); await app.close(); await local.close(); ledger.close(); await f.cleanup(); }
 });
 
 test('persisted application attempt states reuse reservations/responses but never resend uncertain dispatch', async t => {

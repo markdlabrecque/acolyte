@@ -16,7 +16,7 @@ DEEPINFRA_API_KEY=your-api-key
 
 Keep permissions at `0600`. The adapter opens once, checks that descriptor for current-user ownership, owner-only permissions and regular-file type, and reads at most 16 KiB plus one overflow-detection byte. Symlinks are supported; the opened target must pass those checks. Keep the containing directory private too. These checks do not protect against another process running as the same user modifying the opened file.
 
-Missing or empty keys fail closed. After trimming surrounding whitespace, both formats require visible ASCII without spaces or control characters. Provider failure diagnostics and partial failure content are replaced before persistence; unexpected adapter exceptions return a generic error. Dotenv loading does not populate `process.env`, expand variables, or search parent directories.
+Missing or empty keys fail closed. After trimming surrounding whitespace, both formats require visible ASCII without spaces or control characters. The adapter publishes only terminal responses, not partial streaming events. Failed responses are rebuilt from safe fields, dropping provider diagnostics, content and metadata before persistence; unexpected adapter exceptions return a generic error. Stream activity still refreshes the progress deadline. Successful provider content remains trusted as model output; this is not a filter for a malicious provider returning a key as successful content. Dotenv loading does not populate `process.env`, expand variables, or search parent directories.
 
 The eventual local live-test JSON configuration must use:
 
