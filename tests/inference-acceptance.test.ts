@@ -9,6 +9,7 @@ import { BACKGROUND_CONTEXT as context } from '@earendil-works/chord/context';
 import { Harness, MemoryStorage, LiveDoc, ROOT_CONVERSATION_ID, createRegistry, defineExtension, hook, GenerationTask, type TaskId } from '@earendil-works/pi-durable';
 import { fauxAssistantMessage } from '@earendil-works/pi-ai';
 import { inference } from '../src/inference/deepinfra.ts';
+import { inferenceProvider } from '../src/inference/provider-call.ts';
 import { spendingLedger, type Reservations } from '../src/inference/budget.ts';
 import { StateDoc } from '../src/runtime/documents.ts';
 import { todoExtension } from '../src/tools/todos.ts';
@@ -159,6 +160,26 @@ test('stream progress changes before the provider finishes without retaining par
     await running;
     assert.equal((await app.state())!.receipts.request!.progress!.deltaCount, 2);
   } finally { response?.end(); await app.close(); await local.close(); ledger.close(); await f.cleanup(); }
+});
+
+test('a failed progress write aborts the upstream connection', { timeout: 10000 }, async () => {
+  const f = await fixture();
+  f.config.inference.mode = 'live';
+  let closed = false;
+  const local = await wire((_body, res) => {
+    res.on('close', () => { closed = true; });
+    res.writeHead(200, { 'content-type': 'text/event-stream' });
+    res.write(`data: ${JSON.stringify({ id: 'progress-failure', object: 'chat.completion.chunk', created: 1,
+      model: f.config.inference.model, choices: [{ index: 0, delta: { content: 'working' }, finish_reason: null }] })}\n\n`);
+  });
+  try {
+    const provider = inferenceProvider(f.config, local.endpoint);
+    await assert.rejects(provider.call(provider.model,
+      { messages: [{ role: 'user', content: 'test', timestamp: Date.now() }] }, undefined,
+      'synthetic-model-token', 30000, async () => { throw new Error('synthetic storage failure'); }), /synthetic storage failure/);
+    for (let i = 0; i < 100 && !closed; i++) await new Promise(resolve => setTimeout(resolve, 10));
+    assert.equal(closed, true, 'Upstream must close without waiting for a deadline');
+  } finally { await local.close(); await f.cleanup(); }
 });
 
 test('ledger retries the intent/reservation gap idempotently, preserves conflicts and monthly cap', async () => {

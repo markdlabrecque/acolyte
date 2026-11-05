@@ -66,7 +66,7 @@ export function inferenceProvider(config: Config, testEndpoint?: string) {
         && usage.totalTokens > 0 && usage.totalTokens === usage.input + usage.output + usage.cacheRead + usage.cacheWrite
         && usageMatches(response);
       return { response, knownUsage };
-    } finally { clearTimeout(deadline); clearTimeout(progress); }
+    } finally { controller.abort(); clearTimeout(deadline); clearTimeout(progress); }
   }
   return { model, call };
 }
