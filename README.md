@@ -6,6 +6,37 @@ The initial assistant's scope includes durable todos and reminders, calendar man
 
 Repository: [markdlabrecque/acolyte](https://github.com/markdlabrecque/acolyte). TD-002 is implemented, live smoke pending. Full crash recovery and service acceptance remain unfinished.
 
+## Docker tests
+
+Run `./scripts/test-docker.sh` with Docker Engine running. No host Node install
+is needed. It builds the current checkout, then runs `npm test` and
+`npm run typecheck`, failing if either fails. The image pins Node 24.20.0
+from `.nvmrc`, npm 11.19.0 and the Debian base digest; `npm ci` installs the
+lockfile, including dev dependencies. Update the image pin when updating Node.
+
+The build needs registry access on a cold cache. The test container runs as
+an unprivileged user with `--network none`, no host mounts and no forwarded
+credentials. Its loopback interface, temporary filesystem, Unix sockets and
+child-process signals remain available for SQLite and recovery tests. No live
+inference is needed. Each invocation uses its own built image ID so concurrent
+Mill worktrees cannot overwrite one another's test image tag.
+
+For Sawmill, set the uncommitted `.mill/config.yaml` entry:
+
+```yaml
+tests:
+  command: ./scripts/test-docker.sh
+  timeout: 30m
+```
+
+Mill 1.1.1 runs this command in the ticket worktree. Its `test_harness: docker`
+setting separately selects browser-site testing; it does not build or run this
+image. Mill requires `test_url` with that setting, even though this test runner
+serves no browser site. A Docker config without `test_url` still fails Mill
+validation. Browser cases need a separately prepared site and URL; for a
+suite-only project, explicitly choose `test_harness: none` instead. This change
+does not make that owner decision or supply a placeholder URL.
+
 ## Todo list size limits
 
 `limits.listPage` and `limits.inputTokens` are validated together at startup.
