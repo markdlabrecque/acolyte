@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Sandcastle Development Plan</title>
+<link rel="stylesheet" href="/home/mark/.pi/agent/skills/html-plan/runtime/htmlplan.css">
+<script src="/home/mark/.pi/agent/skills/html-plan/runtime/htmlplan.js" defer></script>
+<body>
+<header>
+<h1>Sandcastle Development Workflow for Acolyte</h1>
+<doc-changes new="3" changed="6"></doc-changes>
+<details class="thread"><summary>Why · 3 requests</summary>
+<doc-quote via="prompt" from="the user">I want a simple workflow with verification for this project.</doc-quote>
+<doc-quote via="prompt" from="the user">Tests and typecheck only inside Sandcastle; keep independent review as a separate manual step.</doc-quote>
+<doc-quote via="prompt" from="the user">Plan and implement the workflow, then build and test the local base image.</doc-quote>
+</details>
+</header>
+<main><doc-plan>
+<doc-claim><p>Each task runs on a separate branch with Pi.</p>
+<doc-mock frame="terminal" title="Proposed command" w="470"><template>npm run sandcastle -- --task-file task.md
+
+Create a task branch and Docker container.
+Install dependencies with npm ci.
+Run Pi with gpt-6.1-sol.
+Run tests and typecheck.
+Report the branch for manual review.
+Do not push or merge.</template></doc-mock>
+<doc-ask id="input"><p>How does the workflow get its task?</p><label><input type="radio" name="input" value="file" checked>A local task file <small>No GitHub token is necessary.</small></label><label><input type="radio" name="input" value="issue">A GitHub issue number <small>The workflow needs read access to GitHub.</small></label></doc-ask>
+<doc-claim><p>The host controls the sandbox and reads each command exit code.</p>
+<doc-code title=".sandcastle/main.ts · sketch" lang="ts"><script type="text/plain">
+const sandbox = await createSandbox(options);
+try {
+  await requireSuccess(sandbox, "npm ci");
+  await sandbox.run({ agent: pi("gpt-6.1-sol"), prompt });
+  await requireSuccess(sandbox, "npm test");
+  await requireSuccess(sandbox, "npm run typecheck");
+  await requireSuccess(sandbox, "git diff --check");
+} finally {
+  await sandbox.close();
+}
+</script></doc-code>
+<doc-claim at=".sandcastle/main.ts:1"><p>.sandcastle/main.ts:1 · workflow entrypoint</p><doc-code src=".sandcastle/main.ts" lines="1-12"></doc-code></doc-claim>
+</doc-claim>
+</doc-claim>
+<doc-claim><p>A failed command stops the run with a nonzero exit code.</p>
+<doc-mock frame="terminal" title="Proposed failure report" w="470"><template>Verification failed: npm test
+Exit code: 1
+Branch: sandcastle/task-...
+No push or merge occurred.
+Manual review is still required.</template></doc-mock>
+<doc-ask id="retry"><p>Does Pi get another attempt after tests fail?</p><label><input type="radio" name="retry" value="stop" checked>No, stop and report the failure <small>One agent run keeps the workflow simple.</small></label><label><input type="radio" name="retry" value="once">Yes, allow one repair attempt <small>Run all verification commands again after the repair.</small></label></doc-ask>
+<doc-claim><p>Synthetic tests cover failure handling without live inference.</p>
+<doc-code title="tests/sandcastle.test.ts · sketch" lang="ts"><script type="text/plain">
+// Use an injected sandbox with recorded calls.
+// Setup failure prevents the agent run.
+// Agent failure prevents a success report.
+// Test or typecheck failure produces a nonzero exit.
+// Every path closes the sandbox.
+// Success requires every verification command to pass.
+// No path pushes or merges.
+</script></doc-code>
+</doc-claim>
+</doc-claim>
+<doc-claim><p>The base image matches the project Node and npm versions.</p>
+<doc-code title=".sandcastle/Dockerfile · sketch" lang="dockerfile"><script type="text/plain">
+FROM node:24.20.0-bookworm
+# Install git, ca-certificates and required shell tools.
+# Install npm 11.19.0 and a pinned compatible Pi package.
+# Align the agent UID/GID with the host.
+# Do not copy project files, credentials or node_modules.
+USER agent
+WORKDIR /home/agent
+ENTRYPOINT ["sleep", "infinity"]
+</script></doc-code>
+<doc-claim><p>The image passes local tests without credentials.</p>
+<doc-code title="Image acceptance · sketch" lang="sh"><script type="text/plain">
+# Build acolyte-sandcastle:dev with host UID/GID.
+# Assert Node 24.20.0, npm 11.19.0 and non-root execution.
+# Assert git and the pinned Pi executable are available.
+# Use a temporary clean checkout without credential mounts.
+# Run npm ci, npm test and npm run typecheck in the image.
+# Test the workflow with a synthetic agent, not live inference.
+</script></doc-code>
+</doc-claim>
+</doc-claim>
+<doc-claim aux="shared"><p>The workflow uses one local image and one verification contract.</p><doc-code title="Affected files · sketch" lang="text"><script type="text/plain">
+Change .sandcastle/main.ts: orchestration and command exit handling
+Change .sandcastle/prompt.md: task scope and safety boundaries
+Change .sandcastle/Dockerfile: pinned development tools
+Change .sandcastle/.env.example: only the selected provider setup
+Change package.json: workflow command
+Change tsconfig.json: include workflow typechecking
+Add .sandcastle/workflow.ts: testable orchestration
+Add tests/sandcastle.test.ts: synthetic regression tests
+Add docs/sandcastle.md: build, run and manual review instructions
+</script></doc-code></doc-claim>
+<doc-claim aux="scope"><p>Live acceptance and publication remain outside this workflow.</p><ul><li>Independent technical review remains a separate manual step.</li><li>No automatic commit publication, PR creation or merge.</li><li>No production access, 1Password access or live DeepInfra inference.</li><li>No credentials or host Pi configuration in the image.</li><li>The model is gpt-6.1-sol. Provider compatibility needs confirmation before a live run.</li><li>Build and synthetic tests do not require a live agent call.</li><li>The existing root Dockerfile remains unchanged.</li><li>TD-002 remains blocked on its separate live acceptance.</li></ul></doc-claim>
+</doc-plan></main></body></html>

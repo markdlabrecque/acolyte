@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Durable Agent Plan</title>
+<link rel="stylesheet" href="/home/mark/.pi/agent/skills/html-plan/runtime/htmlplan.css">
+<script src="/home/mark/.pi/agent/skills/html-plan/runtime/htmlplan.js" defer></script>
+<body>
+<header>
+<h1>An Always-available Agent in Cairn</h1>
+<details class="thread"><summary>Why · 3 requests</summary>
+<doc-quote via="prompt" from="the owner">I just want a long-running agent with no connectors to begin with. We can have different milestones for specific connectors, which we can work on next.</doc-quote>
+<doc-quote via="prompt" from="the owner">1) a self-healing, restarting agent 2) background compaction 3) state recovery (with pi-durable)</doc-quote>
+<doc-quote via="prompt" from="the owner">long-running meaning always available. It's unlikely that I will be hill-climbing with this agent, though it may do some babysitting, monitoring other agents workflows and unsticking them when they get stuck.</doc-quote>
+</details>
+</header>
+<main><doc-plan>
+
+<doc-claim>
+<p>The agent waits without inference and restarts after a crash.</p>
+<doc-mock frame="terminal" title="Service status · proposed" w="470"><template>Service: ready
+Work: idle
+Model calls while idle: 0
+Store: owned
+
+After an unexpected exit:
+Service: recovering
+Admission: unavailable until ready
+
+After systemctl stop:
+Service: stopped
+Automatic restart: no</template></doc-mock>
+<doc-ask id="startup">
+<p>When must the service start?</p>
+<label><input type="radio" name="startup" value="boot" checked> At boot <small>Use an unprivileged system service.</small></label>
+<label><input type="radio" name="startup" value="login"> At login <small>Availability depends on the user session.</small></label>
+</doc-ask>
+<doc-claim>
+<p>The service uses backoff and stops after repeated startup failures.</p>
+<doc-code title="deploy/systemd/cairn-agent.service · sketch" lang="ini"><script type="text/plain">[Unit]
+StartLimitIntervalSec=300
+StartLimitBurst=5
+[Service]
+# Set a dedicated unprivileged user and explicit paths.
+Type=notify
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=30
+# Signal readiness only after ownership and recovery checks.
+# Start the existing runner, not a second agent implementation.
+</script></doc-code>
+<doc-note>Proposed defaults require service tests. Do not install units or reboot the owner host during implementation.</doc-note>
+</doc-claim>
+<doc-claim>
+<p>Recovery removes only endpoints that the service can prove it owns.</p>
+<doc-calls title="Startup and readiness" caption="The runner must prove ownership before it becomes ready."><script type="text/plain">~ ownStore(config)                           @ src/host/store.ts:88
+~ ownSocket(socket)                          @ src/host/store.ts:48
++   prove stale endpoint ownership             @ src/host/store.ts:57
+~ openRuntime(storage, config, ledger)        @ src/runtime/pi-durable.ts:16
++ publish readiness after recovery             @ src/runner.ts:1
+</script></doc-calls>
+<doc-note tone="warn">Current startup refuses every existing socket, including stale sockets. A crash can therefore prevent automatic restart. Preserve foreign paths and active owners.</doc-note>
+<doc-claim at="src/host/store.ts:48"><p>src/host/store.ts:48 · ownSocket()</p><doc-code src="src/host/store.ts" lines="48-61"></doc-code></doc-claim>
+</doc-claim>
+<doc-claim>
+<p>Service tests prove idle, crash, stop, and reboot behavior separately.</p>
+<doc-code title="Service acceptance · proposed" lang="text"><script type="text/plain">Environment: authorized isolated Linux VM with systemd
+Idle: no provider dispatch; CPU and memory measurements retained
+SIGKILL: restart with the same store; become ready safely
+Crash loop: start-rate limit stops repeated failures
+Intentional stop: remain stopped; keep pending work
+Normal reboot: reopen state and process the next request
+Corrupt store: fail readiness; preserve original data
+Foreign endpoint: refuse takeover; preserve original path
+</script></doc-code>
+<doc-note>Existing Docker evidence covers 114 tests and typecheck without external network. It does not cover systemd, host reboot, or power loss. See <a href="../evidence/issue-22-docker-tests.md">the retained Docker evidence</a>.</doc-note>
+</doc-claim>
+</doc-claim>
+
+<doc-claim>
+<p>Acknowledged requests and committed local effects survive a process crash.</p>
+<doc-mock frame="terminal" title="Recovery result · proposed" w="470"><template>Request: local-001
+Receipt: unchanged after restart
+Conversation: unchanged after restart
+Todo effects: 1
+Saved tool result: reused
+Final answer: stored before retrieval
+
+Result retrieval adds no model calls.</template></doc-mock>
+<doc-claim>
+<p>The runtime restores one submission for each admitted request.</p>
+<doc-calls title="Keep the existing request path" caption="Keep stable request IDs across every application boundary."><script type="text/plain">  CLI submission                              @ src/cli.ts:1
+  gateway forwarding                          @ src/gateway.ts:1
+~ openRuntime.submit(input)                  @ src/runtime/pi-durable.ts:103
+~   restore queued and active receipts         @ src/runtime/pi-durable.ts:38
+    conversation.submit(stable requestId)      @ src/runtime/pi-durable.ts:65
+    todoExtension(config)                     @ src/tools/todos.ts:1
+~   persist the terminal result                @ src/runtime/pi-durable.ts:72
+</script></doc-calls>
+<doc-note>Reuse the CLI, local gateway, runner, Pi documents, and todo extension. The local gateway is internal transport, not a product connector.</doc-note>
+<doc-claim at="src/runtime/pi-durable.ts:65"><p>src/runtime/pi-durable.ts:65 · submission mapping</p><doc-code src="src/runtime/pi-durable.ts" lines="63-77"></doc-code></doc-claim>
+</doc-claim>
+<doc-claim>
+<p>Crash tests cover each application commit boundary.</p>
+<doc-code title="TD-003 acceptance · proposed" lang="text"><script type="text/plain">Use explicit subprocess barriers, not sleeps as proof.
+Kill before and after durable admission.
+Kill between receipt admission and Pi submission mapping.
+Kill during inference and reservation transitions.
+Kill before and after the local effect/result commit.
+Kill between Pi completion and application outcome commit.
+Kill after final-result commit, before client delivery.
+Reopen the same store in a fresh process for each case.
+Assert stable identities, effect counts and provider attempts.
+</script></doc-code>
+<doc-note>Use <a href="../tickets/003-crash-safe-recovery.md">TD-003</a> as the detailed matrix. Its full runner acceptance remains pending. If a supported transaction removes a gap, record the proof.</doc-note>
+</doc-claim>
+<doc-claim>
+<p>Existing batch tests prove only their measured recovery boundaries.</p>
+<doc-code src="docs/evidence/issue-4-tool-batch.md" lines="29-47" lang="text"></doc-code>
+<doc-note>The tests kill a direct Pi worker before the first tool and after the first local effect. They do not prove runner admission, socket recovery, inference accounting, or final application outcome recovery. Re-run these application tests when compaction changes.</doc-note>
+</doc-claim>
+</doc-claim>
+
+<doc-claim>
+<p>Background compaction preserves new input and the original transcript.</p>
+<doc-mock frame="terminal" title="Compaction status · proposed" w="470"><template>Request: running
+Compaction: summarizing an earlier context
+New input: durably queued
+Summary placement: next safe turn boundary
+Original transcript: retained
+
+If compaction fails:
+Compaction: failed; reason visible
+Previous context: retained
+At the hard context limit: block with a reason</template></doc-mock>
+<doc-claim>
+<p>Pi Durable owns summary generation and placement.</p>
+<doc-code src="node_modules/@earendil-works/pi-durable/README.md" lines="550-573" lang="text"></doc-code>
+<doc-note>These are installed dependency docs, not application acceptance. The pinned package is 1.4.0. Start with supported APIs. Stop for an owner decision if the dependency requires substantial replacement code.</doc-note>
+</doc-claim>
+<doc-claim>
+<p>Every summary call gets a durable identity and cost reservation.</p>
+<doc-schema id="maintenance" lang="ts" title="Compaction accounting · sketch"><script type="text/plain">type MaintenanceAttempt = {
+  id: string;
+  conversationId: string;
+  purpose: 'compaction';
+  state: 'intent' | 'dispatched' | 'answered' | 'failed';
+  reservationId: string;
+  modelCalls: number;
+  consumedActiveMs: number;
+  retryAt?: number;
+};
+// Use supported Pi task identity and documents where possible.
+// Never bind a summary to an unrelated active owner request.
+// Keep uncertain costs after a crash.
+</script></doc-schema>
+<doc-note tone="warn">Prove this path first through synthetic loopback inference. The application guard expects an active receipt. A summary can overlap a request or run without one. Native usage totals alone do not enforce pre-dispatch reservations.</doc-note>
+</doc-claim>
+<doc-claim>
+<p>Validated thresholds start compaction before the hard context limit.</p>
+<doc-code title="Compaction settings · sketch" lang="ts"><script type="text/plain">type CompactionConfig = {
+  enabled: boolean;
+  reserveTokens: number;
+  keepRecentTokens: number;
+  backgroundTokens: number;
+};
+// Derive defaults from the pinned model context window.
+// Reject invalid threshold combinations at startup.
+// Bound summary calls, time, retries and input/output size.
+// Charge summary inference to the same monthly ceiling.
+// Keep ordinary idle time free of periodic model calls.
+</script></doc-code>
+<doc-claim at="src/runtime/pi-durable.ts:25"><p>src/runtime/pi-durable.ts:25 · compaction setting</p><doc-code src="src/runtime/pi-durable.ts" lines="23-27"></doc-code></doc-claim>
+</doc-claim>
+<doc-claim>
+<p>Application tests prove compaction races, failures, and recovery.</p>
+<doc-code title="Compaction acceptance · proposed" lang="text"><script type="text/plain">New input arrives while a summary runs: no lost entries.
+Summary placement keeps new entries and tool-call identities.
+A stale summary cannot replace a newer context.
+SIGKILL during summary dispatch retains possible cost.
+SIGKILL before and after placement leaves usable context.
+Reopen preserves transcript, summary identity and work.
+Summary failure leaves the prior context and a visible reason.
+Hard-limit failure blocks rather than looping on inference.
+Provider overflow retry uses the same accounting and limits.
+No active receipt: summary uses its own maintenance identity.
+Request plus summary: reservations cannot exceed the ceiling.
+Tool-batch crash tests pass with compaction enabled.
+</script></doc-code>
+<doc-note>Test application behavior rather than rebuilding retired tests of third-party code. Keep model-quality claims separate from synthetic integrity tests.</doc-note>
+</doc-claim>
+</doc-claim>
+
+<doc-claim>
+<p>Restart cannot grant extra work, retries, spending, or permissions.</p>
+<doc-mock frame="terminal" title="Effective limits · proposed" w="470"><template>Active request: 1
+Queue capacity: 20
+Request defaults: 5 active minutes
+Model calls: 20; tool calls: 50
+Transient retries: initial attempt plus 2
+Monthly ceiling: US$10; warning: US$5
+Compaction: included in monthly spending
+Restart: counters and reservations retained</template></doc-mock>
+<doc-claim>
+<p>Persisted active intervals exclude idle time and host downtime.</p>
+<doc-code src="src/runtime/limits.ts" lines="4-12" lang="ts"></doc-code>
+<doc-note tone="warn">Current code subtracts elapsed time since startedAt. It does not implement active-time accounting across waits or downtime. Replace it with persisted intervals. Bound uncertain intervals conservatively after a crash.</doc-note>
+</doc-claim>
+<doc-claim>
+<p>Existing guards remain in force for requests and maintenance.</p>
+<doc-code title="TD-004 acceptance · proposed" lang="text"><script type="text/plain">Keep durable receipt lookup before queue-capacity rejection.
+Retain call counts, attempt counts and retry deadlines.
+Reserve estimated cost atomically before every dispatch.
+Retain unknown charges; do not infer exactly-once inference.
+Keep old charges in their original calendar month.
+Persist the US$5 warning; block at the US$10 ceiling.
+Recheck current permissions before each tool effect.
+Unknown price or invalid credentials: refuse dispatch.
+Keep connection and meaningful-progress deadlines.
+</script></doc-code>
+<doc-note>Reuse the implemented ledger and provider guards. Complete <a href="../tickets/004-persisted-limits.md">TD-004</a> crash and race acceptance. A new month must not resume blocked work automatically.</doc-note>
+</doc-claim>
+<doc-claim>
+<p>External-job waits remain a separate scope choice.</p>
+<doc-schema id="wait-scope" lang="ts" title="Future external wait · sketch"><script type="text/plain">type ExternalWait = {
+  requestId: string;
+  jobId: string;
+  usedModelCalls: number;
+  usedToolCalls: number;
+  consumedActiveMs: number;
+};
+// A future wait releases the active slot.
+// A future resume keeps identity, permissions and limits.
+// This record does not authorize any agent-control tool.
+</script></doc-schema>
+<doc-ask id="external-waits">
+<p>Must this milestone implement external-job waits?</p>
+<label><input type="radio" name="external-waits" value="defer" checked> Defer the lifecycle <small>Document the contract. Add it with agent monitoring.</small></label>
+<label><input type="radio" name="external-waits" value="local"> Prove a local wait and resume <small>Add synthetic job IDs. No connector or monitoring.</small></label>
+</doc-ask>
+</doc-claim>
+</doc-claim>
+
+<doc-claim>
+<p>The owner can inspect, cancel, stop, and restore local work.</p>
+<doc-mock frame="terminal" title="Local controls · proposed" w="470"><template>submit: accept durably or reject explicitly
+status: work, queue, recovery, compaction, limits
+result: return the saved final answer
+cancel: save the decision; retain completed effects
+stop: refuse new work; preserve unfinished work
+snapshot: consistent state with the writer stopped
+restore: validate before startup
+
+Backup: local procedure only
+Off-host backup: not configured</template></doc-mock>
+<doc-claim>
+<p>Cancellation survives restart without erasing committed effects.</p>
+<doc-schema id="cancel" lang="ts" title="Receipt extension · sketch"><script type="text/plain">type Cancellation = {
+  requestedAt: number;
+  appliedAt?: number;
+  outcome?: 'cancelled' | 'completed-before-cancel' | 'uncertain';
+};
+// Persist the cancellation before acknowledging it.
+// Stop future dispatch and retain committed local effects.
+// Keep uncertain inference reservations.
+// Restore must not resume a cancelled request.
+</script></doc-schema>
+<doc-note>Define request cancellation separately from service shutdown and background maintenance cancellation. The current receipt states do not include cancellation.</doc-note>
+</doc-claim>
+<doc-claim>
+<p>Status separates service readiness from work and compaction state.</p>
+<doc-calls title="Local status and controls" caption="Extend the existing local interfaces without adding a connector."><script type="text/plain">~ CLI status, result and cancel              @ src/cli.ts:1
+~ local control routes                       @ src/gateway.ts:1
+~ shutdown and readiness                     @ src/runner.ts:1
+~ receipt status and cancellation             @ src/runtime/pi-durable.ts:129
+~ durable control records                    @ src/runtime/documents.ts:5
+</script></doc-calls>
+<doc-note>Reuse metadata-only model progress. Keep credentials and partial model content out of status and logs. Report unavailable service separately from rejected work.</doc-note>
+</doc-claim>
+<doc-claim>
+<p>A local restore includes the store and its spending ledger.</p>
+<doc-code title="Local restore acceptance · proposed" lang="text"><script type="text/plain">Stop admission and the writer before the snapshot.
+Include the agent store and all SQLite sidecar state safely.
+Include the shared spending ledger and required local files.
+Record configuration, versions and an integrity manifest.
+Keep credentials out of ordinary snapshots and test evidence.
+Restore synthetic state into a separate directory.
+Keep the prior writer stopped or isolated.
+Refuse corrupt or incompatible state without replacement.
+Retrieve the same saved result without inference.
+Confirm counters and uncertain reservations remain intact.
+</script></doc-code>
+<doc-note>Use a supported SQLite snapshot method or a proven stopped-store procedure. A plain copy of a live database is not sufficient. Test with synthetic credentials only.</doc-note>
+</doc-claim>
+</doc-claim>
+
+<doc-claim aux="shared">
+<p>The milestone reuses existing code and keeps evidence limits explicit.</p>
+<doc-code title="Evidence and delivery ledger" lang="text"><script type="text/plain">Basis: a8c2c7f07a2dd0f196f3d7f4a297c2baa977eb94
+Historical evidence:
+  Storage: FULL readback, real transactions and reopen tests
+  Credentials: approved loader and response-sanitization fixes
+  Progress: approved metadata-only output
+  Docker: 114 tests and typecheck on the reviewed candidate
+Pending acceptance:
+  Full runner crash matrix and persisted-limit races
+  Compaction through application guards and accounting
+  Cancellation, systemd, isolated reboot and local restore
+  Separately authorized live DeepInfra add/list and compaction
+Delivery:
+  Thin recovery path and compaction proof first
+  Full tests, typecheck, diff checks and fresh independent review
+  Record exact revisions, rejected reviews and approval
+  Preserve historical evidence; add current milestone scope
+</script></doc-code>
+<doc-note>Read the <a href="../01-always-available-durable-agent-milestone.md">workplan</a>, <a href="../evidence/issue-6-storage-durability.md">storage evidence</a>, <a href="../evidence/issue-9-credential-review.md">credential evidence</a>, and <a href="../evidence/issue-5-progress.md">progress evidence</a>. No tests ran for this plan. Keep the background Sandcastle work separate. Local fixtures do not pass live acceptance. Historical issue status is not current GitHub state.</doc-note>
+</doc-claim>
+<doc-claim aux="scope">
+<p>This milestone adds no product connector or autonomous goal loop.</p>
+<ul>
+<li>Keep one configured agent, local submission, and the existing durable todo tool as the real recovery exercise.</li>
+<li>Defer Slack, Google Calendar, Gmail, Proton, email drafts, reminders, and scheduled background checks to separate connector or workflow milestones.</li>
+<li>Defer monitoring and control of other agents. Add no shell tool, arbitrary network tool, standing-goal loop, or self-modifying repair.</li>
+<li>Defer multiple agents, off-host backup automation, automatic upgrades, and process-on-demand activation. Keep the process idle between requests.</li>
+<li>Self-healing means process restart and safe state recovery. Invalid configuration, corrupt storage, and repeated failures require a visible stop.</li>
+<li>This plan grants no permission to implement, publish, merge, install services, reboot a host, read real credentials, call a live model, or use 1Password.</li>
+<li>Do not rerun completed connector spikes. Their evidence remains useful for later milestones, not acceptance of this local service.</li>
+<li>Process-kill and normal reboot tests do not establish sudden power-loss safety or remote-write recovery.</li>
+</ul>
+</doc-claim>
+</doc-plan></main>
+</body></html>
