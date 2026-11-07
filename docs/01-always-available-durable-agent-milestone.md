@@ -2,6 +2,8 @@
 
 > System of record: **Filesystem**
 
+This product milestone is separate from the [Sandcastle developer workflow](sandcastle-workflow.md). The plan below is retained product scope, not authorization to install services or run live tests. See [CURRENT.md](../CURRENT.md) for the workflow candidate and acceptance status.
+
 ## Objective
 
 Plan one local, always-available Cairn agent service. The idle process waits without model calls. Include crash restart, Pi Durable recovery, background compaction, durable admission, bounded execution, cancellation, status and local snapshot/restore. Reuse existing CLI/gateway/runner, todo tools and evidence. Exclude connectors, monitoring other agents, schedules, multi-agent behavior, shell tools, automatic repair/upgrades and off-host backups. This is planning only, not authorization for implementation, publication, host service installation, real credentials, live inference or reboot. The companion interactive HTML plan contains proposed choices. Preserve background-agent work and historical evidence; TD-002 remains blocked on separately authorized live acceptance.
@@ -9,7 +11,7 @@ Plan one local, always-available Cairn agent service. The idle process waits wit
 ## Action Plan
 
 1. [ ] Record the candidate revision and inventory current application tests and retained evidence. Separate measured behavior from documented dependency contracts and pending acceptance; do not overwrite historical records or claim a new test run.
-2. [ ] Resolve the interactive plan choices for service startup and external-wait scope before implementation. Create a focused branch or isolated worktree from updated main after coordinating with the background agent; do not include its Sandcastle changes by accident.
+2. [ ] Resolve the interactive plan choices for service startup and external-wait scope before implementation. Create a focused branch or isolated worktree from updated main. Preserve the owner's separate recovery work and other agents' changes.
 3. [ ] Build a thin recovery path through the existing local CLI, gateway, runner, Pi Durable and production todo tool. Add explicit test barriers after durable admission and local effect commit, kill the runner, reopen the same store and retrieve the original result without a duplicate effect.
 4. [ ] Resolve stale Unix endpoint recovery under exclusive ownership. Prove that automatic restart cannot remove a live or foreign endpoint, admit a second store owner, replace corrupt state or report readiness too early.
 5. [ ] Prove native Pi Durable compaction through the application provider guard using synthetic loopback inference. Bind compaction to a durable maintenance identity, reserve cost before every dispatch and persist counters without borrowing the current request. Stop for a dependency decision if supported APIs require substantial replacement machinery.

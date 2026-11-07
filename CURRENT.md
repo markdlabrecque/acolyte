@@ -1,6 +1,24 @@
 # Acolyte repository status
 
-## Verified delivery update, 2026-11-05
+## Workflow implementation candidate
+
+The GitHub helper workflow is an implementation candidate, not a merged delivery. The owner waived further independent review for publication of this workflow delivery and authorized a feature-branch push, not a merge. Remote CI is pending at this pre-push snapshot; its actual result will be recorded on the linked tickets. GitHub API readback confirms that `main` protection is active: GitHub Actions app 15368 must supply `tests` and `typecheck`, strict up-to-date checks and administrator enforcement are enabled, and force pushes and deletion are disabled. Never bypass these protections. The owner's separate dirty recovery work remains untouched. Live dispatch, scheduler-scoped single-issue execution, isolated implementation/check/review sessions and read-only Luna analysis are now connected. At `6a79e0d`, protected-container validation passed all 256 tests with no failures/skips and typecheck. Independent whole-workflow approval was not obtained; the owner's publication waiver is recorded in [publication evidence](docs/evidence/workflow-publication.md). Remote CI must still run; [execution evidence](docs/evidence/workflow-execution.md) records the integration and reproduced failures.
+
+CI/gate re-review rejected historical `52a109c` because PR retargeting could conceal the workflow definition used by an earlier run. The correction candidate requires push-triggered CI at the approved head, with the workflow blob pinned there. PR checks now have distinct names. At `fb6391c`, all 262 tests and typecheck passed in the protected offline container, together with image/catalog/isolation and diff checks. The [rejection and dispositions](docs/evidence/workflow-merge-gate.md) remain recorded; the owner subsequently waived further review for this publication only. Automated ticket runs still require exact-head review and genuine remote CI.
+
+Whole-workflow review rejected `f0d5cae` for candidate-controlled system-prompt discovery, stale eligibility after CI waits and noncanonical persisted path claims. The correction candidate overrides both prompt sources, revalidates eligibility immediately before the merge write and canonicalizes comparison-time claims. [Whole-workflow review evidence](docs/evidence/workflow-independent-review.md) retains the rejection and regression design. At `43407b4`, all 274 tests, typecheck, diff checks and the actual Pi 1.5.0 resource-loader regression passed in the protected offline image. No approval of the later correction is claimed.
+
+A second whole-workflow review rejected `e91d600` because implementation-requested shell checks could inherit the coding key and network access. Correction `f70962e` removes shell/code-execution tools from online implementation and repair, and reserves all candidate execution for the separate offline, credential-free worker. All 275 tests, typecheck and protected smoke checks passed, including a real Pi 1.5.0 agent-loop regression denying an explicit request to run candidate checks with a synthetic key present. The review confirmed the push-bound CI provenance correction but did not approve the whole delivery. Both whole-workflow rejection rounds remain in the linked evidence. The superseded `d6768cf` review was cancelled without a verdict; the next final-HEAD review attempt was blocked by the review service without a technical verdict. The owner then waived further review for this publication only. This is not technical approval and does not change future automated-run review gates or main protection.
+
+Sandcastle is developer tooling, not the Cairn product. Its candidate development image uses Node 24.20.0 and Pi coding-agent 1.5.0; the application remains on Pi 1.4.0 and the selected DeepInfra model. Manual starts, GPT-only ticket routing, isolated runs and host-only GitHub authentication are described in [the workflow](docs/sandcastle-workflow.md). The owner-authorized OpenAI OAuth check returned HTTP 200 without inference. The selected GPT model IDs were not advertised by the models-list response, so selected-model inference and a real coding workflow run remain unverified. See [authentication evidence](docs/evidence/workflow-auth-check.md). TD-002 remains blocked on separately authorized live acceptance.
+
+## Publication packaging
+
+The owner requested three commits: [image evidence summary](docs/evidence/image-work-summary.md), [recovery evidence summary](docs/evidence/recovery-work-summary.md), then the workflow and CI as one combined commit. Workflow source is captured from `9b10b748b84bb34e368294a66c9de70bbf47741e`, whose 275 tests, typecheck, protected smoke and actual Pi probes passed. The original integration history and dirty recovery/image checkouts remain intact. Recovery source/tests are excluded; the image updates are included in the workflow. Issues [25](https://github.com/markdlabrecque/acolyte/issues/25) and [37](https://github.com/markdlabrecque/acolyte/issues/37) through [40](https://github.com/markdlabrecque/acolyte/issues/40) remain open until their outstanding acceptance/delivery work is actually completed. No PR or merge is authorized by this push request.
+
+## Historical delivery update, 2026-11-05
+
+This update records the state at that delivery; its CI, issue and checkout statements are not current.
 
 [PR #21](https://github.com/markdlabrecque/acolyte/pull/21) merged at `947c3a8`; [issue #5](https://github.com/markdlabrecque/acolyte/issues/5) is verified closed. The owner chose request status for metadata-only model progress. JSON status includes cumulative delta count and last-activity milliseconds; plain status shows count and an ISO timestamp, or zero/none before activity. No partial model content is exposed.
 
@@ -12,7 +30,7 @@ TD-002 remains blocked on separately authorized live DeepInfra add/list acceptan
 
 ## Historical snapshot, 2026-11-05
 
-The sections below retain the earlier snapshot and are superseded by the verified delivery update above where they describe current checkout or GitHub state.
+The sections below retain earlier snapshots. Their checkout, issue and CI statements are historical.
 
 The public repository is [markdlabrecque/acolyte](https://github.com/markdlabrecque/acolyte). The PRD and glossary retain the owner-selected product name Cairn; this status update does not rename the product. This is a checked snapshot, not an automatically maintained feed.
 

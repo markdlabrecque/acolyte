@@ -1,4 +1,4 @@
-FROM node:22-bookworm
+FROM node:24.20.0-bookworm
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -25,7 +25,7 @@ ARG AGENT_GID=1000
 RUN groupmod -o -g $AGENT_GID node && usermod -o -u $AGENT_UID -g $AGENT_GID -d /home/agent -m -l agent node
 
 # Install pi coding agent (run as root before USER agent)
-RUN npm install -g @mariozechner/pi-coding-agent
+RUN npm install -g @earendil-works/pi-coding-agent@1.5.0
 
 USER ${AGENT_UID}:${AGENT_GID}
 
