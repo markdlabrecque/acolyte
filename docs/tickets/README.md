@@ -18,6 +18,8 @@ Follow the dependency order. TD-002 is the first vertical implementation, not a 
 
 ## Ticket workflow
 
+For GitHub delivery, use [the Sandcastle workflow](../sandcastle-workflow.md). Its manual GPT-only routing, isolated runs and mandatory exact-head remote CI govern developer tooling, not product acceptance. The local TD tickets below retain their product dependencies and live-acceptance gates.
+
 - Each ticket file owns its status, dependencies, acceptance checks, and evidence. Keep this index consistent when a status changes.
 - Use stable IDs of the form `TD-001`. Do not renumber or reuse IDs. Link directly to files.
 - Statuses are `draft`, `ready`, `in-progress`, `blocked`, `done`, and `cancelled`.
@@ -26,7 +28,7 @@ Follow the dependency order. TD-002 is the first vertical implementation, not a 
 - Before work, read the parent ticket and the applicable PRD sections. Check the branch and working tree. Set an assignee and mark only the selected ticket `in-progress`.
 - At completion, record changed paths, commands, results, and any test limitations. A checkbox or documentation review is not runtime evidence.
 - Mark `done` only when the acceptance checks pass. If a test is simplified or retired, record why and which claim remains unproved. Do not silently waive recovery or safety acceptance.
-- Complete at most one non-research ticket per session, consistent with the retained planning convention.
+- The older one-ticket-per-session planning convention does not limit the GitHub helper's independently isolated runs. Follow its dependency and path-conflict checks.
 - Keep code changes on feature branches. Commit or publish only when asked.
 
 ## Existing planning records

@@ -1,3 +1,6 @@
 .env
 logs/
 worktrees/
+state/
+evidence/
+board.html

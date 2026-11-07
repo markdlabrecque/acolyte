@@ -4,7 +4,11 @@ Updated 27 October 2026. Slack, Google, and Proton spikes are **complete and clo
 
 There are **no remaining spike tests, browser observations, reboot windows, monitoring approvals, or evidence-recovery tasks for the owner**. Lock/suspend tests remain excluded. Do not restart the old checklist just because raw artifacts for owner-confirmed passes are not copied locally.
 
-## Implementation status, 2026-11-03
+## Current workflow and status
+
+The developer workflow candidate is separate from the product milestones below. See [CURRENT.md](../CURRENT.md) and [the GitHub helper workflow](sandcastle-workflow.md) for its pending review and remote CI. TD-002 still needs separately authorized live DeepInfra acceptance.
+
+## Historical implementation snapshot, 2026-11-03
 
 TD-002 is implemented, live smoke pending, at commit `53f7860`. Its formal acceptance remains blocked by the live gate and documented review/evidence gaps. The issue #4 candidate now passes 101 tests and typecheck, including [persisted-batch SIGKILL contract coverage](evidence/issue-4-tool-batch.md). That issue remains open pending publication. [Runtime-connection FULL verification](evidence/issue-6-storage-durability.md) is merged and issue #6 is closed. See [CURRENT.md](../CURRENT.md), the [local implementation tracker](tickets/README.md), and [Acolyte's open issues](https://github.com/markdlabrecque/acolyte/issues).
 

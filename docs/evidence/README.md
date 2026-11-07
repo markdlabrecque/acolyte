@@ -2,6 +2,10 @@
 
 Collected into this project on 27 October 2026. These files preserve evidence that previously lived outside the project or under `/tmp`. Historical handoffs/runner notes are unmodified copies and may contain stale next-action instructions, external paths, or open-status wording. They are evidence, not current authorization or the current tracker. Use [remaining work](../remaining-work.md) for current actions and [the snapshot](../integration-spike-snapshot.md) for interpretation.
 
+## Workflow evidence
+
+[Documentation audit](workflow-docs-audit.md) records current workflow guidance and historical references. [Sandcastle runtime update](sandcastle-runtime-update.md) records a separate image candidate and its offline smoke, not a live workflow acceptance. [Image](image-work-summary.md) and [recovery](recovery-work-summary.md) summaries are separate evidence-only commits; recovery source is excluded. [Publication authorization](workflow-publication.md) records the owner's review waiver and combined workflow/CI push scope. [Review rounds](workflow-independent-review.md) retain rejections and the blocked final attempt without claiming approval. See [CURRENT.md](../../CURRENT.md) and the linked issue comments for publication and remote CI status.
+
 ## Final completion ledger
 
 [Integration spike completion ledger](integration-spike-ledger.md): on 27 October the owner reported recovering the remaining evidence and explicitly confirmed all previously unrecorded in-scope tests passed. Slack, Google, and Proton are complete and closed. No evidence-recapture or human observation tasks remain. Retained copies below are historical sources; their old open/untested wording is superseded by this owner-confirmed completion, not silently rewritten.

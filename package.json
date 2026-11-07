@@ -9,8 +9,9 @@
   },
   "packageManager": "npm@11.19.0",
   "scripts": {
-    "test": "node --test tests/*.test.ts",
-    "typecheck": "tsc --noEmit"
+    "test": "node --test tests/*.test.ts .sandcastle/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "test:pi-resources": "node .sandcastle/pi-resource-probe.mjs"
   },
   "dependencies": {
     "@ai-hero/sandcastle": "^0.14.0",
@@ -21,6 +22,7 @@
   },
   "devDependencies": {
     "@modelcontextprotocol/sdk": "1.32.2",
+    "@standard-schema/spec": "1.1.0",
     "@types/node": "24.10.0",
     "typescript": "5.9.3"
   }

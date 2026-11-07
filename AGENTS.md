@@ -20,10 +20,16 @@
 For requests to complete the delivery workflow, commit and push the feature branch, open a PR into `main`, and merge after passing tests, typecheck and independent review. Respect any narrower authorization in the current request; ask before publication or merge if it was not authorized.
 
 - Start the PR title with the issue reference, such as `#9: Review the credential loader`, and link the closing issue in its body. Include the change, before/after evidence and merge risks.
-- Check GitHub checks before merging. This project has accepted passing local tests and typecheck when no remote CI is configured. Report absent CI accurately; any configured required checks must pass.
+- Remote CI is mandatory. The GitHub Actions `tests` and `typecheck` checks must succeed for the exact independently approved PR head. Missing, pending, skipped, cancelled, stale or failing CI blocks merge; local results never substitute for remote CI. Use the deterministic Sandcastle merge gate and keep `main` protection enforced for administrators. Do not weaken protection or use an override to finish delivery.
 - Verify that the PR merged and the intended issue closed. Switch to local `main` and fast-forward from `origin/main`.
-- After the merge, update `CURRENT.md` from verified repository and GitHub state. Include the merge, issue status, test/review evidence and remaining acceptance gaps. Commit and push this status-only update directly on `main` as the separate final delivery step.
+- After the merge, update `CURRENT.md` from verified repository and GitHub state. Include the merge, issue status, test/review evidence and remaining acceptance gaps. Deliver this separate status-only update through another CI-gated PR; branch protection also applies to documentation. Never bypass CI with a direct status push.
 - Finish only after local `main` and `origin/main` match and the checkout is clean. Report the PR link and status-update commit concisely.
+
+## Development models and orchestration
+
+Use GPT-family coding models through Pi, not Claude Code or an Anthropic fallback. The implementer follows the ticket's single `**Model:**` declaration: Luna-6 maps to `openai/gpt-6-luna`, Terra-6.1 to `openai/gpt-6.1-terra`, and Sol-6.1 to `openai/gpt-6.1-sol`. Missing, unknown or ambiguous declarations stop the run. Independent verification uses Sol-6.1 in a fresh context; read-only ticket analysis uses Luna-6.
+
+The workflow follows `sandcastle-helper/orchestrator/ADAPTING.md`, adapted for GitHub and Node/CLI evidence. Start it manually. Up to three tickets can run in isolated worktrees after dependency and path-conflict checks. Allow two repair rounds after the initial implementation, with counters preserved across restart and fresh review for each corrected revision. `--dry-run` performs no model calls or remote/state mutations. See `docs/sandcastle-workflow.md` for commands and acceptance limits.
 
 ## Safety and acceptance boundaries
 

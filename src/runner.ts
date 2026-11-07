@@ -58,10 +58,10 @@ try {
   server.listen(socket.bindPath);
   await once(server, 'listening');
   await socket.claim();
-  console.log('runner ready');
   const shutdown = () => { void close().catch(() => { console.error('runner shutdown failed'); process.exitCode = 2; }); };
   process.once('SIGTERM', shutdown);
   process.once('SIGINT', shutdown);
+  console.log('runner ready');
 } catch {
   try { await close(); } catch { /* Startup still fails closed. */ }
   console.error('runner startup failed');

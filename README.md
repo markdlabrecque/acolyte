@@ -6,6 +6,12 @@ The initial assistant's scope includes durable todos and reminders, calendar man
 
 Repository: [markdlabrecque/acolyte](https://github.com/markdlabrecque/acolyte). TD-002 is implemented, live smoke pending. Full crash recovery and service acceptance remain unfinished.
 
+## Developer workflow
+
+[Sandcastle](docs/sandcastle-workflow.md) is developer tooling, separate from Cairn. The implementation candidate uses the `sandcastle:acolyte` image with Node 24.20.0 and Pi coding-agent 1.5.0. The application still pins Pi 1.4.0 and uses the selected DeepInfra model.
+
+Start the GitHub helper manually. It routes tickets to GPT models by their single `**Model:**` declaration, permits up to three isolated runs when dependencies and paths do not conflict, and allows two repairs after the initial implementation. GitHub authentication stays on the host. Independent review and the GitHub Actions `tests` and `typecheck` checks must pass on the exact PR head before merge. Missing or unsuccessful remote CI blocks merge; no bypass is allowed. See [current status](CURRENT.md) for candidate and acceptance limits.
+
 ## Docker tests
 
 Run `./scripts/test-docker.sh` with Docker Engine running. No host Node install
@@ -21,7 +27,7 @@ child-process signals remain available for SQLite and recovery tests. No live
 inference is needed. Each invocation uses its own built image ID so concurrent
 Mill worktrees cannot overwrite one another's test image tag.
 
-For Sawmill, set the uncommitted `.mill/config.yaml` entry:
+For an existing Sawmill setup, the following is historical configuration, not the current GitHub helper workflow. Set the uncommitted `.mill/config.yaml` entry:
 
 ```yaml
 tests:
